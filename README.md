@@ -1,4 +1,4 @@
-##Steps to run the project
+#Steps to run the project
 
 To run the project, execute the command below:
 ```
