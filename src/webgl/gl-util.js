@@ -5,46 +5,49 @@ export default class GLUtil{
         gl.compileShader(shader);
 
         if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-          const info = gl.getShaderInfoLog(shader);
-          throw new Error("Shader compilation error: "+info);
+            const info = gl.getShaderInfoLog(shader);
+            throw new Error("Shader compilation error: "+info);
         }
     
         return shader;
-      }
+    }
     
-      static createProgram(gl, vertexShader, fragmentShader) {
+    static createProgram(gl, vertexShader, fragmentShader) {
         const program = gl.createProgram();
     
         gl.attachShader(program, vertexShader);
         gl.attachShader(program, fragmentShader);
         gl.linkProgram(program);
         if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-          const info = gl.getProgramInfoLog(program);
-          throw new Error('Could not compile WebGL program:' + info);
+            const info = gl.getProgramInfoLog(program);
+            throw new Error('Could not compile WebGL program:' + info);
         }
     
         return program;
-      }
+    }
     
-      static createBuffer(gl, type, data) {
+    static createBuffer(gl, type, data) {
         if (data.length == 0)
           return null;
     
-        if (!(value && value.buffer instanceof ArrayBuffer && value.byteLength !== undefined)) {
+        if (!(data && data.buffer instanceof ArrayBuffer && data.byteLength !== undefined)) {
           console.warn('Data is not an instance of ArrayBuffer');
           return null;
         }
     
         const buffer = gl.createBuffer();
+
+        console.log("foi");
+
         gl.bindBuffer(type, buffer);
         gl.bufferData(type, data, gl.STATIC_DRAW);
-    
+
         return buffer;
-      }
+    }
     
 
       // refazer essa depois
-      static createVAO(gl, posAttribLoc, posBuffer, colorAttribLoc = null, colorBuffer = null, normAttribLoc = null, normBuffer = null) {
+    static createVAO(gl, ...attributes) {
         const vao = gl.createVertexArray();
     
         gl.bindVertexArray(vao);
@@ -52,30 +55,16 @@ export default class GLUtil{
         let size;
         let type;
     
-        if (posAttribLoc != null && posAttribLoc != undefined) {
-          gl.enableVertexAttribArray(posAttribLoc);
-          size = 4;
-          type = gl.FLOAT;
-          gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
-          gl.vertexAttribPointer(posAttribLoc, size, type, false, 0, 0);
-        }
-    
-        if (colorAttribLoc != null && colorAttribLoc != undefined) {
-          gl.enableVertexAttribArray(colorAttribLoc);
-          size = 1;
-          type = gl.FLOAT;
-          gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-          gl.vertexAttribPointer(colorAttribLoc, size, type, false, 0, 0);
-        }
-    
-        if (normAttribLoc != null && normAttribLoc != undefined) {
-          gl.enableVertexAttribArray(normAttribLoc);
-          size = 4;
-          type = gl.FLOAT;
-          gl.bindBuffer(gl.ARRAY_BUFFER, normBuffer);
-          gl.vertexAttribPointer(normAttribLoc, size, type, false, 0, 0);
+        for(let attribute of attributes){
+          if (attribute.loc != null && attribute.loc != undefined) {
+            gl.enableVertexAttribArray(attribute.loc);
+            size = attribute.dimension;
+            type = gl.FLOAT;
+            gl.bindBuffer(gl.ARRAY_BUFFER, attribute.buffer);
+            gl.vertexAttribPointer(attribute.loc, size, type, false, 0, 0);
+          }
         }
     
         return vao;
-      }
+    }
 }
