@@ -1,12 +1,13 @@
-import Mesh from "./webgl/mesh";
+import ImageGL from "./view/image";
+import Camera from "./webgl/camera";
 
 const canvas = document.querySelector("#game-screen");
 
-function drawTriangle(canvas){
+async function drawImage(canvas){
     if(!(canvas instanceof HTMLCanvasElement))
         return;
 
-    const gl = canvas.getContext("webgl2");
+    const gl = canvas.getContext("webgl2",{ premultipliedalpha: false });
 
     const devicePixelRatio = window.devicePixelRatio || 1;
     gl.canvas.width = 1024 * devicePixelRatio;
@@ -17,49 +18,27 @@ function drawTriangle(canvas){
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    const info = [
-        0.0, 0.5, 0.0, 1.0,
-        0.0, 0.0, 0.0, 1.0,
-        0.5, 0.0, 0.0, 1.0
-    ]
+    const img = new ImageGL();
+    await img.init(gl, "./assets/fundo war.jpg");
+    img.scale = [10,5];
 
-    const colors = [
-        1.0, 0.0, 0.0, 1.0,
-        0.0, 1.0, 0.0, 1.0,
-        0.0, 0.0, 1.0, 1.0
-    ]
+    const img1 = new ImageGL();
+    await img1.init(gl, "./assets/bowser.png");
 
+    img1.rotation = Math.PI;
+    img1.positionX = 2;
+    //img1.depth = 0.5;
 
-    const vert = `#version 300 es
-    precision highp float;
+    const camera = new Camera(canvas);
+    camera.typeOfProjection = "orthogonal";
 
-    in vec4 position;
-    in vec4 color;
+    gl.enable(gl.DEPTH_TEST);
+    gl.depthFunc(gl.LESS);
 
-    out vec4 fColor;
+    img1.draw(camera);
+    img.draw(camera);
     
-    void main() {
-      gl_Position  = position;
-      fColor = color;
-    }`
-
-    const frag = `#version 300 es
-    precision highp float;
-    
-    in vec4 fColor;
-
-    out vec4 color;
-
-    void main() {
-      color = fColor;
-    }`
-
-    const mesh = new Mesh(gl, vert, frag, gl.TRIANGLES);
-    mesh.addAttribute(gl, "position", info);
-    mesh.addAttribute(gl, "color", colors);
-    mesh.createVAO(gl);
-
-    mesh.draw(gl);
+    gl.disable(gl.DEPTH_TEST);
 }
 
-drawTriangle(canvas);
+drawImage(canvas);
