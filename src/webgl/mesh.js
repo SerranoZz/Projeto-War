@@ -2,9 +2,18 @@ import { vec3, mat4 } from "gl-matrix";
 import GLUtil from "./gl-util";
 
 export default class Mesh{
-    #position = vec3.fromValues(0.0, 0.0, 0.0);
-    #rotation = vec3.fromValues(0.0, 0.0, 0.0);
-    #scale = vec3.fromValues(1.0, 1.0, 1.0);
+    
+    /*static get UNIFORM_INT(){
+        return ""
+    }*/
+
+    #gl;
+
+    position = [0.0, 0.0, 0.0];
+    rotation = [0.0, 0.0, 0.0];
+    scale = [1.0, 1.0, 1.0];
+
+    static #textureI = 0;
 
     #modelMatrix = mat4.create();
 
@@ -21,40 +30,19 @@ export default class Mesh{
 
     #vaoLoc;
 
-    get position(){
-        return this.#position;
+    #uTexture;
+    #texture;
+
+    #useModelMatrix = true;
+    
+    set useModelMatrix(use){
+        if(!(use instanceof Boolean))
+            throw new Error("useModelMatrix need to be a boolean value");
+        
+        this.#useModelMatrix = use;
     }
 
-    set position(pos){
-        if(!(pos instanceof vec3))  
-            throw new Error("Position need to be a vec3.");
-
-        this.#position = vec3.fromValues(...pos, 1.0);
-    }
-
-    get rotation(){
-        return this.#rotation;
-    }
-
-    set rotation(rotation){
-        if(!(pos instanceof vec3))  
-            throw new Error("Rotation need to be a vec3.");
-
-        this.#rotation = vec3.fromValues(...rotation, 1.0);
-    }
-
-    get scale(){
-        return this.#scale;
-    }
-
-    set scale(scale){
-        if(!(pos instanceof vec3))  
-            throw new Error("Scale need to be a vec3.");
-
-        this.#scale = vec3.fromValues(...scale, 1.0);
-    }
-
-    addAttribute(gl, name, info, pointDim = 4){
+    addAttribute(name, info, pointDim = 4){
         if(!(info instanceof Array))
             throw new Error("The info parameter needs to be a Array.");
 
@@ -73,59 +61,100 @@ export default class Mesh{
         const f32Array = new Float32Array(info);
 
         this.#attributes.push({
-            loc: gl.getAttribLocation(this.#program, name),
-            buffer: GLUtil.createBuffer(gl, gl.ARRAY_BUFFER,f32Array),
+            loc: this.#gl.getAttribLocation(this.#program, name),
+            buffer: GLUtil.createBuffer(this.#gl, this.#gl.ARRAY_BUFFER,f32Array),
             dimension: pointDim
         })
-
     }
 
     constructor(gl, vertShaderSrc, fragShaderSrc, primitive){
         this.#primitive = primitive;
         
+        this.#gl = gl;
         //restringir os tipos
 
-        this.createShader(gl, vertShaderSrc, fragShaderSrc);
+        this.createShader(vertShaderSrc, fragShaderSrc);
     }
 
-    createShader(gl, vertShaderSrc, fragShaderSrc) {
-        this.#vertShader = GLUtil.createShader(gl, gl.VERTEX_SHADER, vertShaderSrc);
-        this.#fragShader = GLUtil.createShader(gl, gl.FRAGMENT_SHADER, fragShaderSrc);
-        this.#program = GLUtil.createProgram(gl, this.#vertShader, this.#fragShader);
+    createShader(vertShaderSrc, fragShaderSrc) {
+        this.#vertShader = GLUtil.createShader(this.#gl, this.#gl.VERTEX_SHADER, vertShaderSrc);
+        this.#fragShader = GLUtil.createShader(this.#gl, this.#gl.FRAGMENT_SHADER, fragShaderSrc);
+        this.#program = GLUtil.createProgram(this.#gl, this.#vertShader, this.#fragShader);
     
-        gl.useProgram(this.#program);
+        this.#gl.useProgram(this.#program);
     }
 
-    createVAO(gl) {
-        this.#vaoLoc = GLUtil.createVAO(gl, ...this.#attributes);
-      }
+    createVAO() {
+        this.#vaoLoc = GLUtil.createVAO(this.#gl, ...this.#attributes);
+    }
 
     #updateModelMatrix(){
         mat4.identity(this.#modelMatrix);
 
-        mat4.translate(this.#modelMatrix, this.#modelMatrix, this.#position);
-        mat4.rotateX(this.#modelMatrix, this.#modelMatrix, this.#rotation[0]);
-        mat4.rotateY(this.#modelMatrix, this.#modelMatrix, this.#rotation[1]);
-        mat4.rotateZ(this.#modelMatrix, this.#modelMatrix, this.#rotation[2]);
-        mat4.scale(this.#modelMatrix, this.#modelMatrix, this.#scale);
+        mat4.translate(this.#modelMatrix, this.#modelMatrix, this.position);
+        mat4.rotateX(this.#modelMatrix, this.#modelMatrix, this.rotation[0]);
+        mat4.rotateY(this.#modelMatrix, this.#modelMatrix, this.rotation[1]);
+        mat4.rotateZ(this.#modelMatrix, this.#modelMatrix, this.rotation[2]);
+        mat4.scale(this.#modelMatrix, this.#modelMatrix, this.scale);
     }
 
-    draw(gl){
+    createTex(texData, textureName){
+        this.#uTexture = this.#gl.getUniformLocation(this.#program, textureName);
+        this.#texture = this.#gl.createTexture();
+        this.#gl.activeTexture(this.#gl[`TEXTURE${Mesh.#textureI}`]);
+        this.#gl.bindTexture(this.#gl.TEXTURE_2D, this.#texture);
 
-        gl.frontFace(gl.CCW);
+        this.#gl.texParameteri(this.#gl.TEXTURE_2D, this.#gl.TEXTURE_WRAP_S, this.#gl.CLAMP_TO_EDGE);
+        this.#gl.texParameteri(this.#gl.TEXTURE_2D, this.#gl.TEXTURE_WRAP_T, this.#gl.CLAMP_TO_EDGE);
+        this.#gl.texParameteri(this.#gl.TEXTURE_2D, this.#gl.TEXTURE_MIN_FILTER, this.#gl.NEAREST);
+        this.#gl.texParameteri(this.#gl.TEXTURE_2D, this.#gl.TEXTURE_MAG_FILTER, this.#gl.NEAREST);
 
-        gl.enable(gl.CULL_FACE);
-        gl.cullFace(gl.BACK);
+        this.#gl.texImage2D(this.#gl.TEXTURE_2D, 0, this.#gl.RGBA32F, this.#gl.RGBA, this.#gl.FLOAT, texData);
+
+        this.#gl.useProgram(this.#program);
+        this.#gl.uniform1i(this.#uTexture, Mesh.#textureI);
+
+        console.log(Mesh.#textureI);
+
+        Mesh.#textureI++;
+    }
+
+    setUniformValue(name, value, type){
+        const uniformLoc = this.#gl.getUniformLocation(this.#program, name);
+        
+        if(uniformLoc === -1)
+            throw new Error("This uniform doesn't exist in the shader code.");
+
+        this.#gl.useProgram(this.#program);
+        this.#gl["uniform"+type](uniformLoc, value);
+    }
+
+    draw(cam){
+        this.#gl.frontFace(this.#gl.CCW);
+
+        this.#gl.enable(this.#gl.CULL_FACE);
+        this.#gl.cullFace(this.#gl.BACK);
 
         this.#updateModelMatrix();
 
-        const model = this.#modelMatrix;
+        const mvp = (this.#useModelMatrix)? this.#modelMatrix: mat4.create();
 
-        gl.useProgram(this.#program);
+        if(cam){
+            const viewProj = cam.viewProjection;
+            mat4.multiply(mvp, viewProj, mvp);
+        }
 
-        gl.drawArrays(this.#primitive, 0, this.#count);
+        this.#gl.useProgram(this.#program);
 
-        gl.disable(gl.CULL_FACE);
+        const mvpLoc = this.#gl.getUniformLocation(this.#program, "mvp");
+
+        if(mvp !== -1){ 
+            this.#gl.uniformMatrix4fv(mvpLoc, false, mvp);
+        }
+
+        this.#gl.drawArrays(this.#primitive, 0, this.#count);
+
+        this.#gl.disable(this.#gl.CULL_FACE);
     }
 
 }

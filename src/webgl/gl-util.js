@@ -37,8 +37,6 @@ export default class GLUtil{
     
         const buffer = gl.createBuffer();
 
-        console.log("foi");
-
         gl.bindBuffer(type, buffer);
         gl.bufferData(type, data, gl.STATIC_DRAW);
 
@@ -48,6 +46,8 @@ export default class GLUtil{
 
       // refazer essa depois
     static createVAO(gl, ...attributes) {
+      if(!(gl instanceof WebGL2RenderingContext)) return;
+
         const vao = gl.createVertexArray();
     
         gl.bindVertexArray(vao);
