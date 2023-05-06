@@ -122,9 +122,9 @@ export default class ImageGL{
         mat4.copy(vpmInverse, this.#inverseModel);
 
         if(camera){
-            const view = camera.viewProjection;
+            const viewProj = camera.viewProjProjection;
             const vpInverse = mat4.create();
-            mat4.invert(vpInverse, view);
+            mat4.invert(vpInverse, viewProj);
             mat4.multiply(vpmInverse, vpmInverse, vpInverse);
         }
 
