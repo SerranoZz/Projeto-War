@@ -1,0 +1,217 @@
+/* Definição de fontes */
+@font-face {
+    font-family: 'capture';
+    src: url('../assets/fonts/Captureit.ttf') format('truetype');
+}
+
+:root {
+    --cor-primaria: #1D2026;
+    --cor-secundaria: #F7B500;
+    --cor-secundaria-hover: #f7b50093;
+}
+
+/* Estilo do body */
+body {
+    max-width: 100vw;
+    margin: 0 auto;
+    padding: 0;
+    font-family: 'capture';
+}
+
+header {
+    background-color: var(--cor-primaria);
+    padding-top: 1.7vh;
+    padding-bottom: 1.7vh;
+}
+
+header nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+header nav ul li{
+    padding: 0.4vw;
+}
+
+header nav ul li a {
+    font-weight: bold;
+    font-size: 1vw;
+    letter-spacing: 2px;
+    color: white;
+    text-decoration: none;
+}
+
+header nav ul li a:hover {
+    color: #F7B500;
+}
+
+
+#banner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+    background-image: url(https://images.alphacoders.com/309/309481.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
+#banner div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#banner h1 {
+    font-size: 5vw;
+    letter-spacing: 0.5vw;
+    margin: 0;
+    text-shadow: #000 0.2vw 0.2vw;
+    color: white;
+}
+
+#banner p {
+    font-size: 1.7vw;
+    letter-spacing: 0.1vw;
+    margin: 20px 0;
+    text-shadow: #000 0.15vw 0.15vw;
+    color: white;
+}
+
+#banner a {
+    background-color: var(--cor-secundaria);
+    padding: 1vw 4vw 1vw 4vw;
+    margin-top: 7vh;
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 2vw;
+    letter-spacing: 0.2vw;
+    border-radius: 50px;
+    border: 0.3vw solid black;
+}
+
+#banner a:hover{
+    background-color: var(--cor-secundaria-hover);
+}
+
+#sobre {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    background-color: var(--cor-primaria);
+    padding-top: 4vh;
+    padding-bottom: 4vh;
+}
+
+#sobre h2 {
+    color: white;
+    margin: 0;
+    font-size: 2vw;
+    text-align: center;
+    letter-spacing: 5px;
+}
+
+#sobre div {
+    display: flex;
+    flex-direction: row;
+    align-items:start;
+    justify-content: space-around;
+}
+
+#sobre div div {
+    display: flex;
+    flex-direction: column;
+    max-width: 40%;
+    max-height: 100%;
+    color: white;
+    font-size: 1vw;
+}
+
+#sobre div div h3 {
+    letter-spacing: 4px;
+    width: 100%;
+    text-align: center;
+}
+
+#sobre div div p{
+    text-indent: 3vw;
+    text-align: justify;
+    margin: 4px;
+    letter-spacing: 1.5px;
+}
+
+#sobre div div ul li {
+    width: 100%;
+    text-align: justify;
+    letter-spacing: 1.5px;
+    margin: 0px 0px 15px 0px;
+}
+
+
+#devs {
+    display: flex;
+    flex-direction: column;
+    background-image: url(https://picfiles.alphacoders.com/608/608737.jpeg);
+    background-size: cover;
+    background-position: center;
+    color: white;
+}
+
+#devs h2 {
+    font-size: 2vw;
+    text-align: center;
+    padding-bottom: 1vw;
+    letter-spacing: 0.05vw;
+}
+
+#devs ul {
+    display: flex;
+    justify-content: space-between;
+    max-width: 100%;
+    height: auto;
+    list-style: none;
+    padding: 0vw 5vw 0vw 5vw;
+}
+
+#devs ul li{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#devs ul li div {
+    max-width: 12vw;
+    max-height: 12vw;
+
+}
+
+#devs ul li h3 {
+    font-size: 1.2vw;
+    letter-spacing: 0.1vw;
+}
+
+#devs ul li div img{
+    max-width: 100%;
+    max-height:  100%;
+    border: 0.2vw  solid white;
+    border-radius: 4%;
+}
+
+footer {
+    padding: 1vw;
+    margin: 0;
+    background-color: var(--cor-primaria);
+}
+
+footer p {
+    text-align: center;
+    font-size: 1vw;
+    margin: 0;
+    color: white;
+}

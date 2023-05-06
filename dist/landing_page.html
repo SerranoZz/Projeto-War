@@ -1,16 +1,128 @@
-<html lang="PT-br">
+<!DOCTYPE html>
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Landing Page do Jogo War</title>
+	<link rel="stylesheet" href="./css/style.css">
 </head>
-    <body>
-        <header>
-            <ul>
-                <li><p>Teste1</p></li>
-                <li><p>Teste2</p></li>
-            </ul>
-        </header>
-    </body>
+
+<body>
+	<header>
+		<nav>
+			<ul>
+				<li><a href="#">Início</a></li>
+				<li><a href="#" onclick="scrollParaElemento('#sobre')">Sobre</a></li>
+				<li><a href="#" onclick="scrollParaElemento('#devs')">Desenvolvedores</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section id="banner">
+        <div>
+            <h1>Prepare-se para a Guerra!</h1>
+            <p>Jogue o melhor jogo de estratégia de guerra online</p>
+            <a href="index.html" target="_self">Jogar</a>
+        </div>
+	</section>
+
+	<section id="sobre">
+        <h2>Sobre o Jogo</h2>
+        <div>
+            <div>
+                <h3>Regras</h3>
+                <p>
+                    O jogo é disputado em um mapa do mundo dividido em 6 regiões (Europa, Ásia, África, América do Norte, América do Sul e Oceania). Cada jogador recebe uma carta com uma determinado missão e, ganha quem a completar primeiro.
+                </p>
+                <p>
+                    É disputado em rodadas conforme os números dos dados, nas quais os participantes colocam exércitos e atacam outros oponentes. Uma partida pode durar várias horas, com disputas, regidas pela estratégia dos jogadores e pela sorte lançada nos dados.<br>
+                <p>
+                    Cada participante pode atacar partindo de um ou vários territórios, conforme a estratégia pessoal. Se ele quiser atacar de mais de um território, ele deve indicar antes território de onde partirá o ataque e contra qual território será feito. Após finalizado o primeiro ataque, poderá iniciar outro a partir de qualquer território que lhe pertença. O ataque, a partir de um território, somente pode ser executado em um território adversário que tenha fronteiras em comum, ou se estão ligado através de uma linha pontilhada. Cada jogador pode atacar um território adversário quantas vezes achar necessário para conquista-lo, até ficar só um exército no seu território ou, até quando achar conveniente não atacar.
+                </p>
+                <p>
+                    No ataque, o número de exércitos que o jogador usará em cada batalha, será igual ao número de exércitos situados no território atacante - 1 (menos um), que é o exército de ocupação. Onde 3 é o número máximo de exércitos participantes em cada ataque, mesmo que o número de exércitos possuídos no território seja superior. O jogador atacante jogará a quantidade de dados igual aos exércitos participantes da batalha, o mesmo ocorrendo com o jogador da defesa. Assim, se o atacante usar 3 exércitos contra um da defesa, ele jogará 3 dados contra um do defensor. Na defesa, o número de exércitos que o jogador usará, é de no máximo 3 e no mínimo 1 (podendo utilizar inclusive o exército de ocupação).
+                </p>
+            </div>
+
+            <div>
+                <h3>Objetivos</h3>
+                <p>
+                    Cada jogador recebe uma missão dentre os 14 existentes. No caso do número de jogadores ser inferior a 6, os objetivos relacionados com as cores dos exércitos não participantes devem ser retirados do sorteio.
+                </p>
+                <ul>
+                    <li>Conquistar na totalidade a EUROPA, a OCEANIA e mais um terceiro.</li>
+                    <li>Conquistar na totalidade a ÁSIA e a AMÉRICA DO SUL.</li>
+                    <li>Conquistar na totalidade a EUROPA, a AMÉRICA DO SUL e mais um terceiro.</li>
+                    <li>Conquistar 18 TERRITÓRIOS e ocupar cada um deles com pelo menos dois exércitos.</li>
+                    <li>Conquistar na totalidade a ÁSIA e a ÁFRICA.</li>
+                    <li>Conquistar na totalidade a AMÉRICA DO NORTE e a ÁFRICA.</li>
+                    <li>Conquistar 24 TERRITÓRIOS à sua escolha.</li>
+                    <li>Conquistar na totalidade a AMÉRICA DO NORTE e a OCEANIA.</li>
+                    <li>Destruir totalmente OS EXÉRCITOS AZUIS.</li>
+                    <li>Destruir totalmente OS EXÉRCITOS AMARELOS.</li>
+                    <li>Destruir totalmente OS EXÉRCITOS VERMELHOS.</li>
+                    <li>Destruir totalmente OS EXÉRCITOS PRETOS.</li>
+                    <li>Destruir totalmente OS EXÉRCITOS BRANCO.</li>
+                    <li>Destruir totalmente OS EXÉRCITOS VERDES.</li>
+                </ul>
+            </div>
+        </div>
+	</section>
+
+	<section id="devs">
+		<h2>Desenvolvedores</h2>
+        <ul>
+            <li>
+                <div>
+                    <img src="./assets/devs/bruno.jpg" alt="">
+                </div>
+                <h3>Bruno Adji</h3>            
+            </li>
+            <li>
+                <div>
+                    <img src="./assets/devs/davi.jpg"alt="">
+                </div>
+                <h3>Davi Santana</h3>            
+            </li>
+            <li>
+                <div>
+                    <img src="./assets/devs/guadala.jpg" alt="">
+                </div>
+                <h3>Julio Vasconcellos</h3>            
+            </li>
+            <li>
+                <div>
+                    <img src="./assets/devs/serrano.jpg" alt="">
+                </div>
+                <h3>Lucas Serrano</h3>            
+            </li>
+            <li>
+                <div>
+                    <img src="./assets/devs/pacheco.jpg" alt="">
+                </div>
+                <h3>Lucas Pacheco</h3>            
+            </li>
+            <li>
+                <div>
+                    <img src="./assets/devs/raphael.jpg" alt="">
+                </div>
+                <h3>Raphael Carvalho</h3>            
+            </li>
+        </ul>
+	</section>
+
+	<footer>
+		<p>Instituto de Computação - UFF</p>
+	</footer>
+
+    <script>
+		function scrollParaElemento(id) {
+			var elemento = document.querySelector(id);
+			var topo = elemento.offsetTop;
+			window.scrollTo({ top: topo, behavior: 'smooth' });
+		}
+	</script>
+
+</body>
+
 </html>
