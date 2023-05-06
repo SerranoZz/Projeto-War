@@ -39,7 +39,7 @@ async function drawImage(canvas){
         const point = mapClickInCanvas(e.clientX, e.clientY, canvas);
     
         //o teste de colisão do botão usa as coordenadas no sistema de coordenadas do webgl;
-        console.log(button.pointCollision(...point, camera));
+        alert(button.pointCollision(...point, camera));
     })
 }
 
