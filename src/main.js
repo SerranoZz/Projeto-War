@@ -24,7 +24,7 @@ async function drawImage(canvas){
     //button.positionX = 0.2;
 
     const camera = new Camera(canvas);
-    camera.typeOfProjection = "perspective";
+    camera.typeOfProjection = "orthogonal";
 
     gl.enable(gl.DEPTH_TEST);
     gl.depthFunc(gl.LESS);
