@@ -21,11 +21,10 @@ async function drawImage(canvas){
     const button = new ImageGL();
     await button.init(gl, "./assets/button.png");
 
-    button.positionX = 1;
-    button.rotation = Math.PI/2;
+    //button.positionX = 0.2;
 
     const camera = new Camera(canvas);
-    camera.typeOfProjection = "orthogonal";
+    camera.typeOfProjection = "perspective";
 
     gl.enable(gl.DEPTH_TEST);
     gl.depthFunc(gl.LESS);
@@ -33,10 +32,22 @@ async function drawImage(canvas){
     button.draw(camera);
     
     gl.disable(gl.DEPTH_TEST);
+
+    canvas.addEventListener("click", e=>{
+        // e.clientX e e.clientY são a posição do mouse
+
+        const point = mapClickInCanvas(e.clientX, e.clientY, canvas);
+    
+        //o teste de colisão do botão usa as coordenadas no sistema de coordenadas do webgl;
+        console.log(button.pointCollision(...point, camera));
+    })
+}
+
+// use essa função para conseguir a posição do mouse no sistema de coordenadas do webgl
+function mapClickInCanvas(x, y, canvas){
+    const mappedOnCenter = [(x - canvas.offsetLeft) - canvas.width/2, (canvas.height/2) - (y - canvas.offsetTop)];
+    return [mappedOnCenter[0]*2/canvas.width, mappedOnCenter[1]*2/canvas.height];
 }
 
 drawImage(canvas);
 
-canvas.addEventListener("click", e=>{
-    console.log(e.clientX, e.clientY);
-})

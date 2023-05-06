@@ -35,6 +35,11 @@ export default class Mesh{
 
     #useModelMatrix = true;
     
+    get modelMatrix(){
+        this.#updateModelMatrix();
+        return this.#modelMatrix;
+    }
+
     set useModelMatrix(use){
         if(!(use instanceof Boolean))
             throw new Error("useModelMatrix need to be a boolean value");
@@ -114,8 +119,6 @@ export default class Mesh{
         this.#gl.useProgram(this.#program);
         this.#gl.uniform1i(this.#uTexture, Mesh.#textureI);
 
-        console.log(Mesh.#textureI);
-
         Mesh.#textureI++;
     }
 
@@ -138,7 +141,7 @@ export default class Mesh{
         this.#updateModelMatrix();
 
         const mvp = (this.#useModelMatrix)? this.#modelMatrix: mat4.create();
-
+        console.log(mvp);
         if(cam){
             const viewProj = cam.viewProjection;
             mat4.multiply(mvp, viewProj, mvp);
