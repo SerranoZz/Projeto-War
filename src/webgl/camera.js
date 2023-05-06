@@ -16,7 +16,7 @@ export default class Camera{
     near = 1.0;
     far = 9.0;
 
-    fovy = Math.PI/1.7;
+    fovy = Math.PI/1.3;
     aspect;
 
     constructor(canvas){

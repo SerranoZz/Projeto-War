@@ -1,5 +1,12 @@
 #game-screen{
-    position: fixed;
+    position: absolute;
     left: 12%;
     background-color: black;
+    display: block;
+}
+
+#teste{
+    position: absolute;
+    left: 500px;
+    top: 500px;
 }
