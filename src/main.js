@@ -40,6 +40,7 @@ async function drawImage(canvas){
     
         //o teste de colisão do botão usa as coordenadas no sistema de coordenadas do webgl;
         alert(button.pointCollision(...point, camera));
+        console.log(point);
     })
 }
 
