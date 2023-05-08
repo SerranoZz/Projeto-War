@@ -2,28 +2,26 @@
 WAR game project for the Software Engineering II course - Computer Science - UFF.
 
 # Team
-Bruno Adji
-Davi Santanna
-Julio Vasconcellos
-Lucas Serrano
-Lucas Pacheco
-Raphael Carvalho
+Bruno Adji<br/>
+Davi Santanna<br/>
+Julio Vasconcellos<br/>
+Lucas Serrano<br/>
+Lucas Pacheco<br/>
+Raphael Carvalho<br/>
+
 
 # Installation
 We assume you have Node 12.10+ and Git 2.23+ installed on your computer.
 
 ## Requirements
 ## Steps for setting up the environment (needs to be done just once) 
-1. Clone our repository: 
-
+1. Clone our repository: <br/>
 `~$ git clone https://github.com/gems-uff/db-mining.git`
 
-2. Go into the project directory:
-
+2. Go into the project directory:<br/>
 `~$ cd Projeto-War`
 
-3. Run the command bellow:
-
+3. Run the command bellow:<br/>
 `~$ npm i`
 
 
