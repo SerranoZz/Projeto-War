@@ -1,14 +1,16 @@
-#game-screen{
-    position: absolute;
-    left: 12%;
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: black;
 }
 
-#teste{
-    position: absolute;
-    left: 1280px;
-    top: 720px;
+#game-screen{
+    width: 1280;
+    height: 720;   
+    background-color: white;
 }
+
 
 *{
     border: none;

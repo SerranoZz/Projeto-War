@@ -10,18 +10,20 @@ async function drawImage(canvas){
     const gl = canvas.getContext("webgl2",{ premultipliedalpha: false });
 
     const devicePixelRatio = window.devicePixelRatio || 1;
-    gl.canvas.width = 1024 * devicePixelRatio;
-    gl.canvas.height = 768 * devicePixelRatio;
+    gl.canvas.width = 1280 * devicePixelRatio;
+    gl.canvas.height = 720 * devicePixelRatio;
 
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    const button = new ImageGL();
-    await button.init(gl, "./assets/button.png");
 
-    //button.positionX = 0.2;
+    const menu_background = new ImageGL();
+    await menu_background.init(gl, "./assets/menu/fundo.jpg")
+    
+    menu_background.scaleX = 6;
+    menu_background.scaleY = 7;
 
     const camera = new Camera(canvas);
     camera.typeOfProjection = "orthogonal";
@@ -29,18 +31,18 @@ async function drawImage(canvas){
     gl.enable(gl.DEPTH_TEST);
     gl.depthFunc(gl.LESS);
 
-    button.draw(camera);
+    menu_background.draw(camera)
     
     gl.disable(gl.DEPTH_TEST);
 
-    canvas.addEventListener("click", e=>{
+    /*canvas.addEventListener("click", e=>{
         // e.clientX e e.clientY são a posição do mouse
 
         const point = mapClickInCanvas(e.clientX, e.clientY, canvas);
     
         //o teste de colisão do botão usa as coordenadas no sistema de coordenadas do webgl;
         alert(button.pointCollision(...point, camera));
-    })
+    })*/
 }
 
 // use essa função para conseguir a posição do mouse no sistema de coordenadas do webgl
