@@ -2,10 +2,6 @@ import { vec3, mat4 } from "gl-matrix";
 import GLUtil from "./gl-util";
 
 export default class Mesh{
-    
-    /*static get UNIFORM_INT(){
-        return ""
-    }*/
 
     #gl;
 
@@ -140,8 +136,10 @@ export default class Mesh{
 
         this.#updateModelMatrix();
 
+        this.#gl.bindVertexArray(this.#vaoLoc);
+
         const mvp = (this.#useModelMatrix)? this.#modelMatrix: mat4.create();
-        console.log(mvp);
+        //console.log(mvp);
         if(cam){
             const viewProj = cam.viewProjection;
             mat4.multiply(mvp, viewProj, mvp);

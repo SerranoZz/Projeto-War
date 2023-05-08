@@ -15,6 +15,6 @@ export default `#version 300 es
 
         if(color.a < 0.5) discard;
 
-        color.a = alpha;
+        color *= alpha;
     }
 `

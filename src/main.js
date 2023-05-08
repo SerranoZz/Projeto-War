@@ -19,30 +19,32 @@ async function drawImage(canvas){
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
 
-    const menu_background = new ImageGL();
-    await menu_background.init(gl, "./assets/menu/fundo.jpg")
-    
-    menu_background.scaleX = 6;
-    menu_background.scaleY = 7;
+    const bowser = new ImageGL();
+    await bowser.init(gl, "./assets/bowser.png");
+
+    bowser.positionX = 1;
 
     const camera = new Camera(canvas);
-    camera.typeOfProjection = "orthogonal";
-
+    
     gl.enable(gl.DEPTH_TEST);
     gl.depthFunc(gl.LESS);
 
-    menu_background.draw(camera)
-    
-    gl.disable(gl.DEPTH_TEST);
+    button.draw(camera);
 
-    /*canvas.addEventListener("click", e=>{
+    bowser.draw(camera);
+
+    gl.disable(gl.DEPTH_TEST);camera.typeOfProjection = "orthogonal";
+
+    canvas.addEventListener("click", e=>{
         // e.clientX e e.clientY são a posição do mouse
 
         const point = mapClickInCanvas(e.clientX, e.clientY, canvas);
     
         //o teste de colisão do botão usa as coordenadas no sistema de coordenadas do webgl;
         alert(button.pointCollision(...point, camera));
-    })*/
+        bowser.pointCollision(...point, camera);
+        console.log(point);
+    })
 }
 
 // use essa função para conseguir a posição do mouse no sistema de coordenadas do webgl
@@ -52,4 +54,3 @@ function mapClickInCanvas(x, y, canvas){
 }
 
 drawImage(canvas);
-
