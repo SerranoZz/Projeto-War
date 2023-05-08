@@ -61,9 +61,7 @@ export default class ImageGL{
     async init(gl, src){
         this.#mesh = new Mesh(gl, imgVert, imgFrag, gl.TRIANGLES);
 
-        const size = await this.#loadImage(src);
-
-        console.log(size);
+        const size = await this.#loadTex(src);
 
         const data = this.#createRect(...size);
 
@@ -74,9 +72,18 @@ export default class ImageGL{
         this.opacity = 1.0;
     }
 
-    async #loadImage(imgSrc){
-        const img = document.createElement("img");
-        img.src = imgSrc;
+    async loadImage(url){
+        return new  Promise(resolve => {
+            const image = new Image();
+            image.addEventListener('load', () => {
+                resolve(image);
+            });
+            image.src = url; 
+        });
+    }
+
+    async #loadTex(imgSrc){
+        const img = await this.loadImage(imgSrc);
         await img.decode();
         const imageBitmap = await createImageBitmap(img);
 
