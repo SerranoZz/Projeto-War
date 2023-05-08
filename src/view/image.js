@@ -63,6 +63,8 @@ export default class ImageGL{
 
         const size = await this.#loadImage(src);
 
+        console.log(size);
+
         const data = this.#createRect(...size);
 
         this.#mesh.addAttribute("position", data.coords);

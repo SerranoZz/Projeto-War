@@ -26,13 +26,6 @@ async function drawImage(canvas){
     const camera = new Camera(canvas);
     camera.typeOfProjection = "orthogonal";
 
-    gl.enable(gl.DEPTH_TEST);
-    gl.depthFunc(gl.LESS);
-
-    button.draw(camera);
-    
-    gl.disable(gl.DEPTH_TEST);
-
     canvas.addEventListener("click", e=>{
         // e.clientX e e.clientY são a posição do mouse
 
@@ -41,6 +34,22 @@ async function drawImage(canvas){
         //o teste de colisão do botão usa as coordenadas no sistema de coordenadas do webgl;
         alert(button.pointCollision(...point, camera));
         console.log(point);
+    })
+
+    canvas.addEventListener("mousemove", e=>{
+        const point = mapClickInCanvas(e.clientX, e.clientY, canvas);
+
+        gl.enable(gl.DEPTH_TEST);
+        gl.depthFunc(gl.LESS);
+
+        if(button.pointCollision(...point, camera))
+            button.opacity = 0.1; 
+        else
+            button.opacity = 1.0;
+
+        button.draw(camera);
+    
+        gl.disable(gl.DEPTH_TEST);
     })
 }
 
@@ -52,3 +61,6 @@ function mapClickInCanvas(x, y, canvas){
 
 drawImage(canvas);
 
+function setHoverEvent(canvas, img){
+    canvas
+}
