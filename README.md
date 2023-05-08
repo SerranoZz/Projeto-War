@@ -11,9 +11,8 @@ Raphael Carvalho da Conceicao<br/>
 
 
 # Installation
-We assume you have Node 12.10+ and Git 2.23+ installed on your computer.
-
 ## Requirements
+We assume you have Node 12.10+ and Git 2.23+ installed on your computer.
 ## Steps for setting up the environment (needs to be done just once) 
 1. Clone our repository: <br/>
 `~$ git clone https://github.com/gems-uff/db-mining.git`
