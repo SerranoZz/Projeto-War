@@ -3,11 +3,11 @@ WAR game project for the Software Engineering II course - Computer Science - UFF
 
 # Team
 Bruno Adji<br/>
-Davi Santanna<br/>
-Julio Vasconcellos<br/>
-Lucas Serrano<br/>
+Davi Santos Santana<br/>
+Julio Vasconcellos Araujo Dias Goncalves<br/>
+Lucas Silveira Serrano<br/>
 Lucas Pacheco<br/>
-Raphael Carvalho<br/>
+Raphael Carvalho da Conceicao<br/>
 
 
 # Installation
