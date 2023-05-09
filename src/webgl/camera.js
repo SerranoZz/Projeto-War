@@ -52,7 +52,7 @@ export default class Camera{
         if(this.typeOfProjection == "perspective")
             mat4.perspective(this.#proj_matrix, this.fovy, this.aspect, this.near, this.far);
         else
-            mat4.ortho(this.#proj_matrix, this.left * 1024/768, this.right * 1024/768, this.bottom, this.top, this.left, this.right);
+            mat4.ortho(this.#proj_matrix, this.left, this.right, this.bottom, this.top, this.left, this.right);
     }
 
     get viewProjection(){
