@@ -7,7 +7,7 @@ async function drawImage(canvas){
     if(!(canvas instanceof HTMLCanvasElement))
         return;
 
-    const gl = canvas.getContext("webgl2");
+    const gl = canvas.getContext("webgl2", { antialias: true });
 
     const devicePixelRatio = window.devicePixelRatio || 1;
     gl.canvas.width = 1280 * devicePixelRatio;
