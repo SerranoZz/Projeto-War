@@ -3,21 +3,17 @@ import Camera from "./webgl/camera";
 
 const canvas = document.querySelector("#game-screen");
 
-async function drawImage(canvas){
-    if(!(canvas instanceof HTMLCanvasElement))
-        return;
+let screen = 0;
 
-    const gl = canvas.getContext("webgl2");
+const gl = canvas.getContext("webgl2");
 
-    const devicePixelRatio = window.devicePixelRatio || 1;
-    gl.canvas.width = 1280 * devicePixelRatio;
-    gl.canvas.height = 720 * devicePixelRatio;
+gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+gl.clearColor(0.0, 0.0, 0.0, 1.0);
+gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+async function drawImage(gl){
     //initialize
     const background = new ImageGL();
     await background.init(gl, "./assets/menu/fundo.jpg");
@@ -53,8 +49,8 @@ async function drawImage(canvas){
     max_button.positionY = 0.57
 
 
-    const camera = new Camera(canvas);
-    camera.typeOfProjection = "orthogonal";
+    const camera = new Camera(gl.canvas);
+    //camera.typeOfProjection = "perspective";
     
     gl.enable(gl.DEPTH_TEST);
     gl.depthFunc(gl.LESS);
@@ -73,6 +69,54 @@ async function drawImage(canvas){
 
         const point = mapClickInCanvas(e.clientX, e.clientY, canvas);
 
+        if(play_button.pointCollision(...point)){
+            screen = 1;
+            drawNewScreen(gl);
+        }
+
+    })
+}
+
+async function drawNewScreen(gl){
+    const mapa = new ImageGL();
+    await mapa.init(gl, "./assets/mapa.jpg");
+
+    mapa.scale = [4, 4*1.85];
+
+    let move = false;
+
+    const camera = new Camera(canvas);
+
+    gl.enable(gl.DEPTH_TEST);
+    gl.depthFunc(gl.LESS);
+
+    mapa.draw(camera);
+
+    gl.disable(gl.DEPTH_TEST);
+
+    let lastX = 0;
+    let lastY = 0;
+
+    canvas.addEventListener("mousedown", e=>{
+        lastX = e.clientX;
+        lastY = e.clientY;
+
+        move = true;
+    })
+
+    canvas.addEventListener("mouseup", e=>{
+        move = false;
+
+        console.log(lastX, lastY);
+    })
+
+    canvas.addEventListener("mousemove", e=>{
+        if(move){
+            let distX = e.clientX - lastX;
+            let distY = e.clientY - lastY;
+
+            console.log(distX, distY);
+        }
     })
 }
 
@@ -82,4 +126,4 @@ function mapClickInCanvas(x, y, canvas){
     return [mappedOnCenter[0]*2/canvas.width, mappedOnCenter[1]*2/canvas.height];
 }
 
-drawImage(canvas);
+drawImage(gl);

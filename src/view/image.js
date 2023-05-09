@@ -5,7 +5,6 @@ import { mat4, vec3 } from "gl-matrix";
 
 export default class ImageGL{
     #mesh;
-    #inverseModel = mat4.create();
 
     #width;
     #height;
@@ -14,44 +13,37 @@ export default class ImageGL{
         if(x<=0)
             throw new Error("the scale of a image need to be greater than 0");
     
-        this.#mesh.scale[0] = x; 
-        mat4.invert(this.#inverseModel, this.#mesh.modelMatrix);
+        this.#mesh.scale[0] = x;
     }
 
     set scaleY(y){
         if(y<=0)
             throw new Error("the scale of a image need to be greater than 0");
     
-        this.#mesh.scale[1] = y;  
-        mat4.invert(this.#inverseModel, this.#mesh.modelMatrix);
+        this.#mesh.scale[1] = y; 
     }
 
     set positionX(x){
-        this.#mesh.position[0] = x; 
-        mat4.invert(this.#inverseModel, this.#mesh.modelMatrix);
+        this.#mesh.position[0] = x;
     }
 
     set positionY(y){
-        this.#mesh.position[1] = y;   
-        mat4.invert(this.#inverseModel, this.#mesh.modelMatrix);  
+        this.#mesh.position[1] = y;    
     }
 
     set depth(z){
-        this.#mesh.position[2] = z;
-        mat4.invert(this.#inverseModel, this.#mesh.modelMatrix);
+        this.#mesh.position[2] = z
     }
 
     set rotation(theta){
-        this.#mesh.rotation[2] = theta;
-        mat4.invert(this.#inverseModel, this.#mesh.modelMatrix);    
+        this.#mesh.rotation[2] = theta    
     }
 
     set scale(vec){
         if(!(vec instanceof Array) || vec.length !== 2)
             throw new Error("scale need to be a vector with two positions.");
 
-        this.#mesh.scale = vec3.fromValues(vec[0], vec[1], 1);
-        mat4.invert(this.#inverseModel, this.#mesh.modelMatrix);
+        this.#mesh.scale = vec3.fromValues(vec[0], vec[1], 1)
     }
 
     set opacity(alpha){
@@ -127,17 +119,19 @@ export default class ImageGL{
     pointCollision(x, y, camera){
         const point = [x, y, 0, 1];
 
-        const vpmInverse = mat4.create();
-        mat4.copy(vpmInverse, this.#inverseModel);
+        const mvp = mat4.create();
+        mat4.copy(mvp, this.#mesh.modelMatrix);
 
         if(camera){
             const viewProj = camera.viewProjection;
-            const vpInverse = mat4.create();
-            mat4.invert(vpInverse, viewProj);
-            mat4.multiply(vpmInverse, vpmInverse, vpInverse);
+            mat4.multiply(mvp, viewProj, mvp);
         }
 
-        const pointT = multiplyMatWithVec(vpmInverse, point);
+        const inverse = mat4.create();
+
+        mat4.invert(inverse, mvp);
+
+        const pointT = multiplyMatWithVec(inverse, point);
 
         return (Math.abs(pointT[0])<this.#width && Math.abs(pointT[1])<this.#height);
     }
