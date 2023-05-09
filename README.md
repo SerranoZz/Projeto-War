@@ -15,7 +15,7 @@ Raphael Carvalho da Conceicao<br/>
 We assume you have Node 12.10+ and Git 2.23+ installed on your computer.
 ## Steps for setting up the environment (needs to be done just once) 
 1. Clone our repository: <br/>
-`~$ git clone https://github.com/gems-uff/db-mining.git`
+`~$ git clone https://github.com/SerranoZz/Projeto-War.git`
 
 2. Go into the project directory:<br/>
 `~$ cd Projeto-War`
