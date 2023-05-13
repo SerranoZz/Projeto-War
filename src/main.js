@@ -18,35 +18,35 @@ async function drawImage(gl){
     const background = new ImageGL();
     await background.init(gl, "./assets/menu/fundo.jpg");
 
-    const logo_war = new ImageGL();
-    await logo_war.init(gl, "./assets/menu/logo_war.png");
+    const logoWar = new ImageGL();
+    await logoWar.init(gl, "./assets/menu/logo_war.png");
 
-    const play_button = new ImageGL();
-    await play_button.init(gl, "./assets/menu/play_button.png");
+    const playButton = new ImageGL();
+    await playButton.init(gl, "./assets/menu/play_button.png");
 
-    const settings_button = new ImageGL();
-    await settings_button.init(gl, "./assets/menu/settings_button.png");
+    const settingsButton = new ImageGL();
+    await settingsButton.init(gl, "./assets/menu/settings_button.png");
     
-    const max_button = new ImageGL();
-    await max_button.init(gl, "./assets/menu/max_button.png");
+    const maxButton = new ImageGL();
+    await maxButton.init(gl, "./assets/menu/max_button.png");
 
     //scales
-    background.scaleY = 1.85
-    logo_war.scale = [0.35, 0.56] 
-    play_button.scale = [0.15, 0.26]
-    settings_button.scale = [0.05, 0.08]  
-    max_button.scale = [0.05, 0.08]  
+    background.scale = [4, 7.3]
+    logoWar.scale = [1.35, 1.6] 
+    playButton.scale = [0.15, 0.26]
+    settingsButton.scale = [0.05, 0.08]  
+    maxButton.scale = [0.05, 0.08]  
 
     //position
-    logo_war.positionY = 0.25
+    logoWar.positionY = 0.25
     
-    play_button.positionY = -0.55
+    playButton.positionY = -0.55
     
-    settings_button.positionX = 0.9
-    settings_button.positionY = 0.8
+    settingsButton.positionX = 0.9
+    settingsButton.positionY = 0.8
 
-    max_button.positionX = 0.9
-    max_button.positionY = 0.57
+    maxButton.positionX = 0.9
+    maxButton.positionY = 0.57
 
 
     const camera = new Camera(gl.canvas);
@@ -56,11 +56,11 @@ async function drawImage(gl){
     gl.depthFunc(gl.LESS);
 
     //draw
-    logo_war.draw()
-    play_button.draw()
-    settings_button.draw()
-    max_button.draw()
-    background.draw()
+    logoWar.draw(camera)
+    playButton.draw(camera)
+    settingsButton.draw(camera)
+    maxButton.draw(camera)
+    background.draw(camera)
 
     gl.disable(gl.DEPTH_TEST);
 
@@ -69,7 +69,7 @@ async function drawImage(gl){
 
         const point = mapClickInCanvas(e.clientX, e.clientY, canvas);
 
-        if(play_button.pointCollision(...point)){
+        if(playButton.pointCollision(...point, camera)){
             screen = 1;
             drawNewScreen(gl);
         }
