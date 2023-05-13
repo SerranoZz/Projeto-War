@@ -1,0 +1,28 @@
+{
+    "data": [
+        {
+            "name": "Ásia",
+            "bonus": 7
+        },
+        {
+            "name": "Oceania",
+            "bonus": 2
+        },
+        {
+            "name": "Europa",
+            "bonus": 5
+        },
+        {
+            "name": "Ámerica do Sul",
+            "bonus": 2
+        },
+        {
+            "name": "Africa",
+            "bonus": 3
+        },
+        {
+            "name": "North America",
+            "bonus": 5
+        }
+    ]
+}
