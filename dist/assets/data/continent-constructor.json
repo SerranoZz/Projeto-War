@@ -13,15 +13,15 @@
             "bonus": 5
         },
         {
-            "name": "Ámerica do Sul",
+            "name": "América do Sul",
             "bonus": 2
         },
         {
-            "name": "Africa",
+            "name": "África",
             "bonus": 3
         },
         {
-            "name": "North America",
+            "name": "América do Norte",
             "bonus": 5
         }
     ]
