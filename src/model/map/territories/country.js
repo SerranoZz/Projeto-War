@@ -2,49 +2,49 @@ import "/continent.js";
 
 class Country {
     constructor(name, path, continent, neighbors) {
-        this.name = name;
-        this.path = path;
-        this.neighbors = neighbors;
-        this.owner = null;
-        this.continent = null;
-        this.setContinent(continent);
-        this.soldiers = 0;
+        this.#name = name;
+        this.#path = path;
+        this.#neighbors = neighbors;
+        this.#owner = null;
+        this.#continent = null;
+        this.#setContinent(continent);
+        this.#soldiers = 0;
     }
     
-    getName() {
-        return this.name;
+    get name() {
+        return this.#name;
     }
     
-    getPath() {
-        return this.path;
+    get path() {
+        return this.#path;
     }
     
-    getNeighbors() {
-        return this.neighbors;
+    get neighbors() {
+        return this.#neighbors;
     }
     
-    getOwner() {
-        return this.owner;
+    get owner() {
+        return this.#owner;
     }
     
-    getContinent() {
-        return this.continent;
+    get continent() {
+        return this.#continent;
     }
 
-    getSoldiers() {
-        return this.soldiers;
+    get soldiers() {
+        return this.#soldiers;
     }
     
-    setContinent(continent) {
-        this.continent = continent;
+    set continent(continent) {
+        this.#continent = continent;
         continent.addCountry(this);
     }
 
-    setOwner(newOwner) {
+    set owner(newOwner) {
         //todo (Conquista de territorio)
     }
 
-    setSoldiers(soldiers) {
-        this.soldiers = soldiers;
+    set soldiers(soldiers) {
+        this.#soldiers = soldiers;
     }
 }

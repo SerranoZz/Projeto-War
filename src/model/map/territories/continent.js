@@ -2,24 +2,24 @@ import "/country.js";
 
 class Continent {
     constructor(name, bonus) {
-        this.name = name;
-        this.countries = [];
-        this.bonus = bonus;
+        this.#name = name;
+        this.#countries = [];
+        this.#bonus = bonus;
     }
 
     addCountry(country) {
-        this.countries.push(country);
+        this.#countries.push(country);
     }
 
-    getName() {
-        return this.name;
+    get name() {
+        return this.#name;
     }
 
-    getCountries() {
-        return this.countries;
+    get countries() {
+        return this.#countries;
     }
 
-    getBonus() {
-        return this.bonus;
+    get bonus() {
+        return this.#bonus;
     }
 }
