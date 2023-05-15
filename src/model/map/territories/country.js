@@ -47,4 +47,14 @@ class Country {
     set soldiers(soldiers) {
         this.#soldiers = soldiers;
     }
+
+    //Retorna o indíce do vizinho, se tiver e se não tiver retorna -1
+    findNeighbor(name) {
+        for(let i = 0; i < this.#neighbors.length; i++) {
+            if(this.#neighbors[i] == name) {
+                return i;
+            }
+        }
+        return -1;
+    }
 }
