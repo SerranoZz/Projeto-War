@@ -1,0 +1,256 @@
+{
+    "data": [
+        {
+            "name": "Brasil",
+            "neighbors": ["Argentina", "Venezuela", "Peru", "Argélia"],
+            "path": "Insert Here Some Path",
+            "continent": "América do Sul"
+        },
+        {
+            "name": "Argentina",
+            "neighbors": ["Brasil", "Peru"],
+            "path": "Insert Here Some Path",
+            "continent": "América do Sul"
+        },
+        {
+            "name": "Venezuela",
+            "neighbors": ["Brasil", "Peru", "México"],
+            "path": "Insert Here Some Path",
+            "continent": "América do Sul"
+        },
+        {
+            "name": "Peru",
+            "neighbors": ["Brasil", "Argentina", "Venezuela"],
+            "path": "Insert Here Some Path",
+            "continent": "América do Sul"
+        },
+        {
+            "name": "México",
+            "neighbors": ["Venezuela", "Nova Iorque", "Califórnia"],
+            "path": "Insert Here Some Path",
+            "continent": "América do Norte"
+        },
+        {
+            "name": "Califórnia",
+            "neighbors": ["México", "Nova Iorque", "Ottawa", "Vancouver"],
+            "path": "Insert Here Some Path",
+            "continent": "América do Norte"
+        },
+        {
+            "name": "Nova Iorque",
+            "neighbors": ["México", "Califórnia", "Ottawa", "Labrador"],
+            "path": "Insert Here Some Path",
+            "continent": "América do Norte"
+        },
+        {
+            "name": "Labrador",
+            "neighbors": ["Ottawa", "Nova Iorque", "Groenlândia"],
+            "path": "Insert Here Some Path",
+            "continent": "América do Norte"
+        },
+        {
+            "name": "Ottawa",
+            "neighbors": ["Labrador", "Nova Iorque", "Califórnia", "Vancouver", "Mackenzie"],
+            "path": "Insert Here Some Path",
+            "continent": "América do Norte"
+        },
+        {
+            "name": "Vancouver",
+            "neighbors": ["Califórnia", "Ottawa", "Mackenzie", "Alasca"],
+            "path": "Insert Here Some Path",
+            "continent": "América do Norte"
+        },
+        {
+            "name": "Mackenzie",
+            "neighbors": ["Alasca", "Vancouver", "Groenlândia", "Ottawa"],
+            "path": "Insert Here Some Path",
+            "continent": "América do Norte"
+        },
+        {
+            "name": "Alasca",
+            "neighbors": ["Vancouver", "Mackenzie", "Vladvostok"],
+            "path": "Insert Here Some Path",
+            "continent": "América do Norte"
+        },
+        {
+            "name": "Groenlândia",
+            "neighbors": ["Mackenzie", "Labrador", "Islândia"],
+            "path": "Insert Here Some Path",
+            "continent": "América do Norte"
+        },
+        {
+            "name": "Islândia",
+            "neighbors": ["Groenlândia", "Inglaterra"],
+            "path": "Insert Here Some Path",
+            "continent": "Europa"
+        },
+        {
+            "name": "Inglaterra",
+            "neighbors": ["Islândia", "França", "Alemanha", "Suécia"],
+            "path": "Insert Here Some Path",
+            "continent": "Europa"
+        },
+        {
+            "name": "Suécia",
+            "neighbors": ["Inglaterra", "Moscou"],
+            "path": "Insert Here Some Path",
+            "continent": "Europa"
+        },
+        {
+            "name": "Alemanha",
+            "neighbors": ["Inglaterra", "França", "Polônia"],
+            "path": "Insert Here Some Path",
+            "continent": "Europa"
+        },
+        {
+            "name": "França",
+            "neighbors": ["Inglaterra", "Alemanha", "Polônia", "Argélia", "Egito"],
+            "path": "Insert Here Some Path",
+            "continent": "Europa"
+        },
+        {
+            "name": "Polônia",
+            "neighbors": ["França", "Alemanha", "Moscou", "Oriente Médio", "Egito"],
+            "path": "Insert Here Some Path",
+            "continent": "Europa"
+        },
+        {
+            "name": "Moscou",
+            "neighbors": ["Suécia", "Polônia", "Oriente Médio", "Omsk", "Aral"],
+            "path": "Insert Here Some Path",
+            "continent": "Europa"
+        },
+        {
+            "name": "Argélia",
+            "neighbors": ["Brasil", "França", "Egito", "Sudão", "Congo"],
+            "path": "Insert Here Some Path",
+            "continent": "África"
+        },
+        {
+            "name": "Egito",
+            "neighbors": ["Argélia", "Sudão", "Oriente Médio", "Polônia", "França"],
+            "path": "Insert Here Some Path",
+            "continent": "África"
+        },
+        {
+            "name": "Congo",
+            "neighbors": ["África do Sul", "Argélia", "Sudão"],
+            "path": "Insert Here Some Path",
+            "continent": "África"
+        },
+        {
+            "name": "Sudão",
+            "neighbors": ["Argélia", "Egito", "Congo", "África do Sul", "Madagascar"],
+            "path": "Insert Here Some Path",
+            "continent": "África"
+        },
+        {
+            "name": "Madagascar",
+            "neighbors": ["Sudão", "África do Sul"],
+            "path": "Insert Here Some Path",
+            "continent": "África"
+        },
+        {
+            "name": "África do Sul",
+            "neighbors": ["Congo", "Sudão", "Madagascar"],
+            "path": "Insert Here Some Path",
+            "continent": "África"
+        },
+        {
+            "name": "Oriente Médio",
+            "neighbors": ["Moscou", "Polônia", "Egito", "Aral", "Índia"],
+            "path": "Insert Here Some Path",
+            "continent": "Ásia"
+        },
+        {
+            "name": "Aral",
+            "neighbors": ["Moscou", "Omsk", "Oriente Médio", "Índia", "China"],
+            "path": "Insert Here Some Path",
+            "continent": "Ásia"
+        },
+        {
+            "name": "Omsk",
+            "neighbors": ["Moscou", "Aral", "Mongólia", "Dudinka", "China"],
+            "path": "Insert Here Some Path",
+            "continent": "Ásia"
+        },
+        {
+            "name": "Dudinka",
+            "neighbors": ["Omsk", "Sibéria", "Tchita", "Mongólia"],
+            "path": "Insert Here Some Path",
+            "continent": "Ásia"
+        },
+        {
+            "name": "Sibéria",
+            "neighbors": ["Dudinka", "Vladvostok", "Tchita"],
+            "path": "Insert Here Some Path",
+            "continent": "Ásia"
+        },
+        {
+            "name": "Tchita",
+            "neighbors": ["Dudinka", "Sibéria", "Vladvostok", "Mongólia", "China"],
+            "path": "Insert Here Some Path",
+            "continent": "Ásia"
+        },
+        {
+            "name": "Mongólia",
+            "neighbors": ["Omsk", "Dudinka", "Tchita", "China"],
+            "path": "Insert Here Some Path",
+            "continent": "Ásia"
+        },
+        {
+            "name": "Vladvostok",
+            "neighbors": ["China", "Sibéria", "Tchita", "Alasca", "Japão"],
+            "path": "Insert Here Some Path",
+            "continent": "Ásia"
+        },
+        {
+            "name": "China",
+            "neighbors": ["Vladvostok", "Japão", "Vietnã", "Índia", "Aral", "Omsk", "Mongólia", "Tchita"],
+            "path": "Insert Here Some Path",
+            "continent": "Ásia"
+        },
+        {
+            "name": "Índia",
+            "neighbors": ["Oriente Médio", "Aral", "China", "Vietnã", "Sumatra"],
+            "path": "Insert Here Some Path",
+            "continent": "Ásia"
+        },
+        {
+            "name": "Japão",
+            "neighbors": ["Vladvostok", "China"],
+            "path": "Insert Here Some Path",
+            "continent": "Ásia"
+        },
+        {
+            "name": "Vietnã",
+            "neighbors": ["Índia", "China", "Bornéu"],
+            "path": "Insert Here Some Path",
+            "continent": "Ásia"
+        },
+        {
+            "name": "Bornéu",
+            "neighbors": ["Vietnã", "Nova Guiné", "Austrália"],
+            "path": "Insert Here Some Path",
+            "continent": "Oceania"
+        },
+        {
+            "name": "Sumatra",
+            "neighbors": ["Índia", "Austrália"],
+            "path": "Insert Here Some Path",
+            "continent": "Oceania"
+        },
+        {
+            "name": "Nova Guiné",
+            "neighbors": ["Bornéu", "Austrália"],
+            "path": "Insert Here Some Path",
+            "continent": "Oceania"
+        },
+        {
+            "name": "Austrália",
+            "neighbors": ["Nova Guiné", "Bornéu", "Sumatra"],
+            "path": "Insert Here Some Path",
+            "continent": "Oceania"
+        }
+    ]
+}
