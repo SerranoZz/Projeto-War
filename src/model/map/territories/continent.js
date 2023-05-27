@@ -5,6 +5,7 @@ class Continent {
         this.#name = name;
         this.#countries = [];
         this.#bonus = bonus;
+        this.#owner = null;
     }
 
     addCountry(country) {
@@ -21,5 +22,13 @@ class Continent {
 
     get bonus() {
         return this.#bonus;
+    }
+
+    get owner(){
+        return this.#owner;
+    }
+
+    set owner(owner){
+        this.#owner = owner;
     }
 }
