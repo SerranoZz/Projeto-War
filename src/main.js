@@ -99,9 +99,6 @@ async function drawNewScreen(gl){
     const current_player = new ImageGL();
     await current_player.init(gl, "./assets/game/current_player.png");
 
-    const cards_info = new ImageGL();
-    await cards_info.init(gl, "./assets/game/cards_info.png");
-
     const show_players = new ImageGL();
     await show_players.init(gl, "./assets/game/show_players.png");
 
@@ -116,7 +113,6 @@ async function drawNewScreen(gl){
     card_button.scale = [0.5, 0.8]
     objective_button.scale = [0.47, 0.8]
     current_player.scale = [1.5, 2.5]
-    cards_info.scale = [0.8, 1.35] 
     mapa.scale = [4, 4*1.85];
     show_players.scale = [0.47, 0.8]
 
@@ -144,9 +140,6 @@ async function drawNewScreen(gl){
     current_player.positionY = -3.375
     current_player.depth = 0.2
     
-    cards_info.positionX = 3.35
-    cards_info.depth = 0.2
-    
     const camera = new Camera(canvas);
     
     let move = false;
@@ -167,7 +160,7 @@ async function drawNewScreen(gl){
     show_players.draw(camera)
     
     //final result
-    //show_cards.draw(camera)
+    show_cards.draw(camera)
     //fortify.draw(camera);
     
 
@@ -211,18 +204,22 @@ class ShowCards{
         await this.show_cards.init(gl, "./assets/game/show_cards.png");
         this.show_cards.scale = [1.7 , 3];
         console.log(this.show_cards.positionX);
-        ShowCards.setInitialPosition(this.show_cards.positionX, -3.355, 0.2, this.show_cards);
+        ShowCards.setInitialPosition(this.show_cards.positionX, -3.355 - this.show_cards.width, 0.3, this.show_cards);
         
         this.cancel_button = new ImageGL();
         await this.cancel_button.init(gl, "./assets/game/cancel_button.png");
         this.cancel_button.scale = [0.27, 0.48];
-        ShowCards.setInitialPosition(this.cancel_button.positionX - 1.42, -3.2, 0.3, this.cancel_button);
+        ShowCards.setInitialPosition(-1.42, -3.2 - this.show_cards.width, 0.4, this.cancel_button);
 
         this.ok_button = new ImageGL();
         await this.ok_button.init(gl, "./assets/game/ok_button.png");
         this.ok_button.scale = [0.27, 0.48];
-        ShowCards.setInitialPosition(this.ok_button.positionX + 1.42, -3.2, 0.3, this.ok_button);
+        ShowCards.setInitialPosition(1.42, -3.2 - this.show_cards.width, 0.4, this.ok_button);
 
+        this.cards_info = new ImageGL();
+        await this.cards_info.init(gl, "assets/game/cards_info.png");
+        this.cards_info.scale = [0.8, 1.35];
+        ShowCards.setInitialPosition(3.35 + this.cards_info.width, this.cards_info.positionY, 0.3, this.cards_info); 
     }
 
     static setInitialPosition(x, y, depth, widget){
@@ -231,16 +228,18 @@ class ShowCards{
         widget.depth = depth;
     }
 
-    moveAll(amount){
-        this.show_cards.positionY += amount;
-        this.cancel_button.positionY += amount;
-        this.ok_button.positionY += amount;
+    moveAll(amountX, amountY){
+        this.show_cards.positionY += amountY;
+        this.cancel_button.positionY += amountY;
+        this.ok_button.positionY += amountY;
+        this.cards_info.positionX += amountX
     }
 
     draw(camera){
         this.show_cards.draw(camera);
         this.cancel_button.draw(camera);
         this.ok_button.draw(camera);
+        this.cards_info.draw(camera);
     }
 
 }
@@ -250,17 +249,17 @@ class Fortify{
         this.fortify = new ImageGL();
         await this.fortify.init(gl, "./assets/game/fortify.png");
         this.fortify.scale = [1.7 , 3];
-        Fortify.setInitialPosition(this.fortify.positionX, -3.25, 0.2, this.fortify);
+        Fortify.setInitialPosition(this.fortify.positionX, -3.25, 0.3, this.fortify);
 
         this.cancel_button = new ImageGL();
         await this.cancel_button.init(gl, "./assets/game/cancel_button.png");
         this.cancel_button.scale = [0.27, 0.48];
-        ShowCards.setInitialPosition(this.cancel_button.positionX - 1.42, -3.2, 0.3, this.cancel_button);
+        ShowCards.setInitialPosition(1.42, -3.2, 0.4, this.cancel_button);
 
         this.ok_button = new ImageGL();
         await this.ok_button.init(gl, "./assets/game/ok_button.png");
         this.ok_button.scale = [0.27, 0.48];
-        ShowCards.setInitialPosition(this.ok_button.positionX + 1.42, -3.2, 0.3, this.ok_button);
+        ShowCards.setInitialPosition(1.42, -3.2, 0.4, this.ok_button);
     }
 
     static setInitialPosition(x, y, depth, widget){
