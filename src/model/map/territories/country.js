@@ -41,7 +41,7 @@ class Country {
     }
 
     set owner(newOwner) {
-        //todo (Conquista de territorio)
+        this.#owner = newOwner;
     }
 
     set soldiers(soldiers) {

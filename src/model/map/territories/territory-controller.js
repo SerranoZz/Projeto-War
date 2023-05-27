@@ -26,6 +26,22 @@ class TerritoryController {
         }
     }
 
+    conquerCountry(country, newOwner) {
+        countryFound = this.findCountry(country);
+        if(!countryFound) {
+            countryFound.owner = newOwner;
+        }
+    }
+
+    findCountry(country) {
+        for(let i = 0; i < this.#countries; i++) {
+            if(this.#countries[i].name == country) {
+                return this.#countries[i];
+            }
+        }
+        return null;
+    }
+
     get continents() {
         return this.#continents;
     }
