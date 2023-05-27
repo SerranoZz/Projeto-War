@@ -91,19 +91,19 @@ async function drawNewScreen(gl){
     await maxButton.init(gl, "./assets/menu/max_button.png");
 
     const card_button = new ImageGL();
-    await card_button.init(gl, "./assets/jogo/card_button.png");
+    await card_button.init(gl, "./assets/game/card_button.png");
 
     const objective_button = new ImageGL();
-    await objective_button.init(gl, "./assets/jogo/objective_button.png");
+    await objective_button.init(gl, "./assets/game/objective_button.png");
 
     const current_player = new ImageGL();
-    await current_player.init(gl, "./assets/jogo/current_player.png");
+    await current_player.init(gl, "./assets/game/current_player.png");
 
     const cards_info = new ImageGL();
-    await cards_info.init(gl, "./assets/jogo/cards_info.png");
+    await cards_info.init(gl, "./assets/game/cards_info.png");
 
     const show_players = new ImageGL();
-    await show_players.init(gl, "./assets/jogo/show_players.png");
+    await show_players.init(gl, "./assets/game/show_players.png");
 
     const show_cards = new ShowCards();
     await show_cards.init();
@@ -159,7 +159,7 @@ async function drawNewScreen(gl){
     settingsButton.draw(camera);
     card_button.draw(camera)
     objective_button.draw(camera)
-    //current_player.draw(camera)
+    current_player.draw(camera)
     //fortify.draw(camera)
     //show_cards.draw(camera)
     //cards_info.draw(camera)
@@ -168,7 +168,7 @@ async function drawNewScreen(gl){
     
     //final result
     //show_cards.draw(camera)
-    fortify.draw(camera);
+    //fortify.draw(camera);
     
 
     gl.disable(gl.DEPTH_TEST);
@@ -208,18 +208,18 @@ function mapClickInCanvas(x, y, canvas){
 class ShowCards{
     async init(){
         this.show_cards = new ImageGL();
-        await this.show_cards.init(gl, "./assets/jogo/show_cards.png");
+        await this.show_cards.init(gl, "./assets/game/show_cards.png");
         this.show_cards.scale = [1.7 , 3];
         console.log(this.show_cards.positionX);
         ShowCards.setInitialPosition(this.show_cards.positionX, -3.355, 0.2, this.show_cards);
         
         this.cancel_button = new ImageGL();
-        await this.cancel_button.init(gl, "./assets/jogo/cancel_button.png");
+        await this.cancel_button.init(gl, "./assets/game/cancel_button.png");
         this.cancel_button.scale = [0.27, 0.48];
         ShowCards.setInitialPosition(this.cancel_button.positionX - 1.42, -3.2, 0.3, this.cancel_button);
 
         this.ok_button = new ImageGL();
-        await this.ok_button.init(gl, "./assets/jogo/ok_button.png");
+        await this.ok_button.init(gl, "./assets/game/ok_button.png");
         this.ok_button.scale = [0.27, 0.48];
         ShowCards.setInitialPosition(this.ok_button.positionX + 1.42, -3.2, 0.3, this.ok_button);
 
@@ -248,17 +248,17 @@ class ShowCards{
 class Fortify{
     async init(){
         this.fortify = new ImageGL();
-        await this.fortify.init(gl, "./assets/jogo/fortify.png");
+        await this.fortify.init(gl, "./assets/game/fortify.png");
         this.fortify.scale = [1.7 , 3];
         Fortify.setInitialPosition(this.fortify.positionX, -3.25, 0.2, this.fortify);
 
         this.cancel_button = new ImageGL();
-        await this.cancel_button.init(gl, "./assets/jogo/cancel_button.png");
+        await this.cancel_button.init(gl, "./assets/game/cancel_button.png");
         this.cancel_button.scale = [0.27, 0.48];
         ShowCards.setInitialPosition(this.cancel_button.positionX - 1.42, -3.2, 0.3, this.cancel_button);
 
         this.ok_button = new ImageGL();
-        await this.ok_button.init(gl, "./assets/jogo/ok_button.png");
+        await this.ok_button.init(gl, "./assets/game/ok_button.png");
         this.ok_button.scale = [0.27, 0.48];
         ShowCards.setInitialPosition(this.ok_button.positionX + 1.42, -3.2, 0.3, this.ok_button);
     }
