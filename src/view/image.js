@@ -32,7 +32,7 @@ export default class ImageGL{
     }
 
     set depth(z){
-        this.#mesh.position[2] = z
+        this.#mesh.position[2] = z;
     }
 
     set rotation(theta){
@@ -64,7 +64,7 @@ export default class ImageGL{
         this.opacity = 1.0;
     }
 
-    async loadImage(url){
+    static async loadImage(url){
         return new  Promise(resolve => {
             const image = new Image();
             image.addEventListener('load', () => {
@@ -75,11 +75,11 @@ export default class ImageGL{
     }
 
     async #loadTex(imgSrc){
-        const img = await this.loadImage(imgSrc);
+        const img = await ImageGL.loadImage(imgSrc);
         await img.decode();
         const imageBitmap = await createImageBitmap(img);
 
-        this.#mesh.createTex(img, "uTexture");
+        this._tex = this.#mesh.createTex(img, "uTexture");
 
         return [imageBitmap.width, imageBitmap.height];
     }
