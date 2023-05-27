@@ -50,6 +50,14 @@ export default class ImageGL{
         this.#mesh.setUniformValue("alpha", alpha, "1f");
     }
 
+    get positionX(){
+        return this.#mesh.position[0];
+    }
+    
+    get positionY(){
+        return this.#mesh.position[1];
+    }
+
     async init(gl, src){
         this.#mesh = new Mesh(gl, imgVert, imgFrag, gl.TRIANGLES);
 
