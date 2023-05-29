@@ -75,7 +75,8 @@ async function drawImage(gl){
 
         if(maxButton.pointCollision(...point, camera)){
             alert("FullScreen")
-         }
+        }
+        
 
     })
 }
@@ -116,7 +117,6 @@ async function drawNewScreen(gl){
     mapa.scale = [4, 4*1.85];
     show_players.scale = [0.47, 0.8]
 
-
     settingsButton.positionX = 3.7
     settingsButton.positionY = 2.8
     settingsButton.depth = 0.2
@@ -153,9 +153,6 @@ async function drawNewScreen(gl){
     card_button.draw(camera)
     objective_button.draw(camera)
     current_player.draw(camera)
-    //fortify.draw(camera)
-    //show_cards.draw(camera)
-    //cards_info.draw(camera)
     maxButton.draw(camera)
     show_players.draw(camera)
     
@@ -190,6 +187,27 @@ async function drawNewScreen(gl){
             console.log(distX, distY);
         }
     })
+
+    canvas.addEventListener("click", e=>{
+        // e.clientX e e.clientY são a posição do mouse
+
+        const point = mapClickInCanvas(e.clientX, e.clientY, canvas);
+
+        if(card_button.pointCollision(...point, camera)){
+            show_cards.moveAll(-3 ,3);
+            mapa.draw(camera);
+            show_cards.draw(camera);
+        }
+
+        if(show_cards.cancel_button.pointCollision(...point, camera)){
+            alert("cancel");
+        }
+
+        if(show_cards.ok_button.pointCollision(...point, camera)){
+            alert("ok");
+        }
+    
+    })
 }
 
 // use essa função para conseguir a posição do mouse no sistema de coordenadas do webgl
@@ -204,22 +222,22 @@ class ShowCards{
         await this.show_cards.init(gl, "./assets/game/show_cards.png");
         this.show_cards.scale = [1.7 , 3];
         console.log(this.show_cards.positionX);
-        ShowCards.setInitialPosition(this.show_cards.positionX, -3.355 - this.show_cards.width, 0.3, this.show_cards);
+        ShowCards.setInitialPosition(this.show_cards.positionX, (-3.355 - 3), 0.3, this.show_cards);
         
         this.cancel_button = new ImageGL();
         await this.cancel_button.init(gl, "./assets/game/cancel_button.png");
         this.cancel_button.scale = [0.27, 0.48];
-        ShowCards.setInitialPosition(-1.42, -3.2 - this.show_cards.width, 0.4, this.cancel_button);
+        ShowCards.setInitialPosition(-1.42, (-3.2 - 3), 0.4, this.cancel_button);
 
         this.ok_button = new ImageGL();
         await this.ok_button.init(gl, "./assets/game/ok_button.png");
         this.ok_button.scale = [0.27, 0.48];
-        ShowCards.setInitialPosition(1.42, -3.2 - this.show_cards.width, 0.4, this.ok_button);
+        ShowCards.setInitialPosition(1.42, (-3.2 - 3), 0.4, this.ok_button);
 
         this.cards_info = new ImageGL();
         await this.cards_info.init(gl, "assets/game/cards_info.png");
         this.cards_info.scale = [0.8, 1.35];
-        ShowCards.setInitialPosition(3.35 + this.cards_info.width, this.cards_info.positionY, 0.3, this.cards_info); 
+        ShowCards.setInitialPosition((3.35 + 3), this.cards_info.positionY, 0.3, this.cards_info); 
     }
 
     static setInitialPosition(x, y, depth, widget){
