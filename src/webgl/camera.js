@@ -61,8 +61,6 @@ export default class Camera{
         mat4.identity(this.#viewProjMatrix);
         mat4.multiply(this.#viewProjMatrix, this.#proj_matrix, this.#view_matrix);
 
-        console.log(this.aspect, this.fovy, this.near, this.#typeOfProjection)
-
         return this.#viewProjMatrix;
     }
 }

@@ -59,7 +59,6 @@ export default class ImageGL{
 
         this.#mesh.addAttribute("position", data.coords);
         this.#mesh.addAttribute("texCoord", data.texCoords, 2);
-        this.#mesh.createVAO();
 
         this.opacity = 1.0;
     }

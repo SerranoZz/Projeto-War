@@ -7,6 +7,13 @@ import { mat4 } from "gl-matrix";
 export default class IndexedMeshT extends Mesh{
     #hEdge;
     #indicesLoc = -1;
+    #border;
+
+    #vao_updated = false;
+
+    set border(border){
+        this.#border = border;
+    }
 
     constructor(gl, vertShaderSrc, fragShaderSrc, indexes){
         super(gl, vertShaderSrc, fragShaderSrc, gl.TRIANGLES);
@@ -27,10 +34,12 @@ export default class IndexedMeshT extends Mesh{
             throw new Error(`the attribute ${name} doesn't exists in the shader code.`);
 
 
-        this.#hEdge.setAttribute(info, pointDim, name);        
+        this.#hEdge.setAttribute(info, pointDim, name);  
+        
+        this.#vao_updated = false;
     }
 
-    createVAO() {
+    #createVAO() {
         const vbos = this.#hEdge.createVBOs();
 
         const attributes = Array.from(vbos.attributes.entries()).map(entry => {
@@ -46,11 +55,18 @@ export default class IndexedMeshT extends Mesh{
         this.#indicesLoc = GLUtil.createBuffer(this._gl, this._gl.ELEMENT_ARRAY_BUFFER, new Uint32Array(vbos.indexes));
 
         this._count = vbos.indexes.length;
+        this.#vao_updated = true;
     }
 
     draw(cam){
-        if(!(this._gl instanceof WebGL2RenderingContext))return
+        if(!this.#vao_updated)    
+            this.#createVAO();
 
+        if(this.useDepthTest){
+            this._gl.enable(this._gl.DEPTH_TEST);
+            this._gl.depthFunc(this._gl.LESS);
+        }
+        
         this._gl.frontFace(this._gl.CCW);
 
         this._gl.enable(this._gl.CULL_FACE);
@@ -81,6 +97,20 @@ export default class IndexedMeshT extends Mesh{
         this._gl.drawElements(this._primitive, this._count, this._gl.UNSIGNED_INT, 0);
 
         this._gl.disable(this._gl.CULL_FACE);
+
+        if(this.useDepthTest)
+            this._gl.disable(this._gl.DEPTH_TEST);
+    }
+
+    pointCollision(x, y, camera){
+        //colocar o throw dps
+        if(!this.#border) return false;
+
+        return this.#border.pointCollision(x, y, camera, this);
+    }
+
+    get drawBorder(){
+        return this.#border.draw();
     }
 
     static async loadMeshFromObj(path, gl, vertShader, fragShader, texturePath){
@@ -104,9 +134,8 @@ export default class IndexedMeshT extends Mesh{
                 normals.push(...values, 1);
 
                 const d = Math.sqrt(dotProduct(values, values));
-                console.log(d);
 
-                if(dotProduct(values, [0, 0, 1])/d<0.5){
+                if(Math.abs(dotProduct(values, [0, 0, 1])/d)<0.5){
                     const key = values.join(",");
                     if(!border.get(key)) border.set(key, borderIndex);
                 }
@@ -129,11 +158,13 @@ export default class IndexedMeshT extends Mesh{
 
         }
 
-        //console.log(border.values());
+        const border1 = new Border(border, vertices, gl);
 
         const mesh = new IndexedMeshT(gl, vertShader, fragShader, indexes);
         mesh.addAttribute("position", vertices);
         mesh.addAttribute("normal", normals);
+
+        mesh.useDepthTest = true;
 
         if(texCoords.length!==0){
             if(!texturePath)
@@ -146,10 +177,162 @@ export default class IndexedMeshT extends Mesh{
             mesh.createTex(image, "uTexture");
         }
 
+        mesh.border = border1;
+
         return mesh;
     }
 }
 
 const dotProduct = (v1, v2) =>{
     return v1.reduce((ac, curr, i)=>ac+=curr*v2[i], 0);
+}
+
+class Border{
+    #borderMap;
+    #coords;
+    #lastClick;
+    #min;
+    #max;
+
+    constructor(border, coords){
+        this.#borderMap = border;
+        this.#coords = coords;
+
+        let min = Infinity;
+        let max = -Infinity;
+
+        for(let i = 0; i<this.#coords.length; i+=4){
+            if(this.#coords[i+2]<min) min = this.#coords[i+2];
+            if(this.#coords[i+2]>max) max = this.#coords[i+2];
+        }
+
+        this.#min = min;
+        this.#max = max;
+    }
+
+    pointCollision(x, y, camera, mesh){
+        //return this.#pointCollision(x, y, 0, camera, mesh);
+
+        return this.#pointCollision(x, y, this.#min, camera, mesh) || 
+            this.#pointCollision(x, y, this.#max, camera, mesh);
+    }
+
+    #pointCollision(x, y, z, camera, mesh){
+        const point = [x, y, z, 1];
+    
+        const mvp = mat4.create();
+        mat4.copy(mvp, mesh.modelMatrix);
+    
+        if(camera){
+            const viewProj = camera.viewMatrix;
+            mat4.multiply(mvp, viewProj, mvp);
+        }
+    
+        const inverse = mat4.create();
+    
+        mat4.invert(inverse, mvp);
+    
+        let pointT = Border.multiplyMatWithVec(inverse, point);
+
+        console.log(point, pointT);
+    
+        let collided = this.#collide(pointT);
+
+        if(collided) this.#lastClick = point;
+
+        return collided;
+    }
+
+    #collide(point){
+        let first;
+        let prev;
+
+        let intersecsCount = 0;
+        console.log("collide");
+        console.log(point);
+
+        for(let entry of this.#borderMap.entries()){
+            const i = entry[1]*4;
+            const coord = [this.#coords[i], this.#coords[i+1], this.#coords[i+2]];
+
+            if(!first){
+                first = coord;
+                prev = coord;
+                continue;
+            }
+
+            const x = [coord[0], prev[0]];
+            x.sort();
+            const [minX, maxX] = x;
+            
+            const y = [coord[1], prev[1]];
+            y.sort();
+            const [minY, maxY] = y;
+
+            const ang = (minY-maxY)/(minX-maxX);
+            const coefLin = minY - minX*ang;
+
+            if(point[1] <= maxY && point[1] >= minY && point[0] <= (point[1] - coefLin)/ang) {
+                intersecsCount++;
+                console.log(prev, coord, (point[1]-coefLin)/ang);
+
+            }
+
+            prev = coord;
+        }
+
+        const maxX = Math.max(first[0], prev[0]);
+            
+        const y = [first[1], prev[1]];
+        y.sort();
+        const [minY, maxY] = y;
+
+        if(point[1] <= maxY && point[1] >= minY && point[0] <= maxX) intersecsCount++;
+
+        return (intersecsCount % 2 === 1);
+    }
+
+    draw(){
+        const canvas = document.createElement("canvas");
+        canvas.width = 1000;
+        canvas.height = 1000;
+        canvas.style.backgroundColor = "rgb(100, 0, 0)";
+
+        const ctx = canvas.getContext("2d");
+        ctx.beginPath();
+
+        let first;
+
+        for(let entry of this.#borderMap.entries()){
+            const i = entry[1]*4;
+            const coord = [this.#coords[i], this.#coords[i+1], this.#coords[i+2]];
+
+            if(!first) {
+                first = coord;
+                ctx.moveTo(coord[0]*500+250, (-coord[1]+1.0)*500);
+            } else ctx.lineTo(coord[0]*500+250, (-coord[1]+1.0)*500);
+
+        }
+        ctx.lineTo(first[0]*500+250, (-first[1]+1.0)*500)
+        ctx.stroke();
+
+        if(this.#lastClick)
+            ctx.fillRect(this.#lastClick[0]*500+250, (-this.#lastClick[1]+1.0)*500, 5, 5);
+            
+
+        return canvas;
+    }
+
+    static multiplyMatWithVec(mat, vec){
+        const out = new Array(vec.length).fill(0);
+    
+        if(Math.round(vec.length**2) !== mat.length)
+            return;
+    
+        for(let i = 0; i<vec.length; i++)
+            for(let j = 0; j<mat.length; j+=4)
+                out[i]+=mat[j+i]*vec[j/4];
+
+        return out;
+    }
 }

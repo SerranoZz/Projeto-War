@@ -2,7 +2,6 @@ import { vec3, mat4 } from "gl-matrix";
 import GLUtil from "./gl-util";
 
 export default class Mesh{
-
     _gl;
 
     position = [0.0, 0.0, 0.0];
@@ -29,18 +28,13 @@ export default class Mesh{
     #uTexture;
     #texture;
 
-    _useModelMatrix = true;
+    #vao_updated = false;
+
+    useDepthTest = false;
     
     get modelMatrix(){
-        this._updateModelMatrix();
+        this.updateModelMatrix();
         return this.#modelMatrix;
-    }
-
-    set useModelMatrix(use){
-        if(!(use instanceof Boolean))
-            throw new Error("useModelMatrix need to be a boolean value");
-        
-        this._useModelMatrix = use;
     }
 
     addAttribute(name, info, pointDim = 4){
@@ -66,6 +60,8 @@ export default class Mesh{
             buffer: GLUtil.createBuffer(this._gl, this._gl.ARRAY_BUFFER,f32Array),
             dimension: pointDim
         })
+
+        this.#vao_updated = false;
     }
 
     constructor(gl, vertShaderSrc, fragShaderSrc, primitive){
@@ -74,10 +70,10 @@ export default class Mesh{
         this._gl = gl;
         //restringir os tipos
 
-        this.createShader(vertShaderSrc, fragShaderSrc);
+        this.#createShader(vertShaderSrc, fragShaderSrc);
     }
 
-    createShader(vertShaderSrc, fragShaderSrc) {
+    #createShader(vertShaderSrc, fragShaderSrc) {
         this.#vertShader = GLUtil.createShader(this._gl, this._gl.VERTEX_SHADER, vertShaderSrc);
         this.#fragShader = GLUtil.createShader(this._gl, this._gl.FRAGMENT_SHADER, fragShaderSrc);
         this._program = GLUtil.createProgram(this._gl, this.#vertShader, this.#fragShader);
@@ -85,11 +81,11 @@ export default class Mesh{
         this._gl.useProgram(this._program);
     }
 
-    createVAO() {
+    #createVAO() {
         this._vaoLoc = GLUtil.createVAO(this._gl, ...this.#attributes);
     }
 
-    _updateModelMatrix(){
+    updateModelMatrix(){
         mat4.identity(this.#modelMatrix);
 
         mat4.translate(this.#modelMatrix, this.#modelMatrix, this.position);
@@ -97,6 +93,48 @@ export default class Mesh{
         mat4.rotateY(this.#modelMatrix, this.#modelMatrix, this.rotation[1]);
         mat4.rotateZ(this.#modelMatrix, this.#modelMatrix, this.rotation[2]);
         mat4.scale(this.#modelMatrix, this.#modelMatrix, this.scale);
+    }
+
+    loadMVP(camera){
+        const modelLoc = this._gl.getUniformLocation(this._program, "model");
+        const mvLoc = this._gl.getUniformLocation(this._program, "modelView");
+        const mvpLoc = this._gl.getUniformLocation(this._program, "mvp");
+
+        const viewLoc = this._gl.getUniformLocation(this._program, "view");
+        const viewProjLoc = this._gl.getUniformLocation(this._program, "viewProjection");
+        const projectionLoc = this._gl.getUniformLocation(this._program, "projection");
+
+        if(modelLoc){
+            this._gl.uniformMatrix4fv(modelLoc, false, this.#modelMatrix);
+        }else if(mvLoc){
+            const mv = mat4.create();
+
+            if(camera)
+                mat4.multiply(mv, camera.viewMatrix, this.#modelMatrix);
+            else
+                mat4.copy(mv, this.#modelMatrix);
+            
+            this._gl.uniformMatrix4fv(mvLoc, false, mv);
+
+        }else if(mvpLoc){
+            const mvp = mat4.create();
+
+            if(camera)
+                mat4.multiply(mvp, camera.viewProjection, this.#modelMatrix);
+            else
+                mat4.copy(mvp, this.#modelMatrix);
+                
+            this._gl.uniformMatrix4fv(mvpLoc, false, mvp);
+        }
+
+        if(viewLoc)
+            this._gl.uniformMatrix4fv(modelLoc, false, camera.viewMatrix);
+
+        if(projectionLoc)
+            this._gl.uniformMatrix4fv(modelLoc, false, camera.projMatrix);
+    
+        if(viewProjLoc)
+            this._gl.uniformMatrix4fv(modelLoc, false, camera.viewProjection);
     }
 
     createTex(texData, textureName){
@@ -135,47 +173,35 @@ export default class Mesh{
     }
 
     draw(cam){
+        if(!this.#vao_updated){
+            this.#vao_updated = true;
+            this.#createVAO();
+        }
+
         this._gl.frontFace(this._gl.CCW);
 
         this._gl.enable(this._gl.CULL_FACE);
         this._gl.cullFace(this._gl.BACK);
 
-        this._updateModelMatrix();
+        if(this.useDepthTest){
+            this._gl.enable(this._gl.DEPTH_TEST);
+            this._gl.depthFunc(this._gl.LESS);
+        }
+
+        this.updateModelMatrix();
 
         this._gl.bindVertexArray(this._vaoLoc);
 
         this._gl.useProgram(this._program);
 
-        const modelLoc = this._gl.getUniformLocation(this._program, "model");
-        const mvLoc = this._gl.getUniformLocation(this._program, "modelView");
-        const mvpLoc = this._gl.getUniformLocation(this._program, "mvp");
-
-        if(modelLoc){
-            this._gl.uniformMatrix4fv(modelLoc, false, this.#modelMatrix);
-        }else if(mvLoc){
-            const mv = mat4.create();
-
-            if(cam)
-                mat4.multiply(mv, cam.viewMatrix, this.#modelMatrix);
-            else
-                mat4.copy(mv, this.#modelMatrix);
-            
-            this._gl.uniformMatrix4fv(mvLoc, false, mv);
-
-        }else if(mvpLoc){
-            const mvp = mat4.create();
-
-            if(cam)
-                mat4.multiply(mvp, cam.viewProjection, this.#modelMatrix);
-            else
-                mat4.copy(mvp, this.#modelMatrix);
-                
-            this._gl.uniformMatrix4fv(mvpLoc, false, mvp);
-        }
+        this.loadMVP(cam);
 
         this._gl.drawArrays(this._primitive, 0, this.#count);
 
         this._gl.disable(this._gl.CULL_FACE);
+
+        if(this.useDepthTest)
+            this.gl.disable(this._gl.DEPTH_TEST);
     }
 
     static changeTex(gl, {tex, index}, texData){
