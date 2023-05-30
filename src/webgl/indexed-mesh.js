@@ -190,7 +190,8 @@ const dotProduct = (v1, v2) =>{
 class Border{
     #borderMap;
     #coords;
-    #lastClick;
+    #lastClickMin;
+    #lastClickMax;
     #min;
     #max;
 
@@ -211,20 +212,29 @@ class Border{
     }
 
     pointCollision(x, y, camera, mesh){
-        //return this.#pointCollision(x, y, 0, camera, mesh);
+        /*let init = this.#min;
+        const distance = (this.#max - this.#min)/100;
+
+        while(init<this.#max){
+
+        }
+        */
+        this.#lastClickMin = null;
+        this.#lastClickMax = null;
 
         return this.#pointCollision(x, y, this.#min, camera, mesh) || 
             this.#pointCollision(x, y, this.#max, camera, mesh);
+
+        //return this.#pointCollision(x, y, 0, camera, mesh);
     }
 
     #pointCollision(x, y, z, camera, mesh){
-        const point = [x, y, z, 1];
     
         const mvp = mat4.create();
         mat4.copy(mvp, mesh.modelMatrix);
     
         if(camera){
-            const viewProj = camera.viewMatrix;
+            const viewProj = camera.viewProjection;
             mat4.multiply(mvp, viewProj, mvp);
         }
     
@@ -232,13 +242,23 @@ class Border{
     
         mat4.invert(inverse, mvp);
     
-        let pointT = Border.multiplyMatWithVec(inverse, point);
+        const near = (camera)?camera.near: 1;
+        const far = (camera)?camera.far: 1;
 
-        console.log(point, pointT);
+        const p1 = Border.multiplyMatWithVec(inverse, [x, y, near, 1]);
+        const p2 = Border.multiplyMatWithVec(inverse, [x, y, far, 1]);
+
+        const p1Norm = Border.scalarMulti(p1, 1/p1[3]);
+        const p2Norm = Border.scalarMulti(p2, 1/p2[3]);
+
+        const line = new Line(p2Norm, p1Norm);
+
+        const pointT = line.pointWhenZIs(z);
+
+        if(!this.#lastClickMin) this.#lastClickMin = pointT;
+        else this.#lastClickMax = pointT;
     
         let collided = this.#collide(pointT);
-
-        if(collided) this.#lastClick = point;
 
         return collided;
     }
@@ -248,8 +268,6 @@ class Border{
         let prev;
 
         let intersecsCount = 0;
-        console.log("collide");
-        console.log(point);
 
         for(let entry of this.#borderMap.entries()){
             const i = entry[1]*4;
@@ -261,35 +279,35 @@ class Border{
                 continue;
             }
 
-            const x = [coord[0], prev[0]];
-            x.sort();
-            const [minX, maxX] = x;
-            
-            const y = [coord[1], prev[1]];
-            y.sort();
-            const [minY, maxY] = y;
-
-            const ang = (minY-maxY)/(minX-maxX);
-            const coefLin = minY - minX*ang;
-
-            if(point[1] <= maxY && point[1] >= minY && point[0] <= (point[1] - coefLin)/ang) {
+            if(this.leftToEdge(point, prev, coord)) {
                 intersecsCount++;
-                console.log(prev, coord, (point[1]-coefLin)/ang);
-
             }
 
             prev = coord;
         }
 
-        const maxX = Math.max(first[0], prev[0]);
-            
-        const y = [first[1], prev[1]];
+        if(this.leftToEdge(point, prev, first)) intersecsCount++;
+
+        console.log(intersecsCount);
+
+        return (intersecsCount % 2 === 1);
+    }
+
+    leftToEdge(point, prev, coord){
+        const x = [coord[0], prev[0]];
+        x.sort();
+        const [minX, maxX] = x;
+        
+        const y = [coord[1], prev[1]];
         y.sort();
         const [minY, maxY] = y;
 
-        if(point[1] <= maxY && point[1] >= minY && point[0] <= maxX) intersecsCount++;
+        const deltaX = minX-maxX
 
-        return (intersecsCount % 2 === 1);
+        const ang = (deltaX)?(minY-maxY)/(minX-maxX):0;
+        const coefLin = minY - minX*ang;
+
+        return (point[1] <= maxY && point[1] >= minY && (!ang || point[0] <= (point[1] - coefLin)/ang));
     }
 
     draw(){
@@ -316,9 +334,11 @@ class Border{
         ctx.lineTo(first[0]*500+250, (-first[1]+1.0)*500)
         ctx.stroke();
 
-        if(this.#lastClick)
-            ctx.fillRect(this.#lastClick[0]*500+250, (-this.#lastClick[1]+1.0)*500, 5, 5);
+        if(this.#lastClickMin)
+            ctx.fillRect(this.#lastClickMin[0]*500+250, (-this.#lastClickMin[1]+1.0)*500, 5, 5);
             
+        if(this.#lastClickMax)
+            ctx.fillRect(this.#lastClickMax[0]*500+250, (-this.#lastClickMax[1]+1.0)*500, 5, 5);
 
         return canvas;
     }
@@ -334,5 +354,41 @@ class Border{
                 out[i]+=mat[j+i]*vec[j/4];
 
         return out;
+    }
+
+    static scalarMulti(vector, scalar){
+        return vector.map(coord => coord*scalar);
+    }
+}
+
+class Line{
+    #origin;
+    #direction;
+
+    constructor(extreme, origin){
+        const vDir = this.#getDirection(extreme, origin);
+
+        this.#direction = vDir;
+        this.#origin = origin;
+    }
+
+    getPoint(t){
+        return this.#origin.map((coord, index) => coord+t*this.#direction[index]);
+    }
+
+    pointWhenZIs(z){
+        const t = (z - this.#origin[2])/this.#direction[2];
+
+        return this.getPoint(t);
+    }
+
+    #getDirection(extreme, origin){
+        const v = extreme.map((coord, index)=>coord-origin[index]);
+
+        const size = Math.sqrt(v.reduce((ac, coord) => ac+coord**2, 0));
+
+        const vDir = v.map(val=> val/size);
+
+        return vDir;
     }
 }
