@@ -10,6 +10,8 @@ class Game{
     #gameScene;
     #guiScene;
 
+    #scale = 4.5;
+
     #inGame = false;
 
     static async build(canvas){
@@ -94,258 +96,258 @@ class Game{
             "./assets/meshes/south_america/brasil.obj", 
             this.gl, countryVert, phongFrag
         );
-        brasil.scale = [4.15, 4.15, 1];
+        brasil.scale = [this.#scale, this.#scale, 1];
     
         const argentina = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/south_america/argentina.obj", 
             this.gl, countryVert, phongFrag
         );
-        argentina.scale = [4.15, 4.15, 1];
+        argentina.scale = [this.#scale, this.#scale, 1];
 
         const chile = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/south_america/chile.obj", 
             this.gl, countryVert, phongFrag
         );
-        chile.scale = [4.15, 4.15, 1];
+        chile.scale = [this.#scale, this.#scale, 1];
 
         const venezuela = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/south_america/venezuela.obj", 
             this.gl, countryVert, phongFrag
         );
-        venezuela.scale = [4.15, 4.15, 1];
+        venezuela.scale = [this.#scale, this.#scale, 1];
 
         //North America
         const mexico = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/north_america/mexico.obj", 
             this.gl, countryVert, phongFrag
         );
-        mexico.scale = [4.15, 4.15, 1];
+        mexico.scale = [this.#scale, this.#scale, 1];
 
         const california = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/north_america/california.obj", 
             this.gl, countryVert, phongFrag
         );
-        california.scale = [4.15, 4.15, 1];
+        california.scale = [this.#scale, this.#scale, 1];
 
         const nova_york = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/north_america/nova_york.obj", 
             this.gl, countryVert, phongFrag
         );
-        nova_york.scale = [4.15, 4.15, 1];
+        nova_york.scale = [this.#scale, this.#scale, 1];
     
         const ottawa = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/north_america/ottawa.obj", 
             this.gl, countryVert, phongFrag
         );
-        ottawa.scale = [4.15, 4.15, 1];
+        ottawa.scale = [this.#scale, this.#scale, 1];
 
         const labrador = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/north_america/labrador.obj", 
             this.gl, countryVert, phongFrag
         );
-        labrador.scale = [4.15, 4.15, 1];
+        labrador.scale = [this.#scale, this.#scale, 1];
 
         const vancouver = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/north_america/vancouver.obj", 
             this.gl, countryVert, phongFrag
         );
-        vancouver.scale = [4.15, 4.15, 1];
+        vancouver.scale = [this.#scale, this.#scale, 1];
 
         const alaska = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/north_america/alaska.obj", 
             this.gl, countryVert, phongFrag
         );
-        alaska.scale = [4.15, 4.15, 1];
+        alaska.scale = [this.#scale, this.#scale, 1];
 
         const mackenzie = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/north_america/mackenzie.obj", 
             this.gl, countryVert, phongFrag
         );
-        mackenzie.scale = [4.15, 4.15, 1];
+        mackenzie.scale = [this.#scale, this.#scale, 1];
 
         const groelandia = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/north_america/groelandia.obj", 
             this.gl, countryVert, phongFrag
         );
-        groelandia.scale = [4.15, 4.15, 1];
+        groelandia.scale = [this.#scale, this.#scale, 1];
 
         //Africa
         const africa_sul = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/africa/africa_sul.obj", 
             this.gl, countryVert, phongFrag
         );
-        africa_sul.scale = [4.15, 4.15, 1];
+        africa_sul.scale = [this.#scale, this.#scale, 1];
 
         const argelia = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/africa/argelia.obj", 
             this.gl, countryVert, phongFrag
         );
-        argelia.scale = [4.15, 4.15, 1];
+        argelia.scale = [this.#scale, this.#scale, 1];
 
         const congo = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/africa/congo.obj", 
             this.gl, countryVert, phongFrag
         );
-        congo.scale = [4.15, 4.15, 1];
+        congo.scale = [this.#scale, this.#scale, 1];
 
         const egito = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/africa/egito.obj", 
             this.gl, countryVert, phongFrag
         );
-        egito.scale = [4.15, 4.15, 1];
+        egito.scale = [this.#scale, this.#scale, 1];
 
         const madagascar = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/africa/madagascar.obj", 
             this.gl, countryVert, phongFrag
         );
-        madagascar.scale = [4.15, 4.15, 1];
+        madagascar.scale = [this.#scale, this.#scale, 1];
 
         const sudao = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/africa/sudao.obj", 
             this.gl, countryVert, phongFrag
         );
-        sudao.scale = [4.15, 4.15, 1];
+        sudao.scale = [this.#scale, this.#scale, 1];
 
         //Oceania
         const australia = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/oceania/australia.obj", 
             this.gl, countryVert, phongFrag
         );
-        australia.scale = [4.15, 4.15, 1];
+        australia.scale = [this.#scale, this.#scale, 1];
 
         const borneu = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/oceania/borneu.obj", 
             this.gl, countryVert, phongFrag
         );
-        borneu.scale = [4.15, 4.15, 1];
+        borneu.scale = [this.#scale, this.#scale, 1];
 
         const nova_guine = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/oceania/nova_guine.obj", 
             this.gl, countryVert, phongFrag
         );
-        nova_guine.scale = [4.15, 4.15, 1];
+        nova_guine.scale = [this.#scale, this.#scale, 1];
 
         const sumatra = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/oceania/sumatra.obj", 
             this.gl, countryVert, phongFrag
         );
-        sumatra.scale = [4.15, 4.15, 1];
+        sumatra.scale = [this.#scale, this.#scale, 1];
 
         //Asia
         const aral = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/asia/aral.obj", 
             this.gl, countryVert, phongFrag
         );
-        aral.scale = [4.15, 4.15, 1];
+        aral.scale = [this.#scale, this.#scale, 1];
 
         const china = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/asia/china.obj", 
             this.gl, countryVert, phongFrag
         );
-        china.scale = [4.15, 4.15, 1];
+        china.scale = [this.#scale, this.#scale, 1];
 
         const dudinka = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/asia/dudinka.obj", 
             this.gl, countryVert, phongFrag
         );
-        dudinka.scale = [4.15, 4.15, 1];
+        dudinka.scale = [this.#scale, this.#scale, 1];
 
         const india = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/asia/india.obj", 
             this.gl, countryVert, phongFrag
         );
-        india.scale = [4.15, 4.15, 1];
+        india.scale = [this.#scale, this.#scale, 1];
 
         const japao = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/asia/japao.obj", 
             this.gl, countryVert, phongFrag
         );
-        japao.scale = [4.15, 4.15, 1];
+        japao.scale = [this.#scale, this.#scale, 1];
 
         const mongolia = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/asia/mongolia.obj", 
             this.gl, countryVert, phongFrag
         );
-        mongolia.scale = [4.15, 4.15, 1];
+        mongolia.scale = [this.#scale, this.#scale, 1];
 
         const omek = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/asia/omek.obj", 
             this.gl, countryVert, phongFrag
         );
-        omek.scale = [4.15, 4.15, 1];
+        omek.scale = [this.#scale, this.#scale, 1];
 
         const oriente_medio = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/asia/oriente_medio.obj", 
             this.gl, countryVert, phongFrag
         );
-        oriente_medio.scale = [4.15, 4.15, 1];
+        oriente_medio.scale = [this.#scale, this.#scale, 1];
 
         const siberia = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/asia/siberia.obj", 
             this.gl, countryVert, phongFrag
         );
-        siberia.scale = [4.15, 4.15, 1];
+        siberia.scale = [this.#scale, this.#scale, 1];
 
         const tchita = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/asia/tchita.obj", 
             this.gl, countryVert, phongFrag
         );
-        tchita.scale = [4.15, 4.15, 1];
+        tchita.scale = [this.#scale, this.#scale, 1];
 
         const vietna = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/asia/vietna.obj", 
             this.gl, countryVert, phongFrag
         );
-        vietna.scale = [4.15, 4.15, 1];
+        vietna.scale = [this.#scale, this.#scale, 1];
 
         const vladvostok = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/asia/vladvostok.obj", 
             this.gl, countryVert, phongFrag
         );
-        vladvostok.scale = [4.15, 4.15, 1];
+        vladvostok.scale = [this.#scale, this.#scale, 1];
 
         //Europa
         const alemanha = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/europa/alemanha.obj", 
             this.gl, countryVert, phongFrag
         );
-        alemanha.scale = [4.15, 4.15, 1];
+        alemanha.scale = [this.#scale, this.#scale, 1];
 
         const franca = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/europa/franca.obj", 
             this.gl, countryVert, phongFrag
         );
-        franca.scale = [4.15, 4.15, 1];
+        franca.scale = [this.#scale, this.#scale, 1];
 
         const inglaterra = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/europa/inglaterra.obj", 
             this.gl, countryVert, phongFrag
         );
-        inglaterra.scale = [4.15, 4.15, 1];
+        inglaterra.scale = [this.#scale, this.#scale, 1];
 
         const islandia = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/europa/islandia.obj", 
             this.gl, countryVert, phongFrag
         );
-        islandia.scale = [4.15, 4.15, 1];
+        islandia.scale = [this.#scale, this.#scale, 1];
 
         const moscou = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/europa/moscou.obj", 
             this.gl, countryVert, phongFrag
         );
-        moscou.scale = [4.15, 4.15, 1];
+        moscou.scale = [this.#scale, this.#scale, 1];
 
         const polonia = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/europa/polonia.obj", 
             this.gl, countryVert, phongFrag
         );
-        polonia.scale = [4.15, 4.15, 1];
+        polonia.scale = [this.#scale, this.#scale, 1];
 
         const suecia = await IndexedMeshT.loadMeshFromObj(
             "./assets/meshes/europa/suecia.obj", 
             this.gl, countryVert, phongFrag
         );
-        suecia.scale = [4.15, 4.15, 1];
+        suecia.scale = [this.#scale, this.#scale, 1];
 
         this.#gameScene = new Scene(this.gl);
         this.#gameScene.createCamera(canvas);
