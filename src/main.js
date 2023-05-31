@@ -206,6 +206,147 @@ class Game{
         );
         sudao.scale = [4.15, 4.15, 1];
 
+        //Oceania
+        const australia = await IndexedMeshT.loadMeshFromObj(
+            "./assets/meshes/oceania/australia.obj", 
+            this.gl, countryVert, phongFrag
+        );
+        australia.scale = [4.15, 4.15, 1];
+
+        const borneu = await IndexedMeshT.loadMeshFromObj(
+            "./assets/meshes/oceania/borneu.obj", 
+            this.gl, countryVert, phongFrag
+        );
+        borneu.scale = [4.15, 4.15, 1];
+
+        const nova_guine = await IndexedMeshT.loadMeshFromObj(
+            "./assets/meshes/oceania/nova_guine.obj", 
+            this.gl, countryVert, phongFrag
+        );
+        nova_guine.scale = [4.15, 4.15, 1];
+
+        const sumatra = await IndexedMeshT.loadMeshFromObj(
+            "./assets/meshes/oceania/sumatra.obj", 
+            this.gl, countryVert, phongFrag
+        );
+        sumatra.scale = [4.15, 4.15, 1];
+
+        //Asia
+        const aral = await IndexedMeshT.loadMeshFromObj(
+            "./assets/meshes/asia/aral.obj", 
+            this.gl, countryVert, phongFrag
+        );
+        aral.scale = [4.15, 4.15, 1];
+
+        const china = await IndexedMeshT.loadMeshFromObj(
+            "./assets/meshes/asia/china.obj", 
+            this.gl, countryVert, phongFrag
+        );
+        china.scale = [4.15, 4.15, 1];
+
+        const dudinka = await IndexedMeshT.loadMeshFromObj(
+            "./assets/meshes/asia/dudinka.obj", 
+            this.gl, countryVert, phongFrag
+        );
+        dudinka.scale = [4.15, 4.15, 1];
+
+        const india = await IndexedMeshT.loadMeshFromObj(
+            "./assets/meshes/asia/india.obj", 
+            this.gl, countryVert, phongFrag
+        );
+        india.scale = [4.15, 4.15, 1];
+
+        const japao = await IndexedMeshT.loadMeshFromObj(
+            "./assets/meshes/asia/japao.obj", 
+            this.gl, countryVert, phongFrag
+        );
+        japao.scale = [4.15, 4.15, 1];
+
+        const mongolia = await IndexedMeshT.loadMeshFromObj(
+            "./assets/meshes/asia/mongolia.obj", 
+            this.gl, countryVert, phongFrag
+        );
+        mongolia.scale = [4.15, 4.15, 1];
+
+        const omek = await IndexedMeshT.loadMeshFromObj(
+            "./assets/meshes/asia/omek.obj", 
+            this.gl, countryVert, phongFrag
+        );
+        omek.scale = [4.15, 4.15, 1];
+
+        const oriente_medio = await IndexedMeshT.loadMeshFromObj(
+            "./assets/meshes/asia/oriente_medio.obj", 
+            this.gl, countryVert, phongFrag
+        );
+        oriente_medio.scale = [4.15, 4.15, 1];
+
+        const siberia = await IndexedMeshT.loadMeshFromObj(
+            "./assets/meshes/asia/siberia.obj", 
+            this.gl, countryVert, phongFrag
+        );
+        siberia.scale = [4.15, 4.15, 1];
+
+        const tchita = await IndexedMeshT.loadMeshFromObj(
+            "./assets/meshes/asia/tchita.obj", 
+            this.gl, countryVert, phongFrag
+        );
+        tchita.scale = [4.15, 4.15, 1];
+
+        const vietna = await IndexedMeshT.loadMeshFromObj(
+            "./assets/meshes/asia/vietna.obj", 
+            this.gl, countryVert, phongFrag
+        );
+        vietna.scale = [4.15, 4.15, 1];
+
+        const vladvostok = await IndexedMeshT.loadMeshFromObj(
+            "./assets/meshes/asia/vladvostok.obj", 
+            this.gl, countryVert, phongFrag
+        );
+        vladvostok.scale = [4.15, 4.15, 1];
+
+        //Europa
+        const alemanha = await IndexedMeshT.loadMeshFromObj(
+            "./assets/meshes/europa/alemanha.obj", 
+            this.gl, countryVert, phongFrag
+        );
+        alemanha.scale = [4.15, 4.15, 1];
+
+        const franca = await IndexedMeshT.loadMeshFromObj(
+            "./assets/meshes/europa/franca.obj", 
+            this.gl, countryVert, phongFrag
+        );
+        franca.scale = [4.15, 4.15, 1];
+
+        const inglaterra = await IndexedMeshT.loadMeshFromObj(
+            "./assets/meshes/europa/inglaterra.obj", 
+            this.gl, countryVert, phongFrag
+        );
+        inglaterra.scale = [4.15, 4.15, 1];
+
+        const islandia = await IndexedMeshT.loadMeshFromObj(
+            "./assets/meshes/europa/islandia.obj", 
+            this.gl, countryVert, phongFrag
+        );
+        islandia.scale = [4.15, 4.15, 1];
+
+        const moscou = await IndexedMeshT.loadMeshFromObj(
+            "./assets/meshes/europa/moscou.obj", 
+            this.gl, countryVert, phongFrag
+        );
+        moscou.scale = [4.15, 4.15, 1];
+
+        const polonia = await IndexedMeshT.loadMeshFromObj(
+            "./assets/meshes/europa/polonia.obj", 
+            this.gl, countryVert, phongFrag
+        );
+        polonia.scale = [4.15, 4.15, 1];
+
+        const suecia = await IndexedMeshT.loadMeshFromObj(
+            "./assets/meshes/europa/suecia.obj", 
+            this.gl, countryVert, phongFrag
+        );
+        suecia.scale = [4.15, 4.15, 1];
+
         this.#gameScene = new Scene(this.gl);
         this.#gameScene.createCamera(canvas);
         this.#gameScene.camera.camPosition[2] = 1.8;
@@ -235,7 +376,7 @@ class Game{
         cImage.scale = [0.1, 0.1];
         cImage.positionY = 0.2;
     
-        this.#gameScene.appendElement(brasil, argentina, chile, venezuela, mexico, california, nova_york, ottawa, labrador, vancouver, alaska, mackenzie, groelandia, africa_sul, argelia, congo, egito, madagascar, sudao, cImage);
+        this.#gameScene.appendElement(brasil, argentina, chile, venezuela, mexico, california, nova_york, ottawa, labrador, vancouver, alaska, mackenzie, groelandia, africa_sul, argelia, congo, egito, madagascar, sudao, australia, borneu, nova_guine, sumatra, aral, china, dudinka, india, japao, mongolia, omek, oriente_medio, siberia, tchita, vietna, vladvostok, alemanha, franca, inglaterra, islandia, moscou, polonia, suecia);
         this.#guiScene.appendElement(gameScreen, show_cards, fortify);
     
         //colocar a view e a projection
@@ -315,6 +456,97 @@ class Game{
         sudao.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
         sudao.setUniformValue("color", [0.0, 0.0, 1.0, 1.0], "4fv");
 
+        australia.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
+        australia.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
+        australia.setUniformValue("color", [0.0, 0.0, 1.0, 1.0], "4fv");
+
+        borneu.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
+        borneu.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
+        borneu.setUniformValue("color", [0.0, 0.0, 1.0, 1.0], "4fv");
+
+        nova_guine.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
+        nova_guine.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
+        nova_guine.setUniformValue("color", [0.0, 0.0, 1.0, 1.0], "4fv");
+
+        sumatra.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
+        sumatra.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
+        sumatra.setUniformValue("color", [0.0, 0.0, 1.0, 1.0], "4fv");
+
+        aral.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
+        aral.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
+        aral.setUniformValue("color", [0.0, 0.0, 1.0, 1.0], "4fv");
+
+        china.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
+        china.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
+        china.setUniformValue("color", [0.0, 0.0, 1.0, 1.0], "4fv");
+
+        dudinka.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
+        dudinka.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
+        dudinka.setUniformValue("color", [0.0, 0.0, 1.0, 1.0], "4fv");
+
+        india.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
+        india.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
+        india.setUniformValue("color", [0.0, 0.0, 1.0, 1.0], "4fv");
+
+        japao.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
+        japao.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
+        japao.setUniformValue("color", [0.0, 0.0, 1.0, 1.0], "4fv");
+
+        mongolia.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
+        mongolia.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
+        mongolia.setUniformValue("color", [0.0, 0.0, 1.0, 1.0], "4fv");
+
+        omek.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
+        omek.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
+        omek.setUniformValue("color", [0.0, 0.0, 1.0, 1.0], "4fv");
+
+        oriente_medio.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
+        oriente_medio.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
+        oriente_medio.setUniformValue("color", [0.0, 0.0, 1.0, 1.0], "4fv");
+
+        siberia.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
+        siberia.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
+        siberia.setUniformValue("color", [0.0, 0.0, 1.0, 1.0], "4fv");
+
+        tchita.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
+        tchita.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
+        tchita.setUniformValue("color", [0.0, 0.0, 1.0, 1.0], "4fv");
+
+        vietna.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
+        vietna.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
+        vietna.setUniformValue("color", [0.0, 0.0, 1.0, 1.0], "4fv");
+
+        vladvostok.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
+        vladvostok.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
+        vladvostok.setUniformValue("color", [0.0, 0.0, 1.0, 1.0], "4fv");
+
+        alemanha.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
+        alemanha.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
+        alemanha.setUniformValue("color", [0.0, 0.0, 1.0, 1.0], "4fv");
+
+        franca.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
+        franca.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
+        franca.setUniformValue("color", [0.0, 0.0, 1.0, 1.0], "4fv");
+
+        inglaterra.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
+        inglaterra.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
+        inglaterra.setUniformValue("color", [0.0, 0.0, 1.0, 1.0], "4fv");
+
+        islandia.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
+        islandia.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
+        islandia.setUniformValue("color", [0.0, 0.0, 1.0, 1.0], "4fv");
+
+        moscou.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
+        moscou.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
+        moscou.setUniformValue("color", [0.0, 0.0, 1.0, 1.0], "4fv");
+
+        polonia.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
+        polonia.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
+        polonia.setUniformValue("color", [0.0, 0.0, 1.0, 1.0], "4fv");
+
+        suecia.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
+        suecia.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
+        suecia.setUniformValue("color", [0.0, 0.0, 1.0, 1.0], "4fv");
         this.gl.canvas.addEventListener("click", e=>{
             // e.clientX e e.clientY são a posição do mouse
     
