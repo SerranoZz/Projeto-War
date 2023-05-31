@@ -103,13 +103,23 @@ class Game{
         );
         argentina.scale = [1.6, 1.6, 1.5];
         argentina.position = [-0.21, -0.35, 0.3];
+
+        const peru = await IndexedMeshT.loadMeshFromObj(
+            "./assets/meshes/peru.obj",
+            this.gl, countryVert, phongFrag
+        )
+        peru.scale = [6, 6, 1.5];
+
+        const venezuela = await IndexedMeshT.loadMeshFromObj(
+            "./assets/meshes/venezuela.obj",
+            this.gl, countryVert, phongFrag
+        )
+        venezuela.scale = [6, 6, 1.5];
     
         this.#gameScene = new Scene(this.gl);
-    
         this.#gameScene.createCamera(canvas);
         this.#gameScene.camera.camPosition[2] = 1.8;
         this.#gameScene.camera.camPosition[1] = -0.3;
-    
         this.#gameScene.createLight([1.0, 0.0, 0.3]);
 
         this.#guiScene = new Scene(this.gl);
@@ -135,7 +145,7 @@ class Game{
         cImage.scale = [0.1, 0.1];
         cImage.positionY = 0.2;
     
-        this.#gameScene.appendElement(mapa, brasil, argentina, cImage);
+        this.#gameScene.appendElement(mapa, brasil, argentina, peru, venezuela, cImage);
         this.#guiScene.appendElement(gameScreen, show_cards, fortify);
     
         //colocar a view e a projection
@@ -146,6 +156,14 @@ class Game{
         argentina.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
         argentina.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
         argentina.setUniformValue("color", [0.0, 0.0, 1.0, 1.0], "4fv");
+
+        peru.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
+        peru.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
+        peru.setUniformValue("color", [0.0, 1.0, 0.0, 1.0], "4fv");
+        
+        venezuela.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
+        venezuela.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
+        venezuela.setUniformValue("color", [0.0, 1.0, 0.0, 1.0], "4fv");
 
         this.gl.canvas.addEventListener("click", e=>{
             // e.clientX e e.clientY são a posição do mouse
