@@ -271,7 +271,7 @@ class Border{
 
         for(let entry of this.#borderMap.entries()){
             const i = entry[1]*4;
-            const coord = [this.#coords[i], this.#coords[i+1], this.#coords[i+2]];
+            const coord = [this.#coords[i], this.#coords[i+1]];
 
             if(!first){
                 first = coord;
@@ -279,7 +279,11 @@ class Border{
                 continue;
             }
 
-            if(this.leftToEdge(point, prev, coord)) {
+            const compare = this.leftToEdge(point, prev, coord);
+
+            if(compare === 2) return true;
+
+            if(compare) {
                 intersecsCount++;
             }
 
@@ -288,26 +292,30 @@ class Border{
 
         if(this.leftToEdge(point, prev, first)) intersecsCount++;
 
-        console.log(intersecsCount);
+        //console.log(intersecsCount);
 
         return (intersecsCount % 2 === 1);
     }
 
     leftToEdge(point, prev, coord){
-        const x = [coord[0], prev[0]];
-        x.sort();
-        const [minX, maxX] = x;
-        
+        if(coord[0] === point[0] && coord[1] === point[1]) return true;
+        if(prev[0] === point[0] && prev[1] === point[1]) return true;
+
         const y = [coord[1], prev[1]];
         y.sort();
         const [minY, maxY] = y;
 
-        const deltaX = minX-maxX
+        if(point[1]>=maxY || point[1]<=minY) return false;
 
-        const ang = (deltaX)?(minY-maxY)/(minX-maxX):0;
-        const coefLin = minY - minX*ang;
+        const deltaX = prev[0]-coord[0];
 
-        return (point[1] <= maxY && point[1] >= minY && (!ang || point[0] <= (point[1] - coefLin)/ang));
+        if(!deltaX) return point[0]<=prev[0];
+
+        const ang = (prev[1]-coord[1])/deltaX;
+        
+        const coefLin = prev[0] - prev[0]*ang;
+
+        return (point[0] <= (point[1]-coefLin)/ang);
     }
 
     draw(){

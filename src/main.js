@@ -143,14 +143,19 @@ class Game{
 
             const point = Game.mapClickInCanvas(e.clientX, e.clientY, this.gl.canvas);
     
-            if(brasil.pointCollision(...point)){
+            if(brasil.pointCollision(...point, this.#gameScene.camera)){
                 alert("foi");
+                
             }
 
-            if(argentina.pointCollision(...point)){
+            if(argentina.pointCollision(...point, this.#gameScene.camera)){
                 alert("argentina");
             }
     
+        })
+
+        document.body.addEventListener("keydown", e=>{
+            if(e.key==="d") document.body.appendChild(brasil.drawBorder);
         })
     }
 
