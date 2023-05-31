@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import Mesh from "../webgl/mesh";
 import imgVert from "../shaders/imageVert";
 import imgFrag from "../shaders/imageFrag";
