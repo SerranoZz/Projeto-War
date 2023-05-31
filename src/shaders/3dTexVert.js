@@ -5,12 +5,14 @@ export default
     uniform mat4 mvp;
 
     in vec4 position;
-    in vec4 color;
+    in vec4 normal;
+    in vec2 texCoord;
 
-    out vec4 fColor;
+    out vec2 fTexCoord;
 
     void main() {
         gl_Position = mvp * position;
-        fColor = color;
+        gl_Position /= gl_Position.w;
+        fTexCoord = texCoord;
     }
 `

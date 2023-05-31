@@ -2,8 +2,7 @@ import { vec3, mat4 } from "gl-matrix";
 import GLUtil from "./gl-util";
 
 export default class Mesh{
-
-    #gl;
+    _gl;
 
     position = [0.0, 0.0, 0.0];
     rotation = [0.0, 0.0, 0.0];
@@ -18,29 +17,24 @@ export default class Mesh{
     #vertShader = null;
     #fragShader = null;
 
-    #program = null;
+    _program = null;
 
-    #primitive;
+    _primitive;
 
     #count;
 
-    #vaoLoc;
+    _vaoLoc;
 
     #uTexture;
     #texture;
 
-    #useModelMatrix = true;
+    #vao_updated = false;
+
+    useDepthTest = false;
     
     get modelMatrix(){
-        this.#updateModelMatrix();
+        this.updateModelMatrix();
         return this.#modelMatrix;
-    }
-
-    set useModelMatrix(use){
-        if(!(use instanceof Boolean))
-            throw new Error("useModelMatrix need to be a boolean value");
-        
-        this.#useModelMatrix = use;
     }
 
     addAttribute(name, info, pointDim = 4){
@@ -62,34 +56,36 @@ export default class Mesh{
         const f32Array = new Float32Array(info);
 
         this.#attributes.push({
-            loc: this.#gl.getAttribLocation(this.#program, name),
-            buffer: GLUtil.createBuffer(this.#gl, this.#gl.ARRAY_BUFFER,f32Array),
+            loc: this._gl.getAttribLocation(this._program, name),
+            buffer: GLUtil.createBuffer(this._gl, this._gl.ARRAY_BUFFER,f32Array),
             dimension: pointDim
         })
+
+        this.#vao_updated = false;
     }
 
     constructor(gl, vertShaderSrc, fragShaderSrc, primitive){
-        this.#primitive = primitive;
+        this._primitive = primitive;
         
-        this.#gl = gl;
+        this._gl = gl;
         //restringir os tipos
 
-        this.createShader(vertShaderSrc, fragShaderSrc);
+        this.#createShader(vertShaderSrc, fragShaderSrc);
     }
 
-    createShader(vertShaderSrc, fragShaderSrc) {
-        this.#vertShader = GLUtil.createShader(this.#gl, this.#gl.VERTEX_SHADER, vertShaderSrc);
-        this.#fragShader = GLUtil.createShader(this.#gl, this.#gl.FRAGMENT_SHADER, fragShaderSrc);
-        this.#program = GLUtil.createProgram(this.#gl, this.#vertShader, this.#fragShader);
+    #createShader(vertShaderSrc, fragShaderSrc) {
+        this.#vertShader = GLUtil.createShader(this._gl, this._gl.VERTEX_SHADER, vertShaderSrc);
+        this.#fragShader = GLUtil.createShader(this._gl, this._gl.FRAGMENT_SHADER, fragShaderSrc);
+        this._program = GLUtil.createProgram(this._gl, this.#vertShader, this.#fragShader);
     
-        this.#gl.useProgram(this.#program);
+        this._gl.useProgram(this._program);
     }
 
-    createVAO() {
-        this.#vaoLoc = GLUtil.createVAO(this.#gl, ...this.#attributes);
+    #createVAO() {
+        this._vaoLoc = GLUtil.createVAO(this._gl, ...this.#attributes);
     }
 
-    #updateModelMatrix(){
+    updateModelMatrix(){
         mat4.identity(this.#modelMatrix);
 
         mat4.translate(this.#modelMatrix, this.#modelMatrix, this.position);
@@ -99,63 +95,117 @@ export default class Mesh{
         mat4.scale(this.#modelMatrix, this.#modelMatrix, this.scale);
     }
 
+    loadMVP(camera){
+        const modelLoc = this._gl.getUniformLocation(this._program, "model");
+        const mvLoc = this._gl.getUniformLocation(this._program, "modelView");
+        const mvpLoc = this._gl.getUniformLocation(this._program, "mvp");
+
+        const viewLoc = this._gl.getUniformLocation(this._program, "view");
+        const viewProjLoc = this._gl.getUniformLocation(this._program, "viewProjection");
+        const projectionLoc = this._gl.getUniformLocation(this._program, "projection");
+
+        if(modelLoc){
+            this._gl.uniformMatrix4fv(modelLoc, false, this.#modelMatrix);
+        }else if(mvLoc){
+            const mv = mat4.create();
+
+            if(camera)
+                mat4.multiply(mv, camera.viewMatrix, this.#modelMatrix);
+            else
+                mat4.copy(mv, this.#modelMatrix);
+            
+            this._gl.uniformMatrix4fv(mvLoc, false, mv);
+
+        }else if(mvpLoc){
+            const mvp = mat4.create();
+
+            if(camera)
+                mat4.multiply(mvp, camera.viewProjection, this.#modelMatrix);
+            else
+                mat4.copy(mvp, this.#modelMatrix);
+                
+            this._gl.uniformMatrix4fv(mvpLoc, false, mvp);
+        }
+
+        if(viewLoc)
+            this._gl.uniformMatrix4fv(modelLoc, false, camera.viewMatrix);
+
+        if(projectionLoc)
+            this._gl.uniformMatrix4fv(modelLoc, false, camera.projMatrix);
+    
+        if(viewProjLoc)
+            this._gl.uniformMatrix4fv(modelLoc, false, camera.viewProjection);
+    }
+
     createTex(texData, textureName){
-        this.#uTexture = this.#gl.getUniformLocation(this.#program, textureName);
-        this.#texture = this.#gl.createTexture();
-        this.#gl.activeTexture(this.#gl[`TEXTURE${Mesh.#textureI}`]);
-        this.#gl.bindTexture(this.#gl.TEXTURE_2D, this.#texture);
+        this.#uTexture = this._gl.getUniformLocation(this._program, textureName);
+        this.#texture = this._gl.createTexture();
+        this._gl.activeTexture(this._gl[`TEXTURE${Mesh.#textureI}`]);
+        this._gl.bindTexture(this._gl.TEXTURE_2D, this.#texture);
 
-        this.#gl.texParameteri(this.#gl.TEXTURE_2D, this.#gl.TEXTURE_WRAP_S, this.#gl.CLAMP_TO_EDGE);
-        this.#gl.texParameteri(this.#gl.TEXTURE_2D, this.#gl.TEXTURE_WRAP_T, this.#gl.CLAMP_TO_EDGE);
-        this.#gl.texParameteri(this.#gl.TEXTURE_2D, this.#gl.TEXTURE_MIN_FILTER, this.#gl.NEAREST);
-        this.#gl.texParameteri(this.#gl.TEXTURE_2D, this.#gl.TEXTURE_MAG_FILTER, this.#gl.NEAREST);
+        this._gl.texParameteri(this._gl.TEXTURE_2D, this._gl.TEXTURE_WRAP_S, this._gl.CLAMP_TO_EDGE);
+        this._gl.texParameteri(this._gl.TEXTURE_2D, this._gl.TEXTURE_WRAP_T, this._gl.CLAMP_TO_EDGE);
+        this._gl.texParameteri(this._gl.TEXTURE_2D, this._gl.TEXTURE_MIN_FILTER, this._gl.NEAREST);
+        this._gl.texParameteri(this._gl.TEXTURE_2D, this._gl.TEXTURE_MAG_FILTER, this._gl.NEAREST);
 
-        this.#gl.texImage2D(this.#gl.TEXTURE_2D, 0, this.#gl.RGBA32F, this.#gl.RGBA, this.#gl.FLOAT, texData);
+        this._gl.texImage2D(this._gl.TEXTURE_2D, 0, this._gl.RGBA32F, this._gl.RGBA, this._gl.FLOAT, texData);
 
-        this.#gl.useProgram(this.#program);
-        this.#gl.uniform1i(this.#uTexture, Mesh.#textureI);
+        this._gl.useProgram(this._program);
+        this._gl.uniform1i(this.#uTexture, Mesh.#textureI);
 
         Mesh.#textureI++;
+
+        return {tex: this.#texture, index: Mesh.#textureI - 1};
     }
 
     setUniformValue(name, value, type){
-        const uniformLoc = this.#gl.getUniformLocation(this.#program, name);
+        const uniformLoc = this._gl.getUniformLocation(this._program, name);
         
         if(uniformLoc === -1)
             throw new Error("This uniform doesn't exist in the shader code.");
 
-        this.#gl.useProgram(this.#program);
-        this.#gl["uniform"+type](uniformLoc, value);
+        this._gl.useProgram(this._program);
+
+        if(type.startsWith("Matrix"))
+            this._gl["uniform"+type](uniformLoc, false, value);
+        else
+            this._gl["uniform"+type](uniformLoc, value);
     }
 
     draw(cam){
-        this.#gl.frontFace(this.#gl.CCW);
-
-        this.#gl.enable(this.#gl.CULL_FACE);
-        this.#gl.cullFace(this.#gl.BACK);
-
-        this.#updateModelMatrix();
-
-        this.#gl.bindVertexArray(this.#vaoLoc);
-
-        const mvp = (this.#useModelMatrix)? this.#modelMatrix: mat4.create();
-        //console.log(mvp);
-        if(cam){
-            const viewProj = cam.viewProjection;
-            mat4.multiply(mvp, viewProj, mvp);
+        if(!this.#vao_updated){
+            this.#vao_updated = true;
+            this.#createVAO();
         }
 
-        this.#gl.useProgram(this.#program);
+        this._gl.frontFace(this._gl.CCW);
 
-        const mvpLoc = this.#gl.getUniformLocation(this.#program, "mvp");
+        this._gl.enable(this._gl.CULL_FACE);
+        this._gl.cullFace(this._gl.BACK);
 
-        if(mvp !== -1){ 
-            this.#gl.uniformMatrix4fv(mvpLoc, false, mvp);
+        if(this.useDepthTest){
+            this._gl.enable(this._gl.DEPTH_TEST);
+            this._gl.depthFunc(this._gl.LESS);
         }
 
-        this.#gl.drawArrays(this.#primitive, 0, this.#count);
+        this.updateModelMatrix();
 
-        this.#gl.disable(this.#gl.CULL_FACE);
+        this._gl.bindVertexArray(this._vaoLoc);
+
+        this._gl.useProgram(this._program);
+
+        this.loadMVP(cam);
+
+        this._gl.drawArrays(this._primitive, 0, this.#count);
+
+        this._gl.disable(this._gl.CULL_FACE);
+
+        if(this.useDepthTest)
+            this.gl.disable(this._gl.DEPTH_TEST);
     }
 
+    static changeTex(gl, {tex, index}, texData){
+        gl.bindTexture(gl.TEXTURE_2D, tex);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, gl.RGBA, gl.FLOAT, texData);
+    }
 }

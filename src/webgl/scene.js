@@ -1,9 +1,11 @@
 import Camera from "./camera";
+import Light from "./light";
+import Mesh from "./mesh";
 
 export default class Scene{
     #drawnables = [];
-    #lights = [];
-    #camera = null;
+    #light;
+    #camera;
 
     get camera(){
         return this.#camera;
@@ -13,10 +15,6 @@ export default class Scene{
         if(!(gl instanceof WebGL2RenderingContext))
             return;
 
-        const devicePixelRatio = window.devicePixelRatio || 1;
-        gl.canvas.width = 1024 * devicePixelRatio;
-        gl.canvas.height = 768 * devicePixelRatio;
-
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
         if(!clearColor || !clearColor.length || clearColor.length !== 4)
@@ -24,20 +22,30 @@ export default class Scene{
 
         gl.clearColor(0.0, 0.0, 0.0, 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+        this.gl = gl;
     }
 
     createCamera(canvas){
         this.#camera = new Camera(canvas);
     }
 
-    appendElement(drawnable){
-        if(!drawnable.draw)
-            throw new Error("Element need to have a draw function");
-
-        this.#drawnables.push(drawnable);
+    createLight(position){
+        this.#light = new Light(position);
     }
 
-    draw(gl){
+    appendElement(...drawnables){
+        drawnables.forEach(drawnable => {
+            if(!drawnable.draw)
+                throw new Error("Element need to have a draw function");
+
+            this.#drawnables.push(drawnable);
+
+            if(this.#light && drawnable instanceof Mesh) this.#light.createUniforms(drawnable);
+        });
+    }
+
+    draw(){
         for(let element of this.#drawnables){
             element.draw(this.#camera);
         }
