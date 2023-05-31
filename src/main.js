@@ -1,223 +1,249 @@
 import ImageGL from "./view/image";
-import Camera from "./webgl/camera";
+import IndexedMeshT from "./webgl/indexed-mesh";
+import countryVert from "./shaders/countryVert";
+import phongFrag from "./shaders/phongFrag";
+import CanvasImage from "./view/canvasImage";
+import Scene from "./webgl/scene";
 
-const canvas = document.querySelector("#game-screen");
+class Game{
+    #menuScene;
+    #gameScene;
+    #guiScene;
 
-let screen = 0;
+    #inGame = false;
 
-const gl = canvas.getContext("webgl2");
+    static async build(canvas){
+        const game = new Game();
+        await game.init(canvas);
 
-gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+        return game;
+    }
 
-gl.clearColor(0.0, 0.0, 0.0, 1.0);
-gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    async init(canvas){
+        this.gl = canvas.getContext("webgl2");
+        await this.#createMenuScene();
+        //Depois talvez carregar o jogo apenas quando for dado o play
+        await this.#createGameScreen();
+    }
 
+    async #createMenuScene(){
+        this.#menuScene = new Scene(this.gl);
 
-async function drawImage(gl){
-    //initialize
-    const background = new ImageGL();
-    await background.init(gl, "./assets/menu/fundo.jpg");
+        const background = new ImageGL();
+        await background.init(this.gl, "./assets/menu/fundo.jpg");
 
-    const logoWar = new ImageGL();
-    await logoWar.init(gl, "./assets/menu/logo_war.png");
+        const logoWar = new ImageGL();
+        await logoWar.init(this.gl, "./assets/menu/logo_war.png");
 
-    const playButton = new ImageGL();
-    await playButton.init(gl, "./assets/menu/play_button.png");
+        const playButton = new ImageGL();
+        await playButton.init(this.gl, "./assets/menu/play_button.png");
 
-    const settingsButton = new ImageGL();
-    await settingsButton.init(gl, "./assets/menu/settings_button.png");
-    
-    const maxButton = new ImageGL();
-    await maxButton.init(gl, "./assets/menu/max_button.png");
-
-    //scales
-    background.scale = [4, 7.3]
-    logoWar.scale = [1.35, 2] 
-    playButton.scale = [0.65, 1.1]
-    settingsButton.scale = [0.15, 0.27]  
-    maxButton.scale = [0.15, 0.27]  
-
-    //position
-    logoWar.positionY = 0.25
-    
-    playButton.positionY = -1.9
-    
-    settingsButton.positionX = 3.7
-    settingsButton.positionY = 2.8
-
-    maxButton.positionX = 3.7
-    maxButton.positionY = 3.5
-
-    const camera = new Camera(gl.canvas);
-    //camera.typeOfProjection = "perspective";
-    
-    gl.enable(gl.DEPTH_TEST);
-    gl.depthFunc(gl.LESS);
-
-    //draw
-    logoWar.draw(camera)
-    playButton.draw(camera)
-    settingsButton.draw(camera)
-    maxButton.draw(camera)
-    background.draw(camera)
-
-    gl.disable(gl.DEPTH_TEST);
-
-    canvas.addEventListener("click", e=>{
-        // e.clientX e e.clientY são a posição do mouse
-
-        const point = mapClickInCanvas(e.clientX, e.clientY, canvas);
-
-        if(playButton.pointCollision(...point, camera)){
-            screen = 1;
-            drawNewScreen(gl);
-        }
-
-        if(maxButton.pointCollision(...point, camera)){
-            alert("FullScreen")
-        }
+        const settingsButton = new ImageGL();
+        await settingsButton.init(this.gl, "./assets/menu/settings_button.png");
         
+        const maxButton = new ImageGL();
+        await maxButton.init(this.gl, "./assets/menu/max_button.png");
 
-    })
-}
+        //scales
+        background.scaleY = 1.85
+        logoWar.scale = [0.35, 0.56] 
+        playButton.scale = [0.15, 0.26]
+        settingsButton.scale = [0.046, 0.08]  
+        maxButton.scale = [0.046, 0.08]  
 
-async function drawNewScreen(gl){
-    const mapa = new ImageGL();
-    await mapa.init(gl, "./assets/mapa.jpg");
+        //position
+        logoWar.positionY = 0.25
+        
+        playButton.positionY = -0.55
+        
+        settingsButton.positionX = 0.9
+        settingsButton.positionY = 0.57
 
-    const settingsButton = new ImageGL();
-    await settingsButton.init(gl, "./assets/menu/settings_button.png");
+        maxButton.positionX = 0.9
+        maxButton.positionY = 0.8
 
-    const maxButton = new ImageGL();
-    await maxButton.init(gl, "./assets/menu/max_button.png");
+        this.#menuScene.appendElement(background, logoWar, playButton, settingsButton, maxButton);
 
-    const card_button = new ImageGL();
-    await card_button.init(gl, "./assets/game/card_button.png");
-
-    const objective_button = new ImageGL();
-    await objective_button.init(gl, "./assets/game/objective_button.png");
-
-    const current_player = new ImageGL();
-    await current_player.init(gl, "./assets/game/current_player.png");
-
-    const show_players = new ImageGL();
-    await show_players.init(gl, "./assets/game/show_players.png");
-
-    const show_cards = new ShowCards();
-    await show_cards.init();
-
-    const fortify = new Fortify();
-    await fortify.init();
+        this.gl.canvas.addEventListener("click", e=>{
+            // e.clientX e e.clientY são a posição do mouse
     
-    settingsButton.scale = [0.15, 0.27] 
-    maxButton.scale = [0.15, 0.27]  
-    card_button.scale = [0.5, 0.8]
-    objective_button.scale = [0.47, 0.8]
-    current_player.scale = [1.5, 2.5]
-    mapa.scale = [4, 4*1.85];
-    show_players.scale = [0.47, 0.8]
-
-    settingsButton.positionX = 3.7
-    settingsButton.positionY = 2.8
-    settingsButton.depth = 0.2
-
-    maxButton.positionX = 3.7
-    maxButton.positionY = 3.5
-    maxButton.depth = 0.2
-
-    card_button.positionX = 2.9
-    card_button.positionY = -3.2
-    card_button.depth = 0.2
-
-    objective_button.positionX = 3.6
-    objective_button.positionY = -3.2
-    objective_button.depth = 0.2
-
-    show_players.positionX = -3.6
-    show_players.positionY = -3.2
-    show_players.depth = 0.2
-
-    current_player.positionY = -3.375
-    current_player.depth = 0.2
+            const point = Game.mapClickInCanvas(e.clientX, e.clientY, this.gl.canvas);
     
-    const camera = new Camera(canvas);
+            if(playButton.pointCollision(...point)){
+                this.#inGame = true;
+            }
     
-    let move = false;
+        })
+    }
+
+    async #createGameScreen(){
+        //init
+        const mapa = new ImageGL();
+        await mapa.init(this.gl, "./assets/mapa.jpg");
+
+        const settingsButton = new ImageGL();
+        await settingsButton.init(this.gl, "./assets/menu/settings_button.png");
+
+        const maxButton = new ImageGL();
+        await maxButton.init(this.gl, "./assets/menu/max_button.png");
+
+        const card_button = new ImageGL();
+        await card_button.init(this.gl, "./assets/game/card_button.png");
+
+        const objective_button = new ImageGL();
+        await objective_button.init(this.gl, "./assets/game/objective_button.png");
+
+        const current_player = new ImageGL();
+        await current_player.init(this.gl, "./assets/game/current_player.png");
+
+        const show_players = new ImageGL();
+        await show_players.init(this.gl, "./assets/game/show_players.png");
+
+        const show_cards = new ShowCards();
+        await show_cards.init(this.gl);
+
+        const fortify = new Fortify();
+        await fortify.init(this.gl);
     
+        //scales
+        mapa.scale = [2.7, 2.7];
+        settingsButton.scale = [0.046, 0.08];
+        maxButton.scale = [0.046, 0.08];  
+        card_button.scale = [0.5, 0.8];
+        objective_button.scale = [0.47, 0.8];
+        current_player.scale = [1.5, 2.5];
+        show_players.scale = [0.47, 0.8];
+
+        settingsButton.positionX = 0.9
+        settingsButton.positionY = 0.57
+        settingsButton.depth = 0.2;
+
+        maxButton.positionX = 0.9
+        maxButton.positionY = 0.8
+        maxButton.depth = 0.2;
+
+        card_button.positionX = 2.9;
+        card_button.positionY = -3.2;
+        card_button.depth = 0.2;
+
+        objective_button.positionX = 3.6;
+        objective_button.positionY = -3.2;
+        objective_button.depth = 0.2;
+
+        show_players.positionX = -3.6;
+        show_players.positionY = -3.2;
+        show_players.depth = 0.2;
+
+        current_player.positionY = -3.375;
+        current_player.depth = 0.2;
     
-    gl.enable(gl.DEPTH_TEST);
-    gl.depthFunc(gl.LESS);
-
-    mapa.draw(camera);
-    settingsButton.draw(camera);
-    card_button.draw(camera)
-    objective_button.draw(camera)
-    current_player.draw(camera)
-    maxButton.draw(camera)
-    show_players.draw(camera)
+        const brasil = await IndexedMeshT.loadMeshFromObj(
+            "./assets/meshes/brasil-rotacionado.obj", 
+            this.gl, countryVert, phongFrag
+        );
+        brasil.scale = [1.2, 1.2, 1];
+        brasil.position = [0*-1.2, 0*-0.9, 0.3];
+        brasil.rotation[1] = -0.2;
     
-    //final result
-    show_cards.draw(camera)
-    //fortify.draw(camera);
+        const argentina = await IndexedMeshT.loadMeshFromObj(
+            "./assets/meshes/argentina.obj", 
+            this.gl, countryVert, phongFrag
+        );
+        argentina.scale = [1.6, 1.6, 1.5];
+        argentina.position = [-0.21, -0.35, 0.3];
     
+        this.#gameScene = new Scene(this.gl);
+    
+        this.#gameScene.createCamera(canvas);
+        this.#gameScene.camera.camPosition[2] = 1.8;
+        this.#gameScene.camera.camPosition[1] = -0.3;
+    
+        this.#gameScene.createLight([1.0, 0.0, 0.3]);
 
-    gl.disable(gl.DEPTH_TEST);
+        this.#guiScene = new Scene(this.gl);
+    
+        const cImage = new CanvasImage();
+        await cImage.init(this.gl);
+    
+        await cImage.update(ctx =>{
+            if (!(ctx instanceof CanvasRenderingContext2D)) return
+    
+            ctx.fillStyle = "white";
+    
+            ctx.ellipse(500, 500, 400, 500, 0, 0, Math.PI*2);
+    
+            ctx.lineWidth = 100;
+    
+            ctx.stroke();
+    
+            ctx.font = "600px Arial";
+            ctx.fillText("1", 320, 600);
+        }, this.gl);
+    
+        cImage.scale = [0.1, 0.1];
+        cImage.positionY = 0.2;
+    
+        this.#gameScene.appendElement(mapa, brasil, argentina, cImage);
+        this.#guiScene.appendElement(settingsButton);
+    
+        //colocar a view e a projection
+        brasil.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
+        brasil.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
+        brasil.setUniformValue("color", [1.0, 0.0, 0.0, 1.0], "4fv");
+    
+        argentina.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
+        argentina.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
+        argentina.setUniformValue("color", [0.0, 0.0, 1.0, 1.0], "4fv");
 
-    let lastX = 0;
-    let lastY = 0;
+        this.gl.canvas.addEventListener("click", e=>{
+            // e.clientX e e.clientY são a posição do mouse
+    
+            if(!this.#inGame) return;
 
-    canvas.addEventListener("mousedown", e=>{
-        lastX = e.clientX;
-        lastY = e.clientY;
+            const point = Game.mapClickInCanvas(e.clientX, e.clientY, this.gl.canvas);
+    
+            if(brasil.pointCollision(...point)){
+                alert("foi");
+            }
 
-        move = true;
-    })
+            if(argentina.pointCollision(...point)){
+                alert("argentina");
+            }
+    
+        })
+    }
 
-    canvas.addEventListener("mouseup", e=>{
-        move = false;
-
-        console.log(lastX, lastY);
-    })
-
-    canvas.addEventListener("mousemove", e=>{
-        if(move){
-            let distX = e.clientX - lastX;
-            let distY = e.clientY - lastY;
-
-            console.log(distX, distY);
+    draw(){
+        if(this.#inGame){
+            this.#gameScene.draw();
+            this.#guiScene.draw();
         }
-    })
+        else{
+            this.#menuScene.draw();
+        }
+    }
 
-    canvas.addEventListener("click", e=>{
-        // e.clientX e e.clientY são a posição do mouse
-
-        const point = mapClickInCanvas(e.clientX, e.clientY, canvas);
-
-        if(card_button.pointCollision(...point, camera)){
-            show_cards.moveAll(-3 ,3);
-            mapa.draw(camera);
-            show_cards.draw(camera);
+    run(){
+        const run_aux = ()=>{
+            this.draw();
+            requestAnimationFrame(run_aux);
         }
 
-        if(show_cards.cancel_button.pointCollision(...point, camera)){
-            alert("cancel");
-        }
+        run_aux();
+    }
 
-        if(show_cards.ok_button.pointCollision(...point, camera)){
-            alert("ok");
-        }
-    
-    })
-}
+    static mapClickInCanvas(x, y, canvas){
+        const mappedOnCenter = [
+            (x - canvas.offsetLeft) - canvas.width/2, 
+            (canvas.height/2) - (y - canvas.offsetTop)
+        ];
 
-// use essa função para conseguir a posição do mouse no sistema de coordenadas do webgl
-function mapClickInCanvas(x, y, canvas){
-    const mappedOnCenter = [(x - canvas.offsetLeft) - canvas.width/2, (canvas.height/2) - (y - canvas.offsetTop)];
-    return [mappedOnCenter[0]*2/canvas.width, mappedOnCenter[1]*2/canvas.height];
+        return [mappedOnCenter[0]*2/canvas.width, mappedOnCenter[1]*2/canvas.height];
+    }
 }
 
 class ShowCards{
-    async init(){
+    async init(gl){
         this.show_cards = new ImageGL();
         await this.show_cards.init(gl, "./assets/game/show_cards.png");
         this.show_cards.scale = [1.7 , 3];
@@ -263,7 +289,7 @@ class ShowCards{
 }
 
 class Fortify{
-    async init(){
+    async init(gl){
         this.fortify = new ImageGL();
         await this.fortify.init(gl, "./assets/game/fortify.png");
         this.fortify.scale = [1.7 , 3];
@@ -299,4 +325,8 @@ class Fortify{
     }
 }
 
-drawImage(gl);
+const canvas = document.querySelector("#game-screen");
+
+Game.build(canvas).then(game => {
+    game.run();
+});
