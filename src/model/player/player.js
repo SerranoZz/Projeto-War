@@ -9,9 +9,6 @@
 // passa para o proximo jogador
 //Perguntar ao Bruno como importar o json de maneira correta***
 //
-import "./continent.js";
-import ContinentJson from "dist/assets/data/continent-constructor.json";
-import CountryJson from "dist/assets/data/country-constructor.json";
 import Dice from "../tools/dice.js";
 
 class Attack {
@@ -64,6 +61,12 @@ class Attack {
 }
 
 export class Player {
+    #name;
+    #color;
+    #territoriesOwned;
+    #goal;
+    #freeTroops;
+
     constructor(name, color, goal) {
       this.#name = name;
       this.#color = color; // pode ser usado como ID 

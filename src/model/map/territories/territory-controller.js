@@ -1,26 +1,42 @@
-import "./continent.js";
-import ContinentJson from "dist/assets/data/continent-constructor.json";
-import CountryJson from "dist/assets/data/country-constructor.json";
+import Continent from "./continent.js";
+import Country from "./country";
 
 export default class TerritoryController {
-    constructor() {
+    #continents;
+    #countries;
+
+    /*constructor() {
         this.#continents = [];
         this.#countries = [];
         
         this.loadContinents();
         this.loadCountries();
+    }*/
+
+    async init(){
+        this.#continents = [];
+        this.#countries = [];
+        
+        await this.loadContinents();
+        await this.loadCountries();
     }
 
-    loadContinents() {
-        for(let i = 0; i < ContinentJson.data.length; i++) {
-            let newContinent = new Continent(ContinentJson.data[i].name, ContinentJson.data[i].bonus);
+    async loadContinents() {
+        const continents = await fetch("./assets/data/continent-constructor.json");
+        const data = await continents.json();
+
+        for(let i = 0; i < data.length; i++) {
+            let newContinent = new Continent(data[i].name, data[i].bonus);
             this.#continents.push(newContinent);
         }
     }
 
-    loadCountries() {
-        for(let i = 0; i < CountryJson.data.length; i++) {
-            let newCountry = new Country(CountryJson.data[i].name, CountryJson.data[i].path, CountryJson.data[i].continent, CountryJson.data[i].neighbors);
+    async loadCountries() {
+        const countries = await fetch("./assets/data/country-constructor.json");
+        const data = await countries.json();
+
+        for(let i = 0; i < data.length; i++) {
+            let newCountry = new Country(data[i].name, data[i].path, data[i].continent, data[i].neighbors);
             this.#countries.push(newCountry);
         }
     }

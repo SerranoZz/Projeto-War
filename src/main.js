@@ -35,7 +35,7 @@ class Game{
         //Depois talvez carregar o jogo apenas quando for dado o play
         await this.#createGameScreen();
 
-        const names = ["claudio", "et bilu", "dom pedro", "saci", "uantedegemon", "Serrano"];
+        const names = ["claudio", "et bilu", "dom pedro", "saci", "uantedeguemon", "Serrano"];
 
         //preto(acizentado), branco, amarelo, azul, vermelho e cinza
         const colors = [
@@ -58,6 +58,7 @@ class Game{
         }
 
         this.#territoryController = new TerritoryController();
+        await this.#territoryController.init();
 
         const countries = [...this.#territoryController.countries];
 
@@ -640,57 +641,6 @@ class Game{
         ];
 
         return [mappedOnCenter[0]*2/canvas.width, mappedOnCenter[1]*2/canvas.height];
-    }
-
-
-}
-
-class GameScreen{
-    async init(gl){
-        this.settingsButton = new ImageGL();
-        await this.settingsButton.init(gl, "./assets/menu/settings_button.png");
-        this.settingsButton.scale = [0.046, 0.08]; 
-        GameScreen.setInitialPosition(0.9, 0.8, 0.2, this.settingsButton);
-
-        this.card_button = new ImageGL();
-        await this.card_button.init(gl, "./assets/game/card_button.png");
-        this.card_button.scale = [0.08, 0.15]; 
-        GameScreen.setInitialPosition(0.76, -0.85, 0.2, this.card_button);
-
-        this.objective_button = new ImageGL();
-        await this.objective_button.init(gl, "./assets/game/objective_button.png");
-        this.objective_button.scale = [0.065, 0.11]; 
-        GameScreen.setInitialPosition(0.92, -0.85, 0.2, this.objective_button);
-
-        this.current_player = new ImageGL();
-        await this.current_player.init(gl, "./assets/game/current_player.png");
-        this.current_player.scale = [0.4, 0.6]; 
-        GameScreen.setInitialPosition(0, -0.85, 0.2, this.current_player);
-
-        this.show_players = new ImageGL();
-        await this.show_players.init(gl, "./assets/game/show_players.png");
-        this.show_players.scale = [0.065, 0.115]; 
-        GameScreen.setInitialPosition(-0.92, -0.85, 0.2, this.show_players);
-    }
-
-    static setInitialPosition(x, y, depth, widget){
-        widget.positionX = x;
-        widget.positionY = y;
-        widget.depth = depth;
-    }
-
-    moveAll(amountY){
-        this.card_button.positionY += amountY;
-        this.objective_button._tex.positionY += amountY;
-        this.current_player.positionY += amountY;
-    }
-
-    draw(camera){
-        this.settingsButton.draw(camera);
-        this.card_button.draw(camera);
-        this.objective_button.draw(camera);
-        this.current_player.draw(camera);
-        this.show_players.draw(camera);
     }
 
 

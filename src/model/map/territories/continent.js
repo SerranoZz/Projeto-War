@@ -1,6 +1,11 @@
-import "/country.js";
+import Country from "./country";
 
-class Continent {
+export default class Continent {
+    #name;
+    #countries;
+    #bonus;
+    #owner;
+
     constructor(name, bonus) {
         this.#name = name;
         this.#countries = [];

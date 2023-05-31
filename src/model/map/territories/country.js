@@ -1,13 +1,20 @@
-import "/continent.js";
+import Continent from "./continent";
 
 export default class Country {
+    #name;
+    #path;
+    #neighbors;
+    #owner;
+    #continent;
+    #soldiers;
+
     constructor(name, path, continent, neighbors) {
         this.#name = name;
         this.#path = path;
         this.#neighbors = neighbors;
         this.#owner = null;
         this.#continent = null;
-        this.#setContinent(continent);
+        this.continent = continent;
         this.#soldiers = 0;
     }
     
