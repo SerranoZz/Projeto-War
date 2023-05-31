@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import Mesh from "../webgl/mesh";
 import imgVert from "../shaders/imageVert";
 import imgFrag from "../shaders/imageFrag";
@@ -56,6 +57,14 @@ export default class ImageGL{
 
     set opacity(alpha){
         this.#mesh.setUniformValue("alpha", alpha, "1f");
+    }
+
+    get positionX(){
+        return this.#mesh.position[0];
+    }
+    
+    get positionY(){
+        return this.#mesh.position[1];
     }
 
     async init(gl, src){

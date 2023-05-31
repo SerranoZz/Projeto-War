@@ -12,7 +12,7 @@
 
 /* Estilo do body */
 body {
-    max-width: 100vw;
+    max-width: 100%;
     margin: 0 auto;
     padding: 0;
     font-family: 'capture';
@@ -20,8 +20,8 @@ body {
 
 header {
     background-color: var(--cor-primaria);
-    padding-top: 1.7vh;
-    padding-bottom: 1.7vh;
+    padding-top: 1.7%;
+    padding-bottom: 1.7%;
 }
 
 header nav ul {
@@ -32,8 +32,8 @@ header nav ul {
     padding: 0;
 }
 
-header nav ul li{
-    padding: 0.4vw;
+header nav ul li {
+    padding: 0.4%;
 }
 
 header nav ul li a {
@@ -77,14 +77,14 @@ header nav ul li a:hover {
 #banner p {
     font-size: 1.7vw;
     letter-spacing: 0.1vw;
-    margin: 20px 0;
+    margin: 2% 0;
     text-shadow: #000 0.15vw 0.15vw;
     color: white;
 }
 
 #banner a {
     background-color: var(--cor-secundaria);
-    padding: 1vw 4vw 1vw 4vw;
+    padding: 1vw 4vw;
     margin-top: 7vh;
     color: black;
     text-decoration: none;
@@ -95,7 +95,7 @@ header nav ul li a:hover {
     border: 0.3vw solid black;
 }
 
-#banner a:hover{
+#banner a:hover {
     background-color: var(--cor-secundaria-hover);
 }
 
@@ -119,7 +119,7 @@ header nav ul li a:hover {
 #sobre div {
     display: flex;
     flex-direction: row;
-    align-items:start;
+    align-items: start;
     justify-content: space-around;
 }
 
@@ -136,22 +136,24 @@ header nav ul li a:hover {
     letter-spacing: 4px;
     width: 100%;
     text-align: center;
+    font-size: 2vw;
 }
 
-#sobre div div p{
-    text-indent: 3vw;
+#sobre div div p {
+    text-indent: 3%;
     text-align: justify;
     margin: 4px;
     letter-spacing: 1.5px;
+    font-size: 1.2vw;
 }
 
 #sobre div div ul li {
     width: 100%;
     text-align: justify;
     letter-spacing: 1.5px;
-    margin: 0px 0px 15px 0px;
+    margin: 0 0 1.5vw;
+    font-size: 1.2vw;
 }
-
 
 #devs {
     display: flex;
@@ -175,10 +177,10 @@ header nav ul li a:hover {
     max-width: 100%;
     height: auto;
     list-style: none;
-    padding: 0vw 5vw 0vw 5vw;
+    padding: 0 5%;
 }
 
-#devs ul li{
+#devs ul li {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -188,7 +190,6 @@ header nav ul li a:hover {
 #devs ul li div {
     max-width: 12vw;
     max-height: 12vw;
-
 }
 
 #devs ul li h3 {
@@ -196,10 +197,10 @@ header nav ul li a:hover {
     letter-spacing: 0.1vw;
 }
 
-#devs ul li div img{
+#devs ul li div img {
     max-width: 100%;
-    max-height:  100%;
-    border: 0.2vw  solid white;
+    max-height: 100%;
+    border: 0.2vw solid white;
     border-radius: 4%;
 }
 
