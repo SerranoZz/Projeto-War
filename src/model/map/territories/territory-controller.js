@@ -3,6 +3,7 @@ import ContinentJson from "dist/assets/data/continent-constructor.json";
 import CountryJson from "dist/assets/data/country-constructor.json";
 
 
+
 class TerritoryController {
     constructor() {
         this.#continents = [];
@@ -49,4 +50,18 @@ class TerritoryController {
     get countries() {
         return this.#countries;
     }
+
+    troop_reassignment(base, destiny, qtd){
+        if(!(base instanceof(Country)) || !(destiny instanceof(Country)) || !(qtd instanceof int)){
+            throw new Error("Parametro invalido");       
+        }
+        if(base.findNeighbor(destiny)){
+            if(!(base.soldier > qtd)){
+                throw new Error("quantidade de tropas invalidas");
+            }
+            base.soldier -= qtd;
+            destiny.soldier += qtd;
+        }
+    }
+    //verificar se precisa retornar alguma coisa
 }
