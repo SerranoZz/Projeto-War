@@ -4,13 +4,21 @@ import countryVert from "./shaders/countryVert";
 import phongFrag from "./shaders/phongFrag";
 import CanvasImage from "./view/canvasImage";
 import Scene from "./webgl/scene";
+import { Player } from "./model/player/player";
+import TerritoryController from "./model/map/territories/territory-controller";
+import TurnsManager from "./model/player/turns_manager";
 
 class Game{
     #menuScene;
     #gameScene;
     #guiScene;
 
+    #territoryController;
+
     #inGame = false;
+
+    #players = [];
+    #turnsManager;
 
     static async build(canvas){
         const game = new Game();
@@ -24,6 +32,49 @@ class Game{
         await this.#createMenuScene();
         //Depois talvez carregar o jogo apenas quando for dado o play
         await this.#createGameScreen();
+
+        const names = ["claudio", "et bilu", "dom pedro", "saci", "uantedegemon", "Serrano"];
+
+        //preto(acizentado), branco, amarelo, azul, vermelho e cinza
+        const colors = [
+            [0.2, 0.2, 0.2, 1.0],
+            [0.9, 0.9, 0.9, 1.0],
+            [0.0, 0.8, 0.8, 1.0],
+            [0.0, 0.0, 0.8, 1.0],
+            [0.8, 0.0, 0.0, 1.0],
+            [0.5, 0.5, 0.5, 1.0]
+        ];
+
+
+        for(let i = 0; i < 6; i++){
+            const index = Math.floor(Math.random()*colors.length);
+            const color = colors[index];
+
+            colors.splice(index, 1);
+
+            this.#players[i] = new Player(names[i], color, "mata todo mundo");
+        }
+
+        this.#territoryController = new TerritoryController();
+
+        const countries = [...this.#territoryController.countries];
+
+        const countriesPerPlayer = Math.floor(countries.length/this.#players.length); 
+
+        for(let player of this.#players){
+            for(let i = 0; i<countriesPerPlayer; i++){
+                const index = Math.floor(Math.random()*countries.length);
+
+                countries[i].owner = player;
+                countries[i].troops = 1;
+
+                countries.splice(index, 1);
+            }
+        }
+
+        //tratar o lance de sobrar países
+
+        this.#turnsManager = new TurnsManager(this.#players);
     }
 
     async #createMenuScene(){
@@ -239,6 +290,14 @@ class Game{
         ];
 
         return [mappedOnCenter[0]*2/canvas.width, mappedOnCenter[1]*2/canvas.height];
+    }
+
+    static generateColor(){
+        const out = [];
+
+        for(let i = 0; i < 3; i++) out[i] = Math.random();
+
+        return out;
     }
 }
 

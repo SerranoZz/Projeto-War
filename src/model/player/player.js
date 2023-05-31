@@ -12,28 +12,21 @@
 import "./continent.js";
 import ContinentJson from "dist/assets/data/continent-constructor.json";
 import CountryJson from "dist/assets/data/country-constructor.json";
+import Dice from "../tools/dice.js";
 
 class Attack {
-    constructor() {
-        this.continents = [];
-        this.countries = [];
-        
-        this.loadContinents();
-        this.loadCountries();
-    }
 //teste de commit
 
-    attackPlayer(contryAttack, countryDefense) {
-        if(!this.isValidCountry(contryAttack) || !this.isValidCountry(countryDefense)) {
-            console.log("Invalid countries");
-            return;
+    attackPlayer(countryAttack, countryDefense) {
+        if(!this.isValidCountry(countryAttack) || !this.isValidCountry(countryDefense)) {
+            throw new Error("Invalid countries");
         }
     
-        const dicesAttack =  calcDices(contryAttack);
+        const dicesAttack =  calcDices(countryAttack);
         const dicesDefense = this.calcDices(countryDefense);
     
-        const attackDiceRolls = this.rollDice(dicesAttack);
-        const defendDiceRolls = this.rollDice(dicesDefense);
+        const attackDiceRolls = Dice.rollDice(dicesAttack);
+        const defendDiceRolls = Dice.rollDice(dicesDefense);
     
         let attackWins = 0;
         let defenseWins = 0;
@@ -45,26 +38,18 @@ class Attack {
                 defenseWins++;
             }
         }
-        contryAttack.soldier -= defenseWins;
+        countryAttack.soldier -= defenseWins;
         countryDefense.soldier -= attackWins;
     }
     
-    rollDice(numDice) {
-        const diceRolls = [];
-        for (let i = 0; i < numDice; i++) {
-            diceRolls.push(Math.floor(Math.random() * 6) + 1);
-        }
-        return diceRolls;
-    }
-    
-    calcDices(contry) {
-        if(contry.soldier >= 3 || contry.soldier >= 1) {
+    calcDices(country) {
+        if(country.soldiers >= 3 || country.soldiers >= 1) {
             let dice =  3;
             return dice;
-        }else if(contry.soldier < 3 || contry.soldier >= 1) {
+        }else if(country.soldiers < 3 || country.soldiers >= 1) {
             let dice = 2;
             return dice;
-        }else if(contry.soldier < 2 || contry.soldier >=1) {
+        }else if(country.soldiers < 2 || country.soldiers >=1) {
             let dice = 1;
             return dice;
         }
@@ -75,5 +60,51 @@ class Attack {
 ////
     isValidCountry(country) {
         return this.countries.includes(country);
+    }
+}
+
+export class Player {
+    constructor(name, color, goal) {
+      this.#name = name;
+      this.#color = color; // pode ser usado como ID 
+      this.#territoriesOwned = [];
+      this.#goal = goal;
+      this.#freeTroops = 0;
+    }
+  
+    conquestTerritory(territorio) {
+      this.#territoriesOwned.push(territorio);
+    }
+    
+
+    receiveTroop(){
+
+        //calcula a quantidade de tropas a ser recebida devio a quantidade de territorios        
+        const qtdreceivedTroops = Math.floor(this.#territoriesOwned.length / 2);
+
+        //calcula a quantidade de tropas a ser recebida devio aos bonus de continente
+        
+        //a fazer
+
+        this.#freeTroops = qtdreceivedTroops;
+    }
+
+    addTroops(country,qtdTroops){
+        if(qtdTroops <=  this.#freeTroops){
+            country.soldiers = country.soldiers + qtdTroops;
+            this.#freeTroops -= qtdTroops;
+        }
+    }
+    
+    get name(){
+        return this.#name;
+    }
+
+    get color(){
+        return this.#color;
+    }
+
+    get freeTroops(){
+        return this.#freeTroops;
     }
 }

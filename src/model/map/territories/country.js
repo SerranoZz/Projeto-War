@@ -1,6 +1,6 @@
 import "/continent.js";
 
-class Country {
+export default class Country {
     constructor(name, path, continent, neighbors) {
         this.#name = name;
         this.#path = path;

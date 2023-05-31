@@ -2,9 +2,7 @@ import "./continent.js";
 import ContinentJson from "dist/assets/data/continent-constructor.json";
 import CountryJson from "dist/assets/data/country-constructor.json";
 
-
-
-class TerritoryController {
+export default class TerritoryController {
     constructor() {
         this.#continents = [];
         this.#countries = [];
