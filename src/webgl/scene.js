@@ -8,8 +8,16 @@ export default class Scene{
     #light;
     #camera;
 
+    #fadeLight;
+
+    #fadeMode = false;
+
     get camera(){
         return this.#camera;
+    }
+
+    get light(){
+        return this.#light;
     }
 
     constructor(gl, clearColor = [0.0, 0.0, 0.0, 1.0]){
@@ -33,6 +41,13 @@ export default class Scene{
 
     createLight(position){
         this.#light = new Light(position);
+        this.#fadeLight = new Light(position);
+
+        this.#fadeLight.ambK = 0.3;
+        this.#fadeLight.difK = 0.4;
+        this.#fadeLight.espK = 0.3;
+
+        this.#fadeLight.ambColor = [0.5, 0.5, 0.5]; 
     }
 
     appendElement(...drawnables){
@@ -45,6 +60,23 @@ export default class Scene{
             if(this.#light && drawnable instanceof Mesh) this.#light.createUniforms(drawnable);
             
             if(this.#light && drawnable instanceof Country) this.#light.createUniforms(drawnable.mesh);
+        });
+    }
+
+    switchLight(){
+        if(!this.#light) 
+            throw new Error("there is no lights to be switched.");
+
+            this.#fadeMode = !this.#fadeMode;
+
+        const light = (this.#fadeMode)? this.#fadeLight: this.#light;
+
+        this.#drawnables.forEach(drawnable =>{
+            if(drawnable instanceof Mesh)
+                light.createUniforms(drawnable);
+
+            if(drawnable instanceof Country)
+                light.createUniforms(drawnable.mesh);
         });
     }
 

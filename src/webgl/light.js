@@ -1,12 +1,12 @@
 export default class Light{
     ambColor = [0.0, 0.0, 0.0];
-    ambK = 3.0;
+    ambK = 0.5;
 
     difColor = [0.3, 0.3, 0.3];
-    difK = 4.0;
+    difK = 0.4;
 
     espColor = [1.0, 1.0, 1.0];
-    espK = 3.0;
+    espK = 0.1;
     espExp = 20.0;
 
     pos;

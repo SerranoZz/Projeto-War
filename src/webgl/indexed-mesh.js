@@ -109,6 +109,10 @@ export default class IndexedMeshT extends Mesh{
         return this.#border.pointCollision(x, y, camera, this);
     }
 
+    get center(){
+        return this.#border.center;
+    }
+
     get drawBorder(){
         return this.#border.draw();
     }
@@ -202,13 +206,27 @@ class Border{
         let min = Infinity;
         let max = -Infinity;
 
+        let minX = Infinity;
+        let maxX = -Infinity;
+
+        let minY = Infinity;
+        let maxY = -Infinity;
+
         for(let i = 0; i<this.#coords.length; i+=4){
             if(this.#coords[i+2]<min) min = this.#coords[i+2];
             if(this.#coords[i+2]>max) max = this.#coords[i+2];
+
+            if(this.#coords[i]<minX) minX = this.#coords[i];
+            if(this.#coords[i]>maxX) maxX = this.#coords[i];
+
+            if(this.#coords[i+1]<minY) minY = this.#coords[i+1];
+            if(this.#coords[i+1]>maxY) maxY = this.#coords[i+1];
         }
 
         this.#min = min;
         this.#max = max;
+
+        this.center = [(maxX+minX)/2, (minY + maxY)/2];
     }
 
     pointCollision(x, y, camera, mesh){
@@ -280,7 +298,7 @@ class Border{
             if(coord[1]>maxY) maxY = coord[1];
         }
 
-        console.log(minX, maxX, minY, maxY, point);
+        //console.log(minX, maxX, minY, maxY, point);
 
         return (point[0]>=minX && point[0]<=maxX && point[1]>=minY && point[1]<=maxY);
     }

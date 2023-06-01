@@ -5,6 +5,8 @@ import { Player } from "./model/player/player";
 import TerritoryController from "./model/map/territories/territory-controller";
 import TurnsManager from "./model/player/turns_manager";
 import CountryEventsHandler from "./events/events_manager";
+import TroopsView from "./view/troopsView";
+import IndexedMeshT from "./webgl/indexed-mesh";
 
 class Game{
     #menuScene;
@@ -21,6 +23,22 @@ class Game{
     #turnsManager;
 
     #countryEvents;
+
+    get inGame(){
+        return this.#inGame;
+    }
+
+    get gameScene(){
+        return this.#gameScene;
+    }
+    
+    get turnsManager(){
+        return this.#turnsManager;
+    }
+
+    get territoryController(){
+        return this.#territoryController;
+    }
 
     static async build(canvas){
         const game = new Game();
@@ -70,8 +88,6 @@ class Game{
 
                 const index = Math.floor(Math.random()*countries.length);
 
-                console.log(countries)
-
                 countries[index].owner = player;
                 countries[index].troops = 1;
 
@@ -85,9 +101,7 @@ class Game{
 
         await this.#createGameScreenAlt();
 
-        this.#countryEvents = new CountryEventsHandler(
-            this.gl.canvas, this.#turnsManager, this.#territoryController, this.#gameScene.camera
-        );
+        this.#countryEvents = new CountryEventsHandler(this);
     }
 
     async #createMenuScene(){
@@ -156,29 +170,15 @@ class Game{
 
         this.#guiScene = new Scene(this.gl);
     
-        const cImage = new CanvasImage();
-        await cImage.init(this.gl);
-    
-        await cImage.update(ctx =>{
-            if (!(ctx instanceof CanvasRenderingContext2D)) return
-    
-            ctx.fillStyle = "white";
-    
-            ctx.ellipse(500, 500, 400, 500, 0, 0, Math.PI*2);
-    
-            ctx.lineWidth = 100;
-    
-            ctx.stroke();
-    
-            ctx.font = "600px Arial";
-            ctx.fillText("1", 320, 600);
-        }, this.gl);
-    
-        cImage.scale = [0.1, 0.1];
-        cImage.positionY = 0.2;
+        const tView = new TroopsView();
+        await tView.init(this.#territoryController.countries, this.#scale, this.gl);
+
+        const points = IndexedMeshT
     
         this.#gameScene.appendElement(...this.#territoryController.countries);
         this.#guiScene.appendElement(gameScreen, show_cards, fortify);
+
+        this.#gameScene.appendElement(tView);
     
         //colocar a view e a projection
 

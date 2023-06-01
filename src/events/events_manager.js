@@ -3,30 +3,33 @@ import TurnsManager from "../model/player/turns_manager";
 export default class CountryEventsHandler{
     #country = null;
 
-    constructor(canvas, turnsManager, territoryController, camera){
+    constructor(game){
 
-        this.#country = territoryController.countries.find(c => c.name==="México");
-        console.log(this.#country);
+        console.log(game);
 
-        canvas.addEventListener("click", e=>{
-            if(turnsManager.state === TurnsManager.FREEZE) return;
+        //this.#country = territoryController.countries.find(c => c.name==="México");
+
+        game.gl.canvas.addEventListener("click", e=>{
+            //if(game.turnsManager.state === TurnsManager.FREEZE) return;
+
+            console.log(game.inGame);
+
+            if(!game.inGame) return;
     
-            const point = CountryEventsHandler.mapClickInCanvas(e.clientX, e.clientY, canvas);
+            const point = CountryEventsHandler.mapClickInCanvas(e.clientX, e.clientY, game.gl.canvas);
     
-            const country = territoryController.clickedCountry(...point, camera);
+            const country = game.territoryController.clickedCountry(...point, game.gameScene.camera);
 
             if(country)
                 alert(country.name);
             else
                 alert("nulo");
 
-            if(country) countryEvents.get(TurnsManager.ATTACK)(turnsManager.player, country);
+            if(country) countryEvents.get(TurnsManager.ATTACK)(game, country);
 
-            //this.#country = country;
+            this.#country = country;
 
-            console.log("arg");
-
-            this.#country.mesh.pointCollision(...point, camera);
+            this.#country.mesh.pointCollision(...point, game.gameScene.camera);
         });
 
         let child;
@@ -58,21 +61,63 @@ const countryEvents = new Map();
 
 const attack = {}
 
-countryEvents.set(TurnsManager.ATTACK, (player, country)=>{
+countryEvents.set(TurnsManager.ATTACK, (game, country)=>{
+    const player = game.turnsManager.player;
+    const territoryController = game.territoryController;
+
     if(!attack.base) {
-        console.log(country.owner === player);
+        console.log(country.owner, player);
 
         if(country.owner === player){
-
+            alert("entrou");
             attack.base = country;
-            country.mesh.position[2] +=1.0;
+            country.mesh.position[2] = 0.03;
+            country.mesh.scale[2] = 2;
+
+            const neighbors = territoryController.countries.filter(c =>{
+                if(country.neighbors.indexOf(c.name) !== -1)
+                    return c;
+            })
+
+            game.gameScene.switchLight();
+
+            game.gameScene.light.createUniforms(country.mesh);
+
+            neighbors.forEach(neighbor => {
+                if(neighbor.owner === player) return;
+
+                neighbor.mesh.position[2] = 0.03;
+                neighbor.mesh.scale[2] = 2;
+
+                game.gameScene.light.createUniforms(neighbor.mesh);
+            });
+
+            console.log(neighbors);
+            //country.mesh.scale[2] = 3;
+
+            attack.neighbors = neighbors;
         }
     }else{
-        const index = attack.base.neighbors.indexOf(country.name);
+        if(attack.neighbors.indexOf(country) === -1) return;
 
-        if(index === -1) return;
+        alert(`from ${attack.base.name} to ${country.name}`);
 
-        player.attack()
+        player.attack(attack.base, country);
+
+        game.gameScene.switchLight();
+
+        attack.neighbors.forEach(neighbor => {
+            if(neighbor.owner === player) return;
+
+            neighbor.mesh.position[2] = 0.0;
+            neighbor.mesh.scale[2] = 1;
+
+            game.gameScene.light.createUniforms(neighbor.mesh);
+        });
+        
+        attack.base.mesh.position[2] = 0.0;
+        attack.base.mesh.scale[2] = 1;
+
     }
 })
 

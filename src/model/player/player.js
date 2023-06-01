@@ -15,11 +15,11 @@ class Attack {
 //teste de commit
 
     attackPlayer(countryAttack, countryDefense) {
-        if(!this.isValidCountry(countryAttack) || !this.isValidCountry(countryDefense)) {
+        /*if(!this.isValidCountry(countryAttack) || !this.isValidCountry(countryDefense)) {
             throw new Error("Invalid countries");
-        }
+        }*/
     
-        const dicesAttack =  calcDices(countryAttack);
+        const dicesAttack =  this.calcDices(countryAttack);
         const dicesDefense = this.calcDices(countryDefense);
     
         const attackDiceRolls = Dice.rollDice(dicesAttack);
@@ -97,6 +97,12 @@ export class Player {
             country.soldiers = country.soldiers + qtdTroops;
             this.#freeTroops -= qtdTroops;
         }
+    }
+
+    attack(base, to){
+        const att = new Attack();
+        att.attackPlayer(base, to);
+        console.log(base.soldiers, to.soldiers);
     }
     
     get name(){

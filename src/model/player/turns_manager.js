@@ -21,7 +21,7 @@ export default class TurnsManager{
     }
 
     get player(){
-        this.#players[this.#currPlayerIndex];
+        return this.#players[this.#currPlayerIndex];
     }
 
     get state(){

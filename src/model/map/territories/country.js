@@ -1,5 +1,6 @@
 import countryVert from "../../../shaders/countryVert";
 import phongFrag from "../../../shaders/phongFrag";
+import CanvasImage from "../../../view/canvasImage";
 import IndexedMeshT from "../../../webgl/indexed-mesh";
 
 export default class Country {
@@ -18,7 +19,7 @@ export default class Country {
         this.#owner = null;
         this.#continent = null;
         this.continent = continent;
-        this.#soldiers = 0;
+        this.#soldiers = 1;
     }
     
     get name() {
@@ -75,9 +76,40 @@ export default class Country {
     async loadMesh(path, gl, scale){
         this.#mesh = await IndexedMeshT.loadMeshFromObj(path, gl, countryVert, phongFrag);
         this.#mesh.scale = [scale, scale, 1];
+
+        const center = this.#mesh.center;
+
+        //this.soldiersView = new SoldiersView();
+        //await this.soldiersView.init(center[0]*scale, center[1]*scale, this.#soldiers, gl);
     }
 
     draw(camera){
         this.#mesh.draw(camera);
+        //this.soldiersView.draw(camera);
+    }
+}
+
+class SoldiersView{
+    #image;
+
+    async init(x, y, soldiers, gl){
+        const cImage = new CanvasImage();
+        await cImage.init(gl);
+
+        cImage.positionX = x;
+        cImage.positionY = y;
+    
+        await cImage.update(ctx =>{
+            if (!(ctx instanceof CanvasRenderingContext2D)) return
+
+            ctx.font = "100px Arial";
+            ctx.fillText(soldiers.toString(), 320, 600);
+        }, gl);
+
+        this.#image = cImage;
+    }
+
+    draw(camera){
+        this.#image.draw(camera);
     }
 }
