@@ -162,6 +162,8 @@ class Game{
         const fortify = new Fortify();
         await fortify.init(this.gl);
 
+        const brasil_point = new 
+
         this.#gameScene = new Scene(this.gl);
         this.#gameScene.createCamera(canvas);
         this.#gameScene.camera.camPosition[2] = 1.8;
