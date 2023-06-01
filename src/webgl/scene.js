@@ -1,3 +1,4 @@
+import Country from "../model/map/territories/country";
 import Camera from "./camera";
 import Light from "./light";
 import Mesh from "./mesh";
@@ -42,6 +43,8 @@ export default class Scene{
             this.#drawnables.push(drawnable);
 
             if(this.#light && drawnable instanceof Mesh) this.#light.createUniforms(drawnable);
+            
+            if(this.#light && drawnable instanceof Country) this.#light.createUniforms(drawnable.mesh);
         });
     }
 

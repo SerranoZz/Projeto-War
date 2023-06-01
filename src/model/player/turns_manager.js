@@ -5,7 +5,7 @@ export default class TurnsManager{
 
     static DISTRIBUCTION = 0;
     static ATTACK = 1;
-    static REMELATION = 2;
+    static REASSIGNMENT = 2;
     static EXCHANGE_CARDS = 3;
     static FREEZE = 4; // freeze events until next player be provided
 
@@ -16,7 +16,7 @@ export default class TurnsManager{
     }
 
     nextPlayer(){
-        this.#currPlayerIndex++;
+        this.#currPlayerIndex = (this.#currPlayerIndex+1)%this.#players.length;
         this.#state = TurnsManager.DISTRIBUCTION;
     }
 

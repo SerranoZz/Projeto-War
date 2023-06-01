@@ -2,254 +2,254 @@
     "data": [
         {
             "name": "Brasil",
-            "neighbors": ["Argentina", "Venezuela", "Peru", "Argélia"],
-            "path": "Insert Here Some Path",
+            "neighbors": ["Argentina", "Venezuela", "Chile", "Argélia"],
+            "path": "./assets/meshes/south_america/brasil.obj",
             "continent": "América do Sul"
         },
         {
             "name": "Argentina",
-            "neighbors": ["Brasil", "Peru"],
-            "path": "Insert Here Some Path",
+            "neighbors": ["Brasil", "Chile"],
+            "path": "./assets/meshes/south_america/argentina.obj",
             "continent": "América do Sul"
         },
         {
             "name": "Venezuela",
-            "neighbors": ["Brasil", "Peru", "México"],
-            "path": "Insert Here Some Path",
+            "neighbors": ["Brasil", "Chile", "México"],
+            "path": "./assets/meshes/south_america/venezuela.obj",
             "continent": "América do Sul"
         },
         {
-            "name": "Peru",
+            "name": "Chile",
             "neighbors": ["Brasil", "Argentina", "Venezuela"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/south_america/chile.obj",
             "continent": "América do Sul"
         },
         {
             "name": "México",
             "neighbors": ["Venezuela", "Nova Iorque", "Califórnia"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/north_america/mexico.obj",
             "continent": "América do Norte"
         },
         {
             "name": "Califórnia",
             "neighbors": ["México", "Nova Iorque", "Ottawa", "Vancouver"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/north_america/california.obj",
             "continent": "América do Norte"
         },
         {
             "name": "Nova Iorque",
             "neighbors": ["México", "Califórnia", "Ottawa", "Labrador"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/north_america/nova_york.obj",
             "continent": "América do Norte"
         },
         {
             "name": "Labrador",
             "neighbors": ["Ottawa", "Nova Iorque", "Groenlândia"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/north_america/labrador.obj",
             "continent": "América do Norte"
         },
         {
             "name": "Ottawa",
             "neighbors": ["Labrador", "Nova Iorque", "Califórnia", "Vancouver", "Mackenzie"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/north_america/ottawa.obj",
             "continent": "América do Norte"
         },
         {
             "name": "Vancouver",
             "neighbors": ["Califórnia", "Ottawa", "Mackenzie", "Alasca"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/north_america/vancouver.obj",
             "continent": "América do Norte"
         },
         {
             "name": "Mackenzie",
             "neighbors": ["Alasca", "Vancouver", "Groenlândia", "Ottawa"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/north_america/mackenzie.obj",
             "continent": "América do Norte"
         },
         {
             "name": "Alasca",
             "neighbors": ["Vancouver", "Mackenzie", "Vladvostok"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/north_america/alaska.obj",
             "continent": "América do Norte"
         },
         {
             "name": "Groenlândia",
             "neighbors": ["Mackenzie", "Labrador", "Islândia"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/north_america/groenlandia.obj",
             "continent": "América do Norte"
         },
         {
             "name": "Islândia",
             "neighbors": ["Groenlândia", "Inglaterra"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/europa/islandia.obj",
             "continent": "Europa"
         },
         {
             "name": "Inglaterra",
             "neighbors": ["Islândia", "França", "Alemanha", "Suécia"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/europa/inglaterra.obj",
             "continent": "Europa"
         },
         {
             "name": "Suécia",
             "neighbors": ["Inglaterra", "Moscou"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/europa/suecia.obj",
             "continent": "Europa"
         },
         {
             "name": "Alemanha",
             "neighbors": ["Inglaterra", "França", "Polônia"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/europa/alemanha.obj",
             "continent": "Europa"
         },
         {
             "name": "França",
             "neighbors": ["Inglaterra", "Alemanha", "Polônia", "Argélia", "Egito"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/europa/franca.obj",
             "continent": "Europa"
         },
         {
             "name": "Polônia",
             "neighbors": ["França", "Alemanha", "Moscou", "Oriente Médio", "Egito"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/europa/polonia.obj",
             "continent": "Europa"
         },
         {
             "name": "Moscou",
             "neighbors": ["Suécia", "Polônia", "Oriente Médio", "Omsk", "Aral"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/europa/moscou.obj",
             "continent": "Europa"
         },
         {
             "name": "Argélia",
             "neighbors": ["Brasil", "França", "Egito", "Sudão", "Congo"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/africa/argelia.obj",
             "continent": "África"
         },
         {
             "name": "Egito",
             "neighbors": ["Argélia", "Sudão", "Oriente Médio", "Polônia", "França"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/africa/egito.obj",
             "continent": "África"
         },
         {
             "name": "Congo",
             "neighbors": ["África do Sul", "Argélia", "Sudão"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/africa/congo.obj",
             "continent": "África"
         },
         {
             "name": "Sudão",
             "neighbors": ["Argélia", "Egito", "Congo", "África do Sul", "Madagascar"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/africa/sudao.obj",
             "continent": "África"
         },
         {
             "name": "Madagascar",
             "neighbors": ["Sudão", "África do Sul"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/africa/madagascar.obj",
             "continent": "África"
         },
         {
             "name": "África do Sul",
             "neighbors": ["Congo", "Sudão", "Madagascar"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/africa/africa_sul.obj",
             "continent": "África"
         },
         {
             "name": "Oriente Médio",
             "neighbors": ["Moscou", "Polônia", "Egito", "Aral", "Índia"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/asia/oriente_medio.obj",
             "continent": "Ásia"
         },
         {
             "name": "Aral",
             "neighbors": ["Moscou", "Omsk", "Oriente Médio", "Índia", "China"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/asia/aral.obj",
             "continent": "Ásia"
         },
         {
-            "name": "Omsk",
+            "name": "Omek",
             "neighbors": ["Moscou", "Aral", "Mongólia", "Dudinka", "China"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/asia/omek.obj",
             "continent": "Ásia"
         },
         {
             "name": "Dudinka",
             "neighbors": ["Omsk", "Sibéria", "Tchita", "Mongólia"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/asia/dudinka.obj",
             "continent": "Ásia"
         },
         {
             "name": "Sibéria",
             "neighbors": ["Dudinka", "Vladvostok", "Tchita"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/asia/siberia.obj",
             "continent": "Ásia"
         },
         {
             "name": "Tchita",
             "neighbors": ["Dudinka", "Sibéria", "Vladvostok", "Mongólia", "China"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/asia/tchita.obj",
             "continent": "Ásia"
         },
         {
             "name": "Mongólia",
             "neighbors": ["Omsk", "Dudinka", "Tchita", "China"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/asia/mongolia.obj",
             "continent": "Ásia"
         },
         {
             "name": "Vladvostok",
             "neighbors": ["China", "Sibéria", "Tchita", "Alasca", "Japão"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/asia/vladvostok.obj",
             "continent": "Ásia"
         },
         {
             "name": "China",
             "neighbors": ["Vladvostok", "Japão", "Vietnã", "Índia", "Aral", "Omsk", "Mongólia", "Tchita"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/asia/china.obj",
             "continent": "Ásia"
         },
         {
             "name": "Índia",
             "neighbors": ["Oriente Médio", "Aral", "China", "Vietnã", "Sumatra"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/asia/india.obj",
             "continent": "Ásia"
         },
         {
             "name": "Japão",
             "neighbors": ["Vladvostok", "China"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/asia/japao.obj",
             "continent": "Ásia"
         },
         {
             "name": "Vietnã",
             "neighbors": ["Índia", "China", "Bornéu"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/asia/vietna.obj",
             "continent": "Ásia"
         },
         {
             "name": "Bornéu",
             "neighbors": ["Vietnã", "Nova Guiné", "Austrália"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/oceania/borneu.obj",
             "continent": "Oceania"
         },
         {
             "name": "Sumatra",
             "neighbors": ["Índia", "Austrália"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/oceania/sumatra.obj",
             "continent": "Oceania"
         },
         {
             "name": "Nova Guiné",
             "neighbors": ["Bornéu", "Austrália"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/oceania/nova_guine.obj",
             "continent": "Oceania"
         },
         {
             "name": "Austrália",
             "neighbors": ["Nova Guiné", "Bornéu", "Sumatra"],
-            "path": "Insert Here Some Path",
+            "path": "./assets/meshes/oceania/australia.obj",
             "continent": "Oceania"
         }
     ]

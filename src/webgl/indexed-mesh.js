@@ -258,9 +258,31 @@ class Border{
         if(!this.#lastClickMin) this.#lastClickMin = pointT;
         else this.#lastClickMax = pointT;
     
-        let collided = this.#collide(pointT);
+        let collided = this.#collideAlt(pointT);
 
         return collided;
+    }
+
+    #collideAlt(point){
+        let [minX, minY] = [Infinity, Infinity];
+        
+        let [maxX, maxY] = [-Infinity, -Infinity];
+
+
+        for(let entry of this.#borderMap.entries()){
+            const i = entry[1]*4;
+            const coord = [this.#coords[i], this.#coords[i+1]];
+
+            if(coord[0]<minX) minX = coord[0];
+            if(coord[1]<minY) minY = coord[1];
+
+            if(coord[0]>maxX) maxX = coord[0];
+            if(coord[1]>maxY) maxY = coord[1];
+        }
+
+        console.log(minX, maxX, minY, maxY, point);
+
+        return (point[0]>=minX && point[0]<=maxX && point[1]>=minY && point[1]<=maxY);
     }
 
     #collide(point){

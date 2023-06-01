@@ -1,4 +1,6 @@
-import Continent from "./continent";
+import countryVert from "../../../shaders/countryVert";
+import phongFrag from "../../../shaders/phongFrag";
+import IndexedMeshT from "../../../webgl/indexed-mesh";
 
 export default class Country {
     #name;
@@ -7,6 +9,7 @@ export default class Country {
     #owner;
     #continent;
     #soldiers;
+    #mesh;
 
     constructor(name, path, continent, neighbors) {
         this.#name = name;
@@ -42,6 +45,10 @@ export default class Country {
         return this.#soldiers;
     }
     
+    get mesh(){
+        return this.#mesh;
+    }
+    
     set continent(continent) {
         this.#continent = continent;
         continent.addCountry(this);
@@ -63,5 +70,14 @@ export default class Country {
             }
         }
         return -1;
+    }
+
+    async loadMesh(path, gl, scale){
+        this.#mesh = await IndexedMeshT.loadMeshFromObj(path, gl, countryVert, phongFrag);
+        this.#mesh.scale = [scale, scale, 1];
+    }
+
+    draw(camera){
+        this.#mesh.draw(camera);
     }
 }
