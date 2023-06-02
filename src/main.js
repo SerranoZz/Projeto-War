@@ -1,30 +1,34 @@
 import ImageGL from "./view/image";
-import CanvasImage from "./view/canvasImage";
 import Scene from "./webgl/scene";
 import { Player } from "./model/player/player";
 import TerritoryController from "./model/map/territories/territory-controller";
 import TurnsManager from "./model/player/turns_manager";
 import CountryEventsHandler from "./events/events_manager";
 import TroopsView from "./view/troopsView";
-import IndexedMeshT from "./webgl/indexed-mesh";
-import countryVert from "./shaders/countryVert";
-import phongFrag from "./shaders/phongFrag";
 
 class Game{
     #menuScene;
     #gameScene;
     #guiScene;
+    #tView;
 
     #territoryController;
 
     #scale = 4.5;
 
     #inGame = false;
+    #toGame = false;
 
     #players = [];
     #turnsManager;
 
     #countryEvents;
+
+    #fortify;
+
+    get tView(){
+        return this.#tView;
+    }
 
     get inGame(){
         return this.#inGame;
@@ -40,6 +44,10 @@ class Game{
 
     get territoryController(){
         return this.#territoryController;
+    }
+
+    get fortify(){
+        return this.#fortify;
     }
 
     static async build(canvas){
@@ -91,7 +99,7 @@ class Game{
                 const index = Math.floor(Math.random()*countries.length);
 
                 countries[index].owner = player;
-                countries[index].troops = 1;
+                countries[index].soldiers = 1;
 
                 countries.splice(index, 1);
             }
@@ -147,7 +155,8 @@ class Game{
             const point = Game.mapClickInCanvas(e.clientX, e.clientY, this.gl.canvas);
     
             if(playButton.pointCollision(...point)){
-                this.#inGame = true;
+                if(!this.#inGame)
+                    this.#toGame = true;
             }
     
         })
@@ -167,6 +176,8 @@ class Game{
         const fortify = new Fortify();
         await fortify.init(this.gl);
 
+        this.#fortify = fortify;
+
         this.#gameScene = new Scene(this.gl);
         this.#gameScene.createCamera(canvas);
         this.#gameScene.camera.camPosition[2] = 1.8;
@@ -176,13 +187,13 @@ class Game{
 
         this.#guiScene = new Scene(this.gl);
     
-        const tView = new TroopsView();
-        await tView.init(this.#territoryController.countries, this.#scale, this.gl);
+        this.#tView = new TroopsView();
+        await this.#tView.init(this.#territoryController.countries, this.#scale, this.gl);
     
         this.#gameScene.appendElement(game_background, ...this.#territoryController.countries);
         this.#guiScene.appendElement(gameScreen, show_cards, fortify);
 
-        this.#gameScene.appendElement(tView);
+        this.#gameScene.appendElement(this.#tView);
     
         for(let country of this.#territoryController.countries){
             country.mesh.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
@@ -190,6 +201,10 @@ class Game{
             country.mesh.setUniformValue("color", country.owner.color, "4fv");
         }
     
+    }
+
+    logic(){
+        this.#fortify.logic();
     }
 
     draw(){
@@ -204,7 +219,14 @@ class Game{
 
     run(){
         const run_aux = ()=>{
+            this.logic();
             this.draw();
+
+            if(this.#toGame){
+                this.#inGame = true;
+                this.#toGame = false;
+            }
+
             requestAnimationFrame(run_aux);
         }
 
@@ -320,6 +342,9 @@ class ShowCards{
 }
 
 class Fortify{
+    #up = false;
+    #upPos = 0;
+
     async init(gl){
         this.fortify = new ImageGL();
         await this.fortify.init(gl, "./assets/game/fortify.png");
@@ -354,11 +379,31 @@ class Fortify{
     }
 
     moveAll(amount){
+        console.log("am: ", amount);
+
         this.fortify.positionY += amount;
         this.cancel_button.positionY += amount;
         this.ok_button.positionY += amount;
         this.plus_button.positionY += amount;
         this.minus_button.positionY += amount;
+    }
+
+    up(){
+        this.#up = true;
+    }
+
+    logic(){
+        const step = 0.01;
+
+        if(this.#up){
+            this.#upPos += step;
+
+            if(this.#upPos>=1.0){
+                this.#upPos = 1.0;
+                this.#up = false;
+            }else
+                this.moveAll(step);
+        }
     }
 
     draw(camera){

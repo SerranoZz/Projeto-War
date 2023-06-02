@@ -8,19 +8,19 @@
 // verificar se o jogador ainda possui tropas para fazer outro ataque
 // passa para o proximo jogador
 //Perguntar ao Bruno como importar o json de maneira correta***
-//
+
 import Dice from "../tools/dice.js";
 
 class Attack {
-//teste de commit
-
     attackPlayer(countryAttack, countryDefense) {
         /*if(!this.isValidCountry(countryAttack) || !this.isValidCountry(countryDefense)) {
             throw new Error("Invalid countries");
         }*/
     
-        const dicesAttack =  this.calcDices(countryAttack);
-        const dicesDefense = this.calcDices(countryDefense);
+        const dicesAttack =  this.calcDices(countryAttack, true);
+        const dicesDefense = this.calcDices(countryDefense, false);
+
+        if(dicesAttack === 0) return alert("Ataque invalido");
     
         const attackDiceRolls = Dice.rollDice(dicesAttack);
         const defendDiceRolls = Dice.rollDice(dicesDefense);
@@ -28,6 +28,12 @@ class Attack {
         let attackWins = 0;
         let defenseWins = 0;
     
+        attackDiceRolls.sort().reverse();
+        defendDiceRolls.sort().reverse();
+
+        console.log(attackDiceRolls);
+        console.log(defendDiceRolls);
+
         for (let i = 0; i < Math.min(dicesAttack, dicesDefense); i++) {
             if (attackDiceRolls[i] > defendDiceRolls[i]) {
                 attackWins++;
@@ -35,26 +41,29 @@ class Attack {
                 defenseWins++;
             }
         }
-        countryAttack.soldier -= defenseWins;
-        countryDefense.soldier -= attackWins;
+
+        console.log(`vitórias do ataque: ${attackWins}, vitórias da defesa: ${defenseWins}`);
+
+        countryAttack.soldiers -= defenseWins;
+        countryDefense.soldiers -= attackWins;
     }
-    
-    calcDices(country) {
-        if(country.soldiers >= 3 || country.soldiers >= 1) {
-            let dice =  3;
-            return dice;
-        }else if(country.soldiers < 3 || country.soldiers >= 1) {
-            let dice = 2;
-            return dice;
-        }else if(country.soldiers < 2 || country.soldiers >=1) {
-            let dice = 1;
+
+    calcDices(country, isAttack) {
+        if(isAttack) {
+            var dice = country.soldiers-1;
+            if(dice > 3) dice = 3;
             return dice;
         }
+
+        var dice = country.soldiers;
+        if(dice > 3) dice = 3;
+        return dice;
     }
+
     getCountryObject(country) {
         return this.countries.find((c) => c.name === country);
     }
-////
+
     isValidCountry(country) {
         return this.countries.includes(country);
     }
