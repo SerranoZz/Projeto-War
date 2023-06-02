@@ -169,9 +169,9 @@
             "continent": "Ásia"
         },
         {
-            "name": "Omek",
+            "name": "Omsk",
             "neighbors": ["Moscou", "Aral", "Mongólia", "Dudinka", "China"],
-            "path": "./assets/meshes/asia/omek.obj",
+            "path": "./assets/meshes/asia/omsk.obj",
             "continent": "Ásia"
         },
         {
