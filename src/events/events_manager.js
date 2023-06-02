@@ -20,8 +20,6 @@ export default class CountryEventsHandler{
 
             if(country)
                 alert(country.name);
-            else
-                alert("nulo");
 
             // country events é um dicionário de funções, onde as chaves são os estados
             // essa linha chama uma função de acordo com o estado do jogo atual
