@@ -198,7 +198,6 @@ class Game{
         this.#guiScene.appendElement(gameScreen, show_cards, fortify);
 
         this.#gameScene.appendElement(this.#tView);
-    
         //colocar a view e a projection
 
         for(let country of this.#territoryController.countries){
@@ -378,7 +377,9 @@ class Fortify{
         this.minus_button.scale = [0.046, 0.083];
         Fortify.setInitialPosition(-0.168, -0.86 - 1, 0.4, this.minus_button);
 
-
+        gl.canvas.addEventListener("click", e=>{
+            
+        })
     }
 
     static setInitialPosition(x, y, depth, widget){

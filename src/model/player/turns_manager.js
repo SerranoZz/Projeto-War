@@ -13,13 +13,13 @@ export default class TurnsManager{
         this.#players = players;
         this.#currPlayerIndex = 0;
         this.#state = TurnsManager.DISTRIBUCTION;
-        this.#players.recieveTroops();
+        this.#players[this.#currPlayerIndex].receiveTroop();
     }
 
     nextPlayer(){
         this.#currPlayerIndex = (this.#currPlayerIndex+1)%this.#players.length;
         this.#state = TurnsManager.DISTRIBUCTION;
-        this.#players.recieveTroops();
+        this.#players[this.#currPlayerIndex].receiveTroop();
     }
 
     get player(){
