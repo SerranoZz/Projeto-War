@@ -42,14 +42,12 @@ class Attack {
     calcDices(country) {
         if(country.soldiers >= 3 || country.soldiers >= 1) {
             let dice =  3;
-            return dice;
         }else if(country.soldiers < 3 || country.soldiers >= 1) {
             let dice = 2;
-            return dice;
         }else if(country.soldiers < 2 || country.soldiers >=1) {
             let dice = 1;
-            return dice;
         }
+        return dice;
     }
     getCountryObject(country) {
         return this.countries.find((c) => c.name === country);
