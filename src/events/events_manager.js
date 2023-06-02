@@ -12,7 +12,7 @@ export default class CountryEventsHandler{
         game.gl.canvas.addEventListener("click", e=>{
             //if(game.turnsManager.state === TurnsManager.FREEZE) return;
 
-            console.log(game.inGame);
+            console.log(game.inGame, game.turnsManager.state);
 
             if(!game.inGame) return;
     
@@ -25,7 +25,7 @@ export default class CountryEventsHandler{
             else
                 alert("nulo");
 
-            if(country) countryEvents.get(TurnsManager.ATTACK)(game, country);
+            if(country) countryEvents.get(game.turnsManager.state)(game, country);
 
             this.#country = country;
 
@@ -61,25 +61,31 @@ const countryEvents = new Map();
 
 const attack = {}
 
+const distribuction = null;
+
 countryEvents.set(TurnsManager.ATTACK, (game, country)=>{
     const player = game.turnsManager.player;
     const territoryController = game.territoryController;
+    
+    //console.log(country.owner, player);
 
     if(!attack.base) {
-        console.log(country.owner, player);
 
         if(country.owner === player){
             alert("entrou");
-            attack.base = country;
-            country.mesh.position[2] = 0.03;
-            country.mesh.scale[2] = 2;
 
             const neighbors = territoryController.countries.filter(c =>{
-                if(country.neighbors.indexOf(c.name) !== -1)
+                if(country.neighbors.indexOf(c.name) !== -1 && c.owner !== country.owner)
                     return c;
             })
 
+            if(neighbors.length === 0) return;
+
             game.gameScene.switchLight();
+
+            attack.base = country;
+            country.mesh.position[2] = 0.03;
+            country.mesh.scale[2] = 2;
 
             game.gameScene.light.createUniforms(country.mesh);
 
@@ -118,14 +124,28 @@ countryEvents.set(TurnsManager.ATTACK, (game, country)=>{
         attack.base.mesh.position[2] = 0.0;
         attack.base.mesh.scale[2] = 1;
 
+        attack.base = null;
+        attack.neighbors = null;
+
     }
 })
 
-countryEvents.set(TurnsManager.DISTRIBUCTION, (turnsManager, country)=>{
+countryEvents.set(TurnsManager.DISTRIBUCTION, (game, country)=>{
+    console.log("dist")
+    if(distribuction){
+        game.gameScene.switchLight();
 
+        attack.base = country;
+        country.mesh.position[2] = 0.03;
+        country.mesh.scale[2] = 2;
+
+        game.gameScene.light.createUniforms(country.mesh);
+
+        game.fortify.up();
+    }
 })
 
 countryEvents.set(TurnsManager.REASSIGNMENT, (turnsManager, country)=>{
-    
+
 })
 
