@@ -172,9 +172,6 @@ class Game{
 
         this.#background = background;
 
-        const game_background = new ImageGL();
-        await game_background.init(this.gl, "./assets/game/fundo.jpg");
-
         const gameScreen = new GameScreen();
         await gameScreen.init(this.gl);
 
@@ -198,7 +195,7 @@ class Game{
         this.#tView = new TroopsView();
         await this.#tView.init(this.#territoryController.countries, this.#scale, this.gl);
     
-        this.#gameScene.appendElement(game_background, ...this.#territoryController.countries);
+        this.#gameScene.appendElement(...this.#territoryController.countries);
         this.#guiScene.appendElement(gameScreen, show_cards, fortify);
 
         this.#gameScene.appendElement(this.#tView);
