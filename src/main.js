@@ -64,7 +64,7 @@ class Game{
         //Depois talvez carregar o jogo apenas quando for dado o play
         
 
-        const names = ["claudio", "et bilu", "dom pedro", "saci", "uantedeguemon", "Serrano"];
+        const names = ["Player 1", "Player 2", "Player 3", "Player 4", "Player 5", "Player 6"];
 
         //preto(acizentado), branco, amarelo, azul, vermelho e cinza
         const colors = [
