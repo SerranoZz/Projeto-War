@@ -25,7 +25,12 @@ export default class CountryEventsHandler{
 
             // country events é um dicionário de funções, onde as chaves são os estados
             // essa linha chama uma função de acordo com o estado do jogo atual
+<<<<<<< HEAD
             if(country) countryEvents.get(game.turnsManager.state)(game, country);
+=======
+            console.log("Quantidade de soldados: " + country.soldiers);
+            if(country) countryEvents.get(TurnsManager.ATTACK)(game, country);
+>>>>>>> 29759e3e44c9dc10b8cacbe12e21ed8a1280fedc
 
             this.#country = country;
 
@@ -126,7 +131,7 @@ countryEvents.set(TurnsManager.ATTACK, (game, country)=>{
 
         attack.base = null;
         attack.neighbors = null;
-
+        game.tView.update();
     }
 })
 

@@ -10,7 +10,11 @@ class Game{
     #menuScene;
     #gameScene;
     #guiScene;
+<<<<<<< HEAD
     #background;
+=======
+    #tView;
+>>>>>>> 29759e3e44c9dc10b8cacbe12e21ed8a1280fedc
 
     #territoryController;
 
@@ -25,6 +29,10 @@ class Game{
     #countryEvents;
 
     #fortify;
+
+    get tView(){
+        return this.#tView;
+    }
 
     get inGame(){
         return this.#inGame;
@@ -95,7 +103,7 @@ class Game{
                 const index = Math.floor(Math.random()*countries.length);
 
                 countries[index].owner = player;
-                countries[index].troops = 1;
+                countries[index].soldiers = 1;
 
                 countries.splice(index, 1);
             }
@@ -186,13 +194,13 @@ class Game{
 
         this.#guiScene = new Scene(this.gl);
     
-        const tView = new TroopsView();
-        await tView.init(this.#territoryController.countries, this.#scale, this.gl);
+        this.#tView = new TroopsView();
+        await this.#tView.init(this.#territoryController.countries, this.#scale, this.gl);
     
         this.#gameScene.appendElement(...this.#territoryController.countries);
         this.#guiScene.appendElement(gameScreen, show_cards, fortify);
 
-        this.#gameScene.appendElement(tView);
+        this.#gameScene.appendElement(this.#tView);
     
         //colocar a view e a projection
 
