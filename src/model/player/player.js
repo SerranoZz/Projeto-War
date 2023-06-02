@@ -40,12 +40,14 @@ class Attack {
     }
     
     calcDices(country) {
+        let dice = 0;
+
         if(country.soldiers >= 3 || country.soldiers >= 1) {
-            let dice =  3;
+            dice =  3;
         }else if(country.soldiers < 3 || country.soldiers >= 1) {
-            let dice = 2;
+            dice = 2;
         }else if(country.soldiers < 2 || country.soldiers >=1) {
-            let dice = 1;
+            dice = 1;
         }
         return dice;
     }
