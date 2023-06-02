@@ -9,6 +9,14 @@ export default class ImageGL{
     #width;
     #height;
 
+    get width(){
+        return this.#width;
+    }
+
+    get height(){
+        return this.#height;
+    }
+
     set scaleX(x){
         if(x<=0)
             throw new Error("the scale of a image need to be greater than 0");
@@ -32,7 +40,7 @@ export default class ImageGL{
     }
 
     set depth(z){
-        this.#mesh.position[2] = z
+        this.#mesh.position[2] = z;
     }
 
     set rotation(theta){
@@ -50,6 +58,14 @@ export default class ImageGL{
         this.#mesh.setUniformValue("alpha", alpha, "1f");
     }
 
+    get positionX(){
+        return this.#mesh.position[0];
+    }
+    
+    get positionY(){
+        return this.#mesh.position[1];
+    }
+
     async init(gl, src){
         this.#mesh = new Mesh(gl, imgVert, imgFrag, gl.TRIANGLES);
 
@@ -59,12 +75,11 @@ export default class ImageGL{
 
         this.#mesh.addAttribute("position", data.coords);
         this.#mesh.addAttribute("texCoord", data.texCoords, 2);
-        this.#mesh.createVAO();
 
         this.opacity = 1.0;
     }
 
-    async loadImage(url){
+    static async loadImage(url){
         return new  Promise(resolve => {
             const image = new Image();
             image.addEventListener('load', () => {
@@ -75,11 +90,11 @@ export default class ImageGL{
     }
 
     async #loadTex(imgSrc){
-        const img = await this.loadImage(imgSrc);
+        const img = await ImageGL.loadImage(imgSrc);
         await img.decode();
         const imageBitmap = await createImageBitmap(img);
 
-        this.#mesh.createTex(img, "uTexture");
+        this._tex = this.#mesh.createTex(img, "uTexture");
 
         return [imageBitmap.width, imageBitmap.height];
     }
@@ -116,6 +131,10 @@ export default class ImageGL{
         }
     }
 
+    useDepthTest(){
+        this.#mesh.useDepthTest = true;
+    }
+
     pointCollision(x, y, camera){
         const point = [x, y, 0, 1];
 
@@ -131,7 +150,18 @@ export default class ImageGL{
 
         mat4.invert(inverse, mvp);
 
-        const pointT = multiplyMatWithVec(inverse, point);
+        const near = (camera)?camera.near: 1;
+        const far = (camera)?camera.far: 1;
+
+        const p1 = multiplyMatWithVec(inverse, [x, y, near, 1]);
+        const p2 = multiplyMatWithVec(inverse, [x, y, far, 1]);
+
+        const p1Norm = scalarMulti(p1, 1/p1[3]);
+        const p2Norm = scalarMulti(p2, 1/p2[3]);
+
+        const line = new Line(p2Norm, p1Norm);
+
+        const pointT = line.pointWhenZIs(0);
 
         return (Math.abs(pointT[0])<this.#width && Math.abs(pointT[1])<this.#height);
     }
@@ -139,6 +169,10 @@ export default class ImageGL{
     draw(camera){
         if(this.#mesh) this.#mesh.draw(camera);
     }
+}
+
+function scalarMulti(vector, scalar){
+    return vector.map(coord => coord*scalar);
 }
 
 function multiplyMatWithVec(mat, vec){
@@ -152,4 +186,36 @@ function multiplyMatWithVec(mat, vec){
             out[i]+=mat[j+i]*vec[j/4];
 
     return out;
+}
+
+class Line{
+    #origin;
+    #direction;
+
+    constructor(extreme, origin){
+        const vDir = this.#getDirection(extreme, origin);
+
+        this.#direction = vDir;
+        this.#origin = origin;
+    }
+
+    getPoint(t){
+        return this.#origin.map((coord, index) => coord+t*this.#direction[index]);
+    }
+
+    pointWhenZIs(z){
+        const t = (this.#direction[2])?(z - this.#origin[2])/this.#direction[2] : 0;
+
+        return this.getPoint(t);
+    }
+
+    #getDirection(extreme, origin){
+        const v = extreme.map((coord, index)=>coord-origin[index]);
+
+        const size = Math.sqrt(v.reduce((ac, coord) => ac+coord**2, 0));
+
+        const vDir = (size)?v.map(val=> val/size):v;
+
+        return vDir;
+    }
 }

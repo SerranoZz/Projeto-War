@@ -1,4 +1,4 @@
-import { mat4, vec3 } from "gl-matrix";
+import { mat4 } from "gl-matrix";
 
 export default class Camera{
     #view_matrix = mat4.create();
@@ -16,7 +16,7 @@ export default class Camera{
     near = 1.0;
     far = 9.0;
 
-    fovy = Math.PI/1.3;
+    fovy = Math.PI/2;
     aspect;
 
     constructor(canvas){
@@ -29,7 +29,7 @@ export default class Camera{
         if(type !== "orthogonal" && type !== "perspective") 
             throw new Error("Invalid type of projection.");
 
-        this.typeOfProjection = type;
+        this.#typeOfProjection = type;
     }
 
     get viewMatrix(){
@@ -49,10 +49,10 @@ export default class Camera{
 
     #updateProjMatrix(){
         mat4.identity(this.#proj_matrix);
-        if(this.typeOfProjection == "perspective")
+        if(this.#typeOfProjection === "perspective")
             mat4.perspective(this.#proj_matrix, this.fovy, this.aspect, this.near, this.far);
         else
-            mat4.ortho(this.#proj_matrix, this.left, this.right, this.bottom, this.top, this.left, this.right);
+            mat4.ortho(this.#proj_matrix, this.left*this.aspect, this.right*this.aspect, this.bottom, this.top, this.left, this.right);
     }
 
     get viewProjection(){

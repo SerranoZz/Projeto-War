@@ -8,12 +8,10 @@ export default `#version 300 es
 
     out vec4 color;
 
-
-
     void main() {
         color = texture(uTexture, fTexCoord);
 
-        if(color.a < 0.5) discard;
+        if(color.a < 0.2) discard;
 
         color *= alpha;
     }

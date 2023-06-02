@@ -1,10 +1,16 @@
-import "/country.js";
+import Country from "./country";
 
-class Continent {
+export default class Continent {
+    #name;
+    #countries;
+    #bonus;
+    #owner;
+
     constructor(name, bonus) {
         this.#name = name;
         this.#countries = [];
         this.#bonus = bonus;
+        this.#owner = null;
     }
 
     addCountry(country) {
@@ -21,5 +27,13 @@ class Continent {
 
     get bonus() {
         return this.#bonus;
+    }
+
+    get owner(){
+        return this.#owner;
+    }
+
+    set owner(owner){
+        this.#owner = owner;
     }
 }
