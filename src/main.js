@@ -10,6 +10,7 @@ class Game{
     #menuScene;
     #gameScene;
     #guiScene;
+    #background;
 
     #territoryController;
 
@@ -158,6 +159,13 @@ class Game{
     }
 
     async #createGameScreenAlt(){
+        const background = new ImageGL();
+        await background.init(this.gl, "./assets/game/fundo.jpg");
+        background.scaleY = 1.85;
+        background.scaleX = 1.01;
+        background.depth = -0.01;
+
+        this.#background = background;
 
         const gameScreen = new GameScreen();
         await gameScreen.init(this.gl);
@@ -202,6 +210,7 @@ class Game{
 
     draw(){
         if(this.#inGame){
+            this.#background.draw();
             this.#gameScene.draw();
             this.#guiScene.draw();
         }
@@ -363,6 +372,8 @@ class Fortify{
         await this.minus_button.init(gl, "./assets/game/minus_button.png");
         this.minus_button.scale = [0.046, 0.083];
         Fortify.setInitialPosition(-0.168, -0.86 - 1, 0.4, this.minus_button);
+
+
     }
 
     static setInitialPosition(x, y, depth, widget){
@@ -405,6 +416,10 @@ class Fortify{
         this.ok_button.draw(camera);
         this.plus_button.draw(camera);
         this.minus_button.draw(camera);
+    }
+
+    getWidget(x, y, camera){
+
     }
 }
 

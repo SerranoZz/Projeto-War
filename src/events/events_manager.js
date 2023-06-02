@@ -5,8 +5,6 @@ export default class CountryEventsHandler{
 
     constructor(game){
 
-        console.log(game);
-
         //this.#country = territoryController.countries.find(c => c.name==="México");
 
         game.gl.canvas.addEventListener("click", e=>{
@@ -27,7 +25,7 @@ export default class CountryEventsHandler{
 
             // country events é um dicionário de funções, onde as chaves são os estados
             // essa linha chama uma função de acordo com o estado do jogo atual
-            if(country) countryEvents.get(TurnsManager.ATTACK)(game, country);
+            if(country) countryEvents.get(game.turnsManager.state)(game, country);
 
             this.#country = country;
 
@@ -133,8 +131,8 @@ countryEvents.set(TurnsManager.ATTACK, (game, country)=>{
 })
 
 countryEvents.set(TurnsManager.DISTRIBUCTION, (game, country)=>{
-    console.log("dist")
-    if(distribuction){
+    console.log("dist", distribuction);
+    if(!distribuction && country.owner === game.turnsManager.player){
         game.gameScene.switchLight();
 
         attack.base = country;
@@ -143,7 +141,11 @@ countryEvents.set(TurnsManager.DISTRIBUCTION, (game, country)=>{
 
         game.gameScene.light.createUniforms(country.mesh);
 
+        console.log(game.fortify);
+
         game.fortify.up();
+
+        distribuction = country;
     }
 })
 

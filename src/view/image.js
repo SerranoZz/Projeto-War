@@ -131,6 +131,10 @@ export default class ImageGL{
         }
     }
 
+    useDepthTest(){
+        this.#mesh.useDepthTest = true;
+    }
+
     pointCollision(x, y, camera){
         const point = [x, y, 0, 1];
 
