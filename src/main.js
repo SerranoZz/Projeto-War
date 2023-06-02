@@ -10,6 +10,7 @@ class Game{
     #menuScene;
     #gameScene;
     #guiScene;
+    #background;
     #tView;
 
     #territoryController;
@@ -163,6 +164,16 @@ class Game{
     }
 
     async #createGameScreenAlt(){
+        const background = new ImageGL();
+        await background.init(this.gl, "./assets/game/fundo.jpg");
+        background.scaleY = 1.85;
+        background.scaleX = 1.01;
+        background.depth = -0.01;
+
+        this.#background = background;
+
+        const game_background = new ImageGL();
+        await game_background.init(this.gl, "./assets/game/fundo.jpg");
 
         const gameScreen = new GameScreen();
         await gameScreen.init(this.gl);
@@ -180,18 +191,17 @@ class Game{
         this.#gameScene.camera.camPosition[2] = 1.8;
         this.#gameScene.camera.camPosition[1] = -0.3;
         this.#gameScene.createLight([1.0, 0.0, 0.3]);
+        
 
         this.#guiScene = new Scene(this.gl);
     
         this.#tView = new TroopsView();
         await this.#tView.init(this.#territoryController.countries, this.#scale, this.gl);
     
-        this.#gameScene.appendElement(...this.#territoryController.countries);
+        this.#gameScene.appendElement(game_background, ...this.#territoryController.countries);
         this.#guiScene.appendElement(gameScreen, show_cards, fortify);
 
         this.#gameScene.appendElement(this.#tView);
-    
-        //colocar a view e a projection
 
         for(let country of this.#territoryController.countries){
             country.mesh.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
@@ -207,6 +217,7 @@ class Game{
 
     draw(){
         if(this.#inGame){
+            this.#background.draw();
             this.#gameScene.draw();
             this.#guiScene.draw();
         }
@@ -368,6 +379,10 @@ class Fortify{
         await this.minus_button.init(gl, "./assets/game/minus_button.png");
         this.minus_button.scale = [0.046, 0.083];
         Fortify.setInitialPosition(-0.168, -0.86 - 1, 0.4, this.minus_button);
+
+        gl.canvas.addEventListener("click", e=>{
+            
+        })
     }
 
     static setInitialPosition(x, y, depth, widget){
@@ -410,6 +425,10 @@ class Fortify{
         this.ok_button.draw(camera);
         this.plus_button.draw(camera);
         this.minus_button.draw(camera);
+    }
+
+    getWidget(x, y, camera){
+
     }
 }
 
