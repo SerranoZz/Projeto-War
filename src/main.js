@@ -68,12 +68,12 @@ class Game{
 
         //preto(acizentado), branco, amarelo, azul, vermelho e cinza
         const colors = [
-            [0.2, 0.2, 0.2, 1.0],
-            [0.9, 0.9, 0.9, 1.0],
-            [0.0, 0.8, 0.8, 1.0],
-            [0.0, 0.0, 0.8, 1.0],
-            [0.8, 0.0, 0.0, 1.0],
-            [0.5, 0.5, 0.5, 1.0]
+            [1.0, 1.0, 0.0, 1.0],
+            [1.0, 0.0, 0.0, 1.0],
+            [0.0, 128/255, 0, 1.0],
+            [0.0, 0.0, 1.0, 1.0],
+            [1.0, 1.0, 1.0, 1.0],
+            [0.0, 0.0, 0.0, 1.0]
         ];
 
 
@@ -172,9 +172,6 @@ class Game{
 
         this.#background = background;
 
-        const game_background = new ImageGL();
-        await game_background.init(this.gl, "./assets/game/fundo.jpg");
-
         const gameScreen = new GameScreen();
         await gameScreen.init(this.gl);
 
@@ -198,11 +195,11 @@ class Game{
         this.#tView = new TroopsView();
         await this.#tView.init(this.#territoryController.countries, this.#scale, this.gl);
     
-        this.#gameScene.appendElement(game_background, ...this.#territoryController.countries);
+        this.#gameScene.appendElement(...this.#territoryController.countries);
         this.#guiScene.appendElement(gameScreen, show_cards, fortify);
 
         this.#gameScene.appendElement(this.#tView);
-    
+
         for(let country of this.#territoryController.countries){
             country.mesh.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
             country.mesh.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
@@ -380,7 +377,9 @@ class Fortify{
         this.minus_button.scale = [0.046, 0.083];
         Fortify.setInitialPosition(-0.168, -0.86 - 1, 0.4, this.minus_button);
 
-
+        gl.canvas.addEventListener("click", e=>{
+            
+        })
     }
 
     static setInitialPosition(x, y, depth, widget){
