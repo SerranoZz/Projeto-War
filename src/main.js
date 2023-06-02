@@ -172,6 +172,9 @@ class Game{
 
         this.#background = background;
 
+        const game_background = new ImageGL();
+        await game_background.init(this.gl, "./assets/game/fundo.jpg");
+
         const gameScreen = new GameScreen();
         await gameScreen.init(this.gl);
 
@@ -188,17 +191,17 @@ class Game{
         this.#gameScene.camera.camPosition[2] = 1.8;
         this.#gameScene.camera.camPosition[1] = -0.3;
         this.#gameScene.createLight([1.0, 0.0, 0.3]);
+        
 
         this.#guiScene = new Scene(this.gl);
     
         this.#tView = new TroopsView();
         await this.#tView.init(this.#territoryController.countries, this.#scale, this.gl);
     
-        this.#gameScene.appendElement(...this.#territoryController.countries);
+        this.#gameScene.appendElement(game_background, ...this.#territoryController.countries);
         this.#guiScene.appendElement(gameScreen, show_cards, fortify);
 
         this.#gameScene.appendElement(this.#tView);
-        //colocar a view e a projection
 
         for(let country of this.#territoryController.countries){
             country.mesh.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");

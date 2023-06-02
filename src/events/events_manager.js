@@ -148,6 +148,7 @@ countryEvents.set(TurnsManager.DISTRIBUCTION, (game, country)=>{
         game.fortify.up();
 
         distribuction = country;
+
     }
 })
 
