@@ -8,12 +8,10 @@
 // verificar se o jogador ainda possui tropas para fazer outro ataque
 // passa para o proximo jogador
 //Perguntar ao Bruno como importar o json de maneira correta***
-//
+
 import Dice from "../tools/dice.js";
 
 class Attack {
-//teste de commit
-
     attackPlayer(countryAttack, countryDefense) {
         /*if(!this.isValidCountry(countryAttack) || !this.isValidCountry(countryDefense)) {
             throw new Error("Invalid countries");
@@ -52,7 +50,7 @@ class Attack {
     getCountryObject(country) {
         return this.countries.find((c) => c.name === country);
     }
-////
+
     isValidCountry(country) {
         return this.countries.includes(country);
     }
