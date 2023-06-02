@@ -17,8 +17,10 @@ class Attack {
             throw new Error("Invalid countries");
         }*/
     
-        const dicesAttack =  this.calcDices(countryAttack);
-        const dicesDefense = this.calcDices(countryDefense);
+        const dicesAttack =  this.calcDices(countryAttack, true);
+        const dicesDefense = this.calcDices(countryDefense, false);
+
+        if(dicesAttack === 0) return alert("Ataque invalido");
     
         const attackDiceRolls = Dice.rollDice(dicesAttack);
         const defendDiceRolls = Dice.rollDice(dicesDefense);
@@ -26,6 +28,12 @@ class Attack {
         let attackWins = 0;
         let defenseWins = 0;
     
+        attackDiceRolls.sort().reverse();
+        defendDiceRolls.sort().reverse();
+
+        console.log(attackDiceRolls);
+        console.log(defendDiceRolls);
+
         for (let i = 0; i < Math.min(dicesAttack, dicesDefense); i++) {
             if (attackDiceRolls[i] > defendDiceRolls[i]) {
                 attackWins++;
@@ -33,22 +41,25 @@ class Attack {
                 defenseWins++;
             }
         }
-        countryAttack.soldier -= defenseWins;
-        countryDefense.soldier -= attackWins;
-    }
-    
-    calcDices(country) {
-        let dice = 0;
 
-        if(country.soldiers >= 3 || country.soldiers >= 1) {
-            dice =  3;
-        }else if(country.soldiers < 3 || country.soldiers >= 1) {
-            dice = 2;
-        }else if(country.soldiers < 2 || country.soldiers >=1) {
-            dice = 1;
+        console.log(`vitórias do ataque: ${attackWins}, vitórias da defesa: ${defenseWins}`);
+
+        countryAttack.soldiers -= defenseWins;
+        countryDefense.soldiers -= attackWins;
+    }
+
+    calcDices(country, isAttack) {
+        if(isAttack) {
+            var dice = country.soldiers-1;
+            if(dice > 3) dice = 3;
+            return dice;
         }
+
+        var dice = country.soldiers;
+        if(dice > 3) dice = 3;
         return dice;
     }
+
     getCountryObject(country) {
         return this.countries.find((c) => c.name === country);
     }
