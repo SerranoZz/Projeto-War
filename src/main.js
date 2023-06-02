@@ -10,11 +10,8 @@ class Game{
     #menuScene;
     #gameScene;
     #guiScene;
-<<<<<<< HEAD
     #background;
-=======
     #tView;
->>>>>>> 29759e3e44c9dc10b8cacbe12e21ed8a1280fedc
 
     #territoryController;
 
