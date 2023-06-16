@@ -24,7 +24,8 @@ class Attack {
     
         const attackDiceRolls = Dice.rollDice(dicesAttack);
         const defendDiceRolls = Dice.rollDice(dicesDefense);
-    
+
+
         let attackWins = 0;
         let defenseWins = 0;
     
@@ -101,6 +102,7 @@ export class Player {
         this.#freeTroops = qtdreceivedTroops;
     }
 
+
     addTroops(country,qtdTroops){
         if(qtdTroops <=  this.#freeTroops){
             country.soldiers = country.soldiers + qtdTroops;
@@ -114,6 +116,7 @@ export class Player {
         console.log(base.soldiers, to.soldiers);
     }
     
+    
     get name(){
         return this.#name;
     }
@@ -124,5 +127,9 @@ export class Player {
 
     get freeTroops(){
         return this.#freeTroops;
+    }
+
+    get goal(){
+        return this.#goal;
     }
 }

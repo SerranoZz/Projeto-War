@@ -5,6 +5,7 @@ import TerritoryController from "./model/map/territories/territory-controller";
 import TurnsManager from "./model/player/turns_manager";
 import CountryEventsHandler from "./events/events_manager";
 import TroopsView from "./view/troopsView";
+import Goal from "./model/tools/goal";
 
 class Game{
     #menuScene;
@@ -66,6 +67,7 @@ class Game{
 
         const names = ["Player 1", "Player 2", "Player 3", "Player 4", "Player 5", "Player 6"];
 
+        
         //preto(acizentado), branco, amarelo, azul, vermelho e cinza
         const colors = [
             [1.0, 1.0, 0.0, 1.0],
@@ -75,28 +77,36 @@ class Game{
             [1.0, 1.0, 1.0, 1.0],
             [0.0, 0.0, 0.0, 1.0]
         ];
-
-
+        
+        const goal = new Goal();
+        await goal.loadGoals();
+        
         for(let i = 0; i < 6; i++){
             const index = Math.floor(Math.random()*colors.length);
             const color = colors[index];
 
+            goal.sortGoal(names[i]);
+            let player_goal = goal.getGoal;
+            
             colors.splice(index, 1);
 
-            this.#players[i] = new Player(names[i], color, "mata todo mundo");
+            console.log(player_goal.owner);
+            console.log(player_goal.goal);
+            this.#players[i] = new Player(names[i], color, player_goal);
         }
 
         this.#territoryController = new TerritoryController();
         await this.#territoryController.init(this.gl, this.#scale);
 
+        
         const countries = [...this.#territoryController.countries];
 
         const countriesPerPlayer = Math.floor(countries.length/this.#players.length); 
-
+        
         for(let player of this.#players){
             for(let i = 0; i<countriesPerPlayer; i++){
                 if(!countries.length) break;
-
+                
                 const index = Math.floor(Math.random()*countries.length);
 
                 countries[index].owner = player;

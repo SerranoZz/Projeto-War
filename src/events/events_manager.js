@@ -1,4 +1,5 @@
 import TurnsManager from "../model/player/turns_manager";
+import { Player } from "../model/player/player";
 
 export default class CountryEventsHandler{
     #country = null;
