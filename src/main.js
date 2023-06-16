@@ -28,6 +28,9 @@ class Game{
 
     #fortify;
 
+    #goal;
+    #goal_path;
+
     get tView(){
         return this.#tView;
     }
@@ -85,13 +88,13 @@ class Game{
             const index = Math.floor(Math.random()*colors.length);
             const color = colors[index];
 
-            goal.sortGoal(names[i]);
+            goal.sortGoal(names[5-i]);
             let player_goal = goal.getGoal;
             
             colors.splice(index, 1);
-
             console.log(player_goal.owner);
             console.log(player_goal.goal);
+            this.#goal_path = player_goal.path;
             this.#players[i] = new Player(names[i], color, player_goal);
         }
 
@@ -176,11 +179,19 @@ class Game{
     async #createGameScreenAlt(){
         const background = new ImageGL();
         await background.init(this.gl, "./assets/game/fundo.jpg");
+        
         background.scaleY = 1.85;
         background.scaleX = 1.01;
         background.depth = -0.01;
-
         this.#background = background;
+        
+        const goal = new ImageGL();
+        await goal.init(this.gl, this.#goal_path);
+        goal.scaleX = 0.4;
+        goal.scaleY = 0.6;
+        this.#goal = goal;
+        
+        
 
         const gameScreen = new GameScreen();
         await gameScreen.init(this.gl);
@@ -190,6 +201,7 @@ class Game{
 
         const fortify = new Fortify();
         await fortify.init(this.gl);
+
 
         this.#fortify = fortify;
 
@@ -227,6 +239,7 @@ class Game{
             this.#background.draw();
             this.#gameScene.draw();
             this.#guiScene.draw();
+            this.#goal.draw();
         }
         else{
             this.#menuScene.draw();
