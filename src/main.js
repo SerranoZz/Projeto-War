@@ -100,7 +100,6 @@ class Game{
         this.#territoryController = new TerritoryController();
         await this.#territoryController.init(this.gl, this.#scale);
 
-        
         const countries = [...this.#territoryController.countries];
 
         const countriesPerPlayer = Math.floor(countries.length/this.#players.length); 
@@ -118,7 +117,6 @@ class Game{
             }
         }
         
-        goal.verifyDestroy(this.#players[0], this.#players);
         //tratar o lance de sobrar países
 
         this.#turnsManager = new TurnsManager(this.#players);

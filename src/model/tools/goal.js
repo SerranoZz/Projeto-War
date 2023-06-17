@@ -90,7 +90,7 @@ export default class Goal{
     }
 
     //se o objetivo do jogador estiver entre 0 e 5 chamar essa função
-    verifyContinente(player){
+    verifyContinent(player){
         let continentCount;
         let continents = [];
         let verify = false;
@@ -122,14 +122,43 @@ export default class Goal{
                 break;
         }
 
-        if(player.continentsOwned == continentCount){
+        if(player.continentsOwned >= continentCount){
             verify = continents.every(continent => player.vetContinentsOwned.includes(continent));
         }
-
+       
         return verify
         
     }
 
+    //se o objetivo do jogador for o 6 ou 7;
+    verifyTerritory(player){
+        let territoryCount;
+        let territoryTroops;
+        let verify;
+
+        switch(player.goalId){
+            case 6:
+                territoryCount = 18;
+                territoryTroops = 2;
+                break;
+            case 7:
+                territoryCount = 24;
+                territoryTroops = 1;
+                break;
+        }
+
+        if(player.territoriesOwned >= territoryCount){
+            for(let i = 0; i < player.territoriesOwned; i++){
+                if(player.vetTerritoriesOwned[i].soldiers >= territoryTroops){
+                    verify = true;
+                }else{
+                    return false;
+                }
+            }
+        }
+
+        return verify;
+    }
 
     
     colorName(color){
