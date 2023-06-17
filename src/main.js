@@ -71,31 +71,31 @@ class Game{
         const names = ["Player 1", "Player 2", "Player 3", "Player 4", "Player 5", "Player 6"];
 
         
-        //preto(acizentado), branco, amarelo, azul, vermelho e cinza
+        //azul, amarelo, vermelho, preto, verde
         const colors = [
+            [0.0, 0.0, 1.0, 1.0],
             [1.0, 1.0, 0.0, 1.0],
             [1.0, 0.0, 0.0, 1.0],
-            [0.0, 128/255, 0, 1.0],
-            [0.0, 0.0, 1.0, 1.0],
             [1.0, 1.0, 1.0, 1.0],
-            [0.0, 0.0, 0.0, 1.0]
+            [0.0, 0.0, 0.0, 1.0],
+            [0.0, 0.4, 0.0, 1.0]
         ];
         
         const goal = new Goal();
         await goal.loadGoals();
         
         for(let i = 0; i < 6; i++){
-            const index = Math.floor(Math.random()*colors.length);
+            const index = Math.floor(Math.random() * colors.length);
             const color = colors[index];
 
-            goal.sortGoal(names[5-i]);
+            goal.sortGoal(names[5-i], color);
             let player_goal = goal.getGoal;
             
             colors.splice(index, 1);
-            console.log(player_goal.owner);
-            console.log(player_goal.goal);
             this.#goal_path = player_goal.path;
             this.#players[i] = new Player(names[i], color, player_goal);
+
+            console.log(this.#players[i].color, this.#players[i].goal);
         }
 
         this.#territoryController = new TerritoryController();

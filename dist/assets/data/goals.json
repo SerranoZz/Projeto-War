@@ -1,84 +1,98 @@
 {
     "data": [
         {
+            "id": 0,
             "goal": "Conquistar na totalidade a EUROPA, a OCEANIA e mais um terceiro.",
             "owner": "",
             "path": "./assets/game/goals/1.png"
         },
 
         {
+            "id": 1,
             "goal": "Conquistar na totalidade a ÁSIA e a AMÉRICA DO SUL.",
             "owner": "",
             "path": "./assets/game/goals/2.png"
         },
 
         {
+            "id": 2,
             "goal": "Conquistar na totalidade a EUROPA, a AMÉRICA DO SUL e mais um terceiro.",
             "owner": "",
             "path": "./assets/game/goals/3.png"
         },
 
         {
+            "id": 3,
             "goal": "Conquistar 18 TERRITÓRIOS e ocupar cada um deles com pelo menos dois exércitos.",
             "owner": "",
             "path": "./assets/game/goals/4.png"
         },
 
         {
+            "id": 4,
             "goal": "Conquistar na totalidade a ÁSIA e a ÁFRICA.",
             "owner": "",
             "path": "./assets/game/goals/5.png"
         },
 
         {
+            "id": 5,
             "goal": "Conquistar na totalidade a AMÉRICA DO NORTE e a ÁFRICA.",
             "owner": "",
             "path": "./assets/game/goals/6.png"
         },
 
         {
+            "id": 6,
             "goal": "Conquistar 24 TERRITÓRIOS à sua escolha.",
             "owner": "",
             "path": "./assets/game/goals/7.png"
         },
 
         {
+            "id": 7,
             "goal": "Conquistar na totalidade a AMÉRICA DO NORTE e a OCEANIA.",
             "owner": "",
             "path": "./assets/game/goals/8.png"
         },
 
         {
+            "id": 8,
             "goal": "Destruir totalmente OS EXÉRCITOS AZUIS.",
             "owner": "",
             "path": "./assets/game/goals/9.png"
         },
 
         {
+            "id": 9,
             "goal": "Destruir totalmente OS EXÉRCITOS AMARELOS.",
             "owner": "",
             "path": "./assets/game/goals/10.png"
         },
 
         {
+            "id": 10,
             "goal": "Destruir totalmente OS EXÉRCITOS VERMELHOS.",
             "owner": "",
             "path": "./assets/game/goals/11.png"
         },
 
         {
+            "id": 11,
             "goal": "Destruir totalmente OS EXÉRCITOS PRETOS.",
             "owner": "",
             "path": "./assets/game/goals/12.png"
         },
 
         {
+            "id": 12,
             "goal": "Destruir totalmente OS EXÉRCITOS BRANCO.",
             "owner": "",
             "path": "./assets/game/goals/13.png"
         },
 
         {
+            "id": 13,
             "goal": "Destruir totalmente OS EXÉRCITOS VERDES.",
             "owner": "",
             "path": "./assets/game/goals/14.png"

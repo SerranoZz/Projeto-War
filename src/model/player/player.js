@@ -129,7 +129,15 @@ export class Player {
         return this.#freeTroops;
     }
 
+    get territoriesOwned(){
+        return this.#territoriesOwned.length;
+    }
+
     get goal(){
-        return this.#goal;
+        return this.#goal.goal;
+    }
+
+    get goalId(){
+        return this.#goal.id;
     }
 }
