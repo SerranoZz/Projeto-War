@@ -24,23 +24,22 @@ export default class Goal{
     }
     
     async sortGoal(player, color) {
-        const color_name = this.colorName(color);
+        const colorName = this.colorName(color);
         let index = Math.floor(Math.random() * this.#goalCount);
         
         if(this.#goals[index].owner == ""){
             if(
-                (this.#goals[index].id == 8  && color_name == 'azul')     ||
-                (this.#goals[index].id == 9  && color_name == 'amarelo') ||
-                (this.#goals[index].id == 10  && color_name == 'vermelho') ||
-                (this.#goals[index].id == 11  && color_name == 'preto')    ||
-                (this.#goals[index].id == 12  && color_name == 'verde')
+                (this.#goals[index].id == 8  && colorName == 'azul')     ||
+                (this.#goals[index].id == 9  && colorName == 'amarelo')  ||
+                (this.#goals[index].id == 10  && colorName == 'vermelho')||
+                (this.#goals[index].id == 11  && colorName == 'preto')   ||
+                (this.#goals[index].id == 12  && colorName == 'branco')  ||
+                (this.#goals[index].id == 13  && colorName == 'verde') 
             
             ){
-                console.log(this.#goals[index], "Você não pode se matar");
                 this.sortGoal(player, color);
             }else{
                 this.#goals[index].owner = player;
-                console.log(this.#goals[index].owner);
                 this.#goalToReturn = this.#goals[index];
             }
         }else{
@@ -48,6 +47,49 @@ export default class Goal{
         }
     }
 
+    
+    //se o objetivo do jogador estiver entre 8 e 13 chamar essa função.
+    verifyDestroy(player, vetPlayer){
+        let colorName;
+        switch (player.goalId) {
+            case 8:
+                colorName = "azul";
+                break;
+            case 9:
+                colorName = "amarelo";
+                break;
+            case 10:
+                colorName = "vermelho";
+                break;
+            case 11:
+                colorName = "preto";
+                break;
+            case 12:
+                colorName = "branco";
+                break;
+            case 13:
+                colorName = "verde";
+                break;
+            default:
+              colorName = "";
+              break;
+        }
+
+        if(colorName == "") return false;
+
+        for(let i = 0; i < 6; i++){
+            let playerColor = this.colorName(vetPlayer[i].color);
+            
+            if(playerColor == colorName){
+                if(vetPlayer[i].territoriesOwned != 0){
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+    
     colorName(color){
         if(`${color}` == '0,0,1,1'){
             return 'azul';
@@ -63,31 +105,4 @@ export default class Goal{
             return 'verde';
         }
     }
-
-    //se o objetivo do jogador estiver entre 8 e 13 chamar essa função.
-    verifyDestroy(playerGoal){
-        let color = "";
-        
-        if(playerGoal.goalId == 8){
-            azul
-            return false;
-        }else if(playerGoal.goalId == 9){
-            amarelo
-            return false;
-        }else if(playerGoal.goalId == 10){
-            vermelho
-            return false;
-        }else if(playerGoal.goalId == 11){
-            preto
-            return false;
-        }else if(playerGoal.goalId == 12){
-            branco
-            return false;
-        }else if(playerGoal.goalId == 13){
-            verde
-            return false;
-        }
-        return true
-    }
-
 }

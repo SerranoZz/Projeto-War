@@ -89,13 +89,12 @@ class Game{
             const color = colors[index];
 
             goal.sortGoal(names[5-i], color);
-            let player_goal = goal.getGoal;
+            let playerGoal = goal.getGoal;
             
             colors.splice(index, 1);
-            this.#goal_path = player_goal.path;
-            this.#players[i] = new Player(names[i], color, player_goal);
+            this.#goal_path = playerGoal.path;
+            this.#players[i] = new Player(names[i], color, playerGoal);
 
-            console.log(this.#players[i].color, this.#players[i].goal);
         }
 
         this.#territoryController = new TerritoryController();
@@ -118,7 +117,8 @@ class Game{
                 countries.splice(index, 1);
             }
         }
-
+        
+        goal.verifyDestroy(this.#players[0], this.#players);
         //tratar o lance de sobrar países
 
         this.#turnsManager = new TurnsManager(this.#players);
