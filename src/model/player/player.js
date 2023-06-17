@@ -74,6 +74,7 @@ export class Player {
     #name;
     #color;
     #territoriesOwned;
+    #continentsOwned;
     #goal;
     #freeTroops;
 
@@ -81,6 +82,7 @@ export class Player {
       this.#name = name;
       this.#color = color; // pode ser usado como ID 
       this.#territoriesOwned = [];
+      this.#continentsOwned = [];
       this.#goal = goal;
       this.#freeTroops = 0;
     }
@@ -131,6 +133,18 @@ export class Player {
 
     get territoriesOwned(){
         return this.#territoriesOwned.length;
+    }
+
+    get vetTerritoriesOwned(){
+        return this.#territoriesOwned;
+    }
+
+    get continentsOwned(){
+        return this.#continentsOwned.length;
+    }
+
+    get vetContinentsOwned(){
+        return this.#continentsOwned;
     }
 
     get goal(){

@@ -51,7 +51,7 @@ export default class Goal{
     //se o objetivo do jogador estiver entre 8 e 13 chamar essa função.
     verifyDestroy(player, vetPlayer){
         let colorName;
-        switch (player.goalId) {
+        switch(player.goalId) {
             case 8:
                 colorName = "azul";
                 break;
@@ -71,8 +71,8 @@ export default class Goal{
                 colorName = "verde";
                 break;
             default:
-              colorName = "";
-              break;
+                colorName = "";
+                break;
         }
 
         if(colorName == "") return false;
@@ -81,13 +81,55 @@ export default class Goal{
             let playerColor = this.colorName(vetPlayer[i].color);
             
             if(playerColor == colorName){
-                if(vetPlayer[i].territoriesOwned != 0){
+                if(vetPlayer[i].continentsOwned != 0){
                     return false
                 }
             }
         }
         return true
     }
+
+    //se o objetivo do jogador estiver entre 0 e 5 chamar essa função
+    verifyContinente(player){
+        let continentCount;
+        let continents = [];
+        let verify = false;
+
+        switch(player.goalId){
+            case 0:
+                continentCount = 3;
+                continents = ["Europa", "Oceania"];
+                break;
+            case 1:
+                continentCount = 2;
+                continents = ["Ásia", "América do Sul"];
+                break;
+            case 2:
+                continentCount = 3;
+                continents = ["Europa", "América do Sul"];
+                break;
+            case 3:
+                continentCount = 2;
+                continents = ["Ásia", "África"];
+                break;
+            case 4:
+                continentCount = 2;
+                continents = ["América do Norte", "África"];
+                break;
+            case 5:
+                continentCount = 2;
+                continents = ["América do Norte", "Oceania"];
+                break;
+        }
+
+        if(player.continentsOwned == continentCount){
+            verify = continents.every(continent => player.vetContinentsOwned.includes(continent));
+        }
+
+        return verify
+        
+    }
+
 
     
     colorName(color){

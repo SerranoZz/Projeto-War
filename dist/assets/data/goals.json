@@ -21,39 +21,42 @@
             "path": "./assets/game/goals/3.png"
         },
 
+        
         {
             "id": 3,
+            "goal": "Conquistar na totalidade a ÁSIA e a ÁFRICA.",
+            "owner": "",
+            "path": "./assets/game/goals/5.png"
+        },
+        
+        
+        {
+            "id": 4,
+            "goal": "Conquistar na totalidade a AMÉRICA DO NORTE e a ÁFRICA.",
+            "owner": "",
+            "path": "./assets/game/goals/6.png"
+        },
+
+        
+        {
+            "id": 5,
+            "goal": "Conquistar na totalidade a AMÉRICA DO NORTE e a OCEANIA.",
+            "owner": "",
+            "path": "./assets/game/goals/8.png"
+        },
+
+        {
+            "id": 6,
             "goal": "Conquistar 18 TERRITÓRIOS e ocupar cada um deles com pelo menos dois exércitos.",
             "owner": "",
             "path": "./assets/game/goals/4.png"
         },
 
         {
-            "id": 4,
-            "goal": "Conquistar na totalidade a ÁSIA e a ÁFRICA.",
-            "owner": "",
-            "path": "./assets/game/goals/5.png"
-        },
-
-        {
-            "id": 5,
-            "goal": "Conquistar na totalidade a AMÉRICA DO NORTE e a ÁFRICA.",
-            "owner": "",
-            "path": "./assets/game/goals/6.png"
-        },
-
-        {
-            "id": 6,
+            "id": 7,
             "goal": "Conquistar 24 TERRITÓRIOS à sua escolha.",
             "owner": "",
             "path": "./assets/game/goals/7.png"
-        },
-
-        {
-            "id": 7,
-            "goal": "Conquistar na totalidade a AMÉRICA DO NORTE e a OCEANIA.",
-            "owner": "",
-            "path": "./assets/game/goals/8.png"
         },
 
         {
