@@ -24,7 +24,8 @@ class Attack {
     
         const attackDiceRolls = Dice.rollDice(dicesAttack);
         const defendDiceRolls = Dice.rollDice(dicesDefense);
-    
+
+
         let attackWins = 0;
         let defenseWins = 0;
     
@@ -73,6 +74,7 @@ export class Player {
     #name;
     #color;
     #territoriesOwned;
+    #continentsOwned;
     #goal;
     #freeTroops;
 
@@ -80,6 +82,7 @@ export class Player {
       this.#name = name;
       this.#color = color; // pode ser usado como ID 
       this.#territoriesOwned = [];
+      this.#continentsOwned = [];
       this.#goal = goal;
       this.#freeTroops = 0;
     }
@@ -101,6 +104,7 @@ export class Player {
         this.#freeTroops = qtdreceivedTroops;
     }
 
+
     addTroops(country,qtdTroops){
         if(qtdTroops <=  this.#freeTroops){
             country.soldiers = country.soldiers + qtdTroops;
@@ -114,6 +118,7 @@ export class Player {
         console.log(base.soldiers, to.soldiers);
     }
     
+    
     get name(){
         return this.#name;
     }
@@ -124,5 +129,29 @@ export class Player {
 
     get freeTroops(){
         return this.#freeTroops;
+    }
+
+    get territoriesOwned(){
+        return this.#territoriesOwned.length;
+    }
+
+    get vetTerritoriesOwned(){
+        return this.#territoriesOwned;
+    }
+
+    get continentsOwned(){
+        return this.#continentsOwned.length;
+    }
+
+    get vetContinentsOwned(){
+        return this.#continentsOwned;
+    }
+
+    get goal(){
+        return this.#goal.goal;
+    }
+
+    get goalId(){
+        return this.#goal.id;
     }
 }

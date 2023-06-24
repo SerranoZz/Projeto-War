@@ -5,6 +5,7 @@ import TerritoryController from "./model/map/territories/territory-controller";
 import TurnsManager from "./model/player/turns_manager";
 import CountryEventsHandler from "./events/events_manager";
 import TroopsView from "./view/troopsView";
+import Goal from "./model/tools/goal";
 
 class Game{
     #menuScene;
@@ -26,6 +27,9 @@ class Game{
     #countryEvents;
 
     #fortify;
+
+    #goal;
+    #goal_path;
 
     get tView(){
         return this.#tView;
@@ -66,24 +70,31 @@ class Game{
 
         const names = ["Player 1", "Player 2", "Player 3", "Player 4", "Player 5", "Player 6"];
 
-        //preto(acizentado), branco, amarelo, azul, vermelho e cinza
+        
+        //azul, amarelo, vermelho, preto, verde
         const colors = [
+            [0.0, 0.0, 1.0, 1.0],
             [1.0, 1.0, 0.0, 1.0],
             [1.0, 0.0, 0.0, 1.0],
-            [0.0, 128/255, 0, 1.0],
-            [0.0, 0.0, 1.0, 1.0],
             [1.0, 1.0, 1.0, 1.0],
-            [0.0, 0.0, 0.0, 1.0]
+            [0.0, 0.0, 0.0, 1.0],
+            [0.0, 0.4, 0.0, 1.0]
         ];
-
-
+        
+        const goal = new Goal();
+        await goal.loadGoals();
+        
         for(let i = 0; i < 6; i++){
-            const index = Math.floor(Math.random()*colors.length);
+            const index = Math.floor(Math.random() * colors.length);
             const color = colors[index];
 
+            goal.sortGoal(names[5-i], color);
+            let playerGoal = goal.getGoal;
+            
             colors.splice(index, 1);
+            this.#goal_path = playerGoal.path;
+            this.#players[i] = new Player(names[i], color, playerGoal);
 
-            this.#players[i] = new Player(names[i], color, "mata todo mundo");
         }
 
         this.#territoryController = new TerritoryController();
@@ -92,11 +103,11 @@ class Game{
         const countries = [...this.#territoryController.countries];
 
         const countriesPerPlayer = Math.floor(countries.length/this.#players.length); 
-
+        
         for(let player of this.#players){
             for(let i = 0; i<countriesPerPlayer; i++){
                 if(!countries.length) break;
-
+                
                 const index = Math.floor(Math.random()*countries.length);
 
                 countries[index].owner = player;
@@ -105,7 +116,7 @@ class Game{
                 countries.splice(index, 1);
             }
         }
-
+        
         //tratar o lance de sobrar países
 
         this.#turnsManager = new TurnsManager(this.#players);
@@ -166,11 +177,19 @@ class Game{
     async #createGameScreenAlt(){
         const background = new ImageGL();
         await background.init(this.gl, "./assets/game/fundo.jpg");
+        
         background.scaleY = 1.85;
         background.scaleX = 1.01;
         background.depth = -0.01;
-
         this.#background = background;
+        
+        const goal = new ImageGL();
+        await goal.init(this.gl, this.#goal_path);
+        goal.scaleX = 0.4;
+        goal.scaleY = 0.6;
+        this.#goal = goal;
+        
+        
 
         const gameScreen = new GameScreen();
         await gameScreen.init(this.gl);
@@ -180,6 +199,7 @@ class Game{
 
         const fortify = new Fortify();
         await fortify.init(this.gl);
+
 
         this.#fortify = fortify;
 
@@ -217,6 +237,7 @@ class Game{
             this.#background.draw();
             this.#gameScene.draw();
             this.#guiScene.draw();
+            this.#goal.draw();
         }
         else{
             this.#menuScene.draw();
