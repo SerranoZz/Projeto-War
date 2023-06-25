@@ -23,8 +23,9 @@ export default class TroopsView{
 
     async update() {
 
+        this.#cImage.clear(0, 0, this.#gl.canvas.width, this.#gl.canvas.height);
+
         await this.#cImage.update(ctx =>{
-            ctx.clearRect(0, 0, this.#gl.canvas.width, this.#gl.canvas.height);
             if (!(ctx instanceof CanvasRenderingContext2D)) return
 
             this.#countries.forEach(country => {

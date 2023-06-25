@@ -14,7 +14,7 @@ export default class CanvasImage extends ImageGL{
         this.#canvas = canvas;
     }
 
-    async update(drawCanvas = ()=>{}, gl){
+    async update(drawCanvas = (ctx)=>{}, gl){
         const ctx = this.#canvas.getContext("2d");
 
         drawCanvas(ctx);
@@ -23,6 +23,11 @@ export default class CanvasImage extends ImageGL{
         const imageElement = await ImageGL.loadImage(image);
     
         Mesh.changeTex(gl, this._tex, imageElement);
+    }
+
+    clear(x = 0, y = 0, width = this.#canvas.width, height = this.#canvas.height){
+        const ctx = this.#canvas.getContext("2d");
+        ctx.clearRect(x, y, width, height);
     }
 
 }

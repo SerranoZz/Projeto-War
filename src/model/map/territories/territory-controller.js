@@ -71,15 +71,15 @@ export default class TerritoryController {
     }
 
     troop_reassignment(base, destiny, qtd){
-        if(!(base instanceof(Country)) || !(destiny instanceof(Country)) || !(qtd instanceof int)){
+        if(!(base instanceof(Country)) || !(destiny instanceof(Country)) || !(typeof qtd==="number")){
             throw new Error("Parametro invalido");       
         }
         if(base.findNeighbor(destiny)){
-            if(!(base.soldier > qtd)){
+            if(base.soldiers <= qtd){
                 throw new Error("quantidade de tropas invalidas");
             }
-            base.soldier -= qtd;
-            destiny.soldier += qtd;
+            base.soldiers -= qtd;
+            destiny.soldiers += qtd;
         }
     }
     //verificar se precisa retornar alguma coisa

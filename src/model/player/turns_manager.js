@@ -3,17 +3,18 @@ export default class TurnsManager{
     #currPlayerIndex;
     #players;
 
+    #fortifyOpened = false;
+
     static DISTRIBUCTION = 0;
     static ATTACK = 1;
     static REASSIGNMENT = 2;
     static EXCHANGE_CARDS = 3;
-    static FREEZE = 4; // freeze events until next player be provided
 
     constructor(players){
         this.#players = players;
-        this.#currPlayerIndex = 0;
-        this.#state = TurnsManager.DISTRIBUCTION;
-        this.#players[this.#currPlayerIndex].receiveTroop();
+        this.#currPlayerIndex = -1;
+        this.#state = null;
+        this.nextPlayer();
     }
 
     nextPlayer(){
@@ -30,8 +31,25 @@ export default class TurnsManager{
         return this.#state;
     }
 
+    get fortifyOpened(){
+        return this.#fortifyOpened;
+    }
+
+    openFortify(){
+        this.#fortifyOpened = true;
+    }
+
+    closeFortify(){
+        this.#fortifyOpened = false;
+    }
+
     nextState(){
-        if(this.#state < TurnsManager.FREEZE)
-            this.#state++;
+        this.#state++;
+
+        if(this.#state === 4){
+            this.#state = 0;
+
+            this.nextPlayer();
+        }
     }
 }

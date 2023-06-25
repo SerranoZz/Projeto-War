@@ -92,7 +92,9 @@ export class Player {
     receiveTroop(){
 
         //calcula a quantidade de tropas a ser recebida devio a quantidade de territorios        
-        const qtdreceivedTroops = Math.floor(this.#territoriesOwned.length / 2);
+        let qtdreceivedTroops = Math.floor(this.#territoriesOwned.length / 2);
+
+        if(qtdreceivedTroops<3) qtdreceivedTroops = 3;
 
         //calcula a quantidade de tropas a ser recebida devio aos bonus de continente
         
@@ -112,6 +114,10 @@ export class Player {
         const att = new Attack();
         att.attackPlayer(base, to);
         console.log(base.soldiers, to.soldiers);
+        if(to.soldiers===0){
+            to.owner = this;
+            to.changeColor();
+        }
     }
     
     get name(){

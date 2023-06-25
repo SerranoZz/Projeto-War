@@ -87,6 +87,11 @@ export default class Country {
         this.#mesh.draw(camera);
         //this.soldiersView.draw(camera);
     }
+
+    changeColor(){
+        console.log(this.#owner.color)
+        this.#mesh.setUniformValue("color", this.#owner.color, "4fv");
+    }
 }
 
 class SoldiersView{

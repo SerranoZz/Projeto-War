@@ -3,8 +3,9 @@ import Scene from "./webgl/scene";
 import { Player } from "./model/player/player";
 import TerritoryController from "./model/map/territories/territory-controller";
 import TurnsManager from "./model/player/turns_manager";
-import CountryEventsHandler from "./events/events_manager";
+import EventsHandler from "./events/events_manager";
 import TroopsView from "./view/troopsView";
+import CanvasImage from "./view/canvasImage";
 
 class Game{
     #menuScene;
@@ -26,6 +27,7 @@ class Game{
     #countryEvents;
 
     #fortify;
+    #gameScreen;
 
     get tView(){
         return this.#tView;
@@ -49,6 +51,10 @@ class Game{
 
     get fortify(){
         return this.#fortify;
+    }
+
+    get gameScreen(){
+        return this.#gameScreen;
     }
 
     static async build(canvas){
@@ -112,7 +118,7 @@ class Game{
 
         await this.#createGameScreenAlt();
 
-        this.#countryEvents = new CountryEventsHandler(this);
+        this.#countryEvents = new EventsHandler(this);
     }
 
     async #createMenuScene(){
@@ -172,11 +178,10 @@ class Game{
 
         this.#background = background;
 
-        const game_background = new ImageGL();
-        await game_background.init(this.gl, "./assets/game/fundo.jpg");
-
         const gameScreen = new GameScreen();
         await gameScreen.init(this.gl);
+
+        this.#gameScreen = gameScreen;
 
         const show_cards = new ShowCards();
         await show_cards.init(this.gl);
@@ -191,14 +196,13 @@ class Game{
         this.#gameScene.camera.camPosition[2] = 1.8;
         this.#gameScene.camera.camPosition[1] = -0.3;
         this.#gameScene.createLight([1.0, 0.0, 0.3]);
-        
 
         this.#guiScene = new Scene(this.gl);
     
         this.#tView = new TroopsView();
         await this.#tView.init(this.#territoryController.countries, this.#scale, this.gl);
     
-        this.#gameScene.appendElement(game_background, ...this.#territoryController.countries);
+        this.#gameScene.appendElement(...this.#territoryController.countries);
         this.#guiScene.appendElement(gameScreen, show_cards, fortify);
 
         this.#gameScene.appendElement(this.#tView);
@@ -272,14 +276,49 @@ class GameScreen{
         GameScreen.setInitialPosition(0.92, -0.85, 0.2, this.objective_button);
 
         this.current_player = new ImageGL();
-        await this.current_player.init(gl, "./assets/game/current_player.png");
+        await this.current_player.init(gl, "./assets/game/current_player1.png");
         this.current_player.scale = [0.4, 0.6]; 
         GameScreen.setInitialPosition(0, -0.85, 0.2, this.current_player);
+
+        this.current_player_text = new CanvasImage();
+        await this.current_player_text.init(gl);
+
+        this.current_player_text.update(ctx => {
+            if(!(ctx instanceof CanvasRenderingContext2D)) return
+
+            ctx.fillStyle = "white";
+
+            //ctx.fillRect(0, 0, 1000, 1000);
+                
+            ctx.font = "200px Arial";
+            ctx.fillText("Vez do jogador 1", 250, 0);
+
+            ctx.fillText("Distribuição de tropas", 100, 500);
+        }, gl);
+
+        this.current_player_text.scale = [0.4, 0.3];
+        this.current_player_text.positionY = -0.85;
 
         this.show_players = new ImageGL();
         await this.show_players.init(gl, "./assets/game/show_players.png");
         this.show_players.scale = [0.065, 0.115]; 
         GameScreen.setInitialPosition(-0.92, -0.85, 0.2, this.show_players);
+
+        this.changeStateBtn = new CanvasImage();
+        await this.changeStateBtn.init(gl, 50);
+
+        this.changeStateBtn.scale = [0.05, 0.15];
+
+        GameScreen.setInitialPosition(3/5-0.05, -7/8, 0.2, this.changeStateBtn);
+
+        this.changeStateBtn.update(ctx => {
+            if(!(ctx instanceof CanvasRenderingContext2D)) return
+
+            ctx.fillStyle = "white";
+
+            ctx.fillRect(0, 0, 50, 50);
+
+        }, gl);
     }
 
     static setInitialPosition(x, y, depth, widget){
@@ -299,10 +338,16 @@ class GameScreen{
         this.card_button.draw(camera);
         this.objective_button.draw(camera);
         this.current_player.draw(camera);
+        this.current_player_text.draw(camera);
         this.show_players.draw(camera);
+        this.changeStateBtn.draw(camera);
     }
 
-
+    clickedWidget(x, y){
+        if (this.changeStateBtn.pointCollision(x, y)){
+            return "changeTurn";
+        }
+    }
 }
 
 class ShowCards{
@@ -352,7 +397,14 @@ class ShowCards{
 
 class Fortify{
     #up = false;
-    #upPos = 0;
+    #yPos = 0;
+    #gl;
+
+    #down =  false;
+
+    get opened(){
+        return (!this.#up && this.#yPos === 1.0);
+    }
 
     async init(gl){
         this.fortify = new ImageGL();
@@ -380,9 +432,24 @@ class Fortify{
         this.minus_button.scale = [0.046, 0.083];
         Fortify.setInitialPosition(-0.168, -0.86 - 1, 0.4, this.minus_button);
 
-        gl.canvas.addEventListener("click", e=>{
-            
-        })
+        this.numberImage = new CanvasImage();
+        await this.numberImage.init(gl, 500);
+
+        this.numberImage.update(ctx => {
+            if(!(ctx instanceof CanvasRenderingContext2D)) return
+
+            ctx.fillStyle = "white";
+                
+            ctx.font = "30px Arial";
+            ctx.fillText("0", 250, 250);
+        }, gl);
+
+        this.numberImage.depth = 0.5;
+        this.numberImage.scaleY = 1.5;
+
+        Fortify.setInitialPosition(-0.05, -0.86 - 1, 0.4, this.numberImage);
+
+        this.#gl = gl;
     }
 
     static setInitialPosition(x, y, depth, widget){
@@ -399,24 +466,42 @@ class Fortify{
         this.ok_button.positionY += amount;
         this.plus_button.positionY += amount;
         this.minus_button.positionY += amount;
+        this.numberImage.positionY += amount;
     }
 
     up(){
         this.#up = true;
+        this.#down = false;
+    }
+
+    down(){
+        this.#down = true;
+        this.#up = false;
     }
 
     logic(){
         const step = 0.01;
 
-        if(this.#up){
-            this.#upPos += step;
-
-            if(this.#upPos>=1.0){
-                this.#upPos = 1.0;
-                this.#up = false;
-            }else
-                this.moveAll(step);
+        if(this.#up || this.#down){
+            if(this.#up){
+                this.#yPos += step;
+    
+                if(this.#yPos>=1.0){
+                    this.#yPos = 1.0;
+                    this.#up = false;
+                }else
+                    this.moveAll(step);
+            }else if(this.#down){
+                this.#yPos -= step;
+    
+                if(this.#yPos<=0.0){
+                    this.#yPos = 0.0;
+                    this.#down = false;
+                }else
+                    this.moveAll(-step);
+            }
         }
+
     }
 
     draw(camera){
@@ -425,11 +510,34 @@ class Fortify{
         this.ok_button.draw(camera);
         this.plus_button.draw(camera);
         this.minus_button.draw(camera);
+        this.numberImage.draw(camera);
     }
 
-    getWidget(x, y, camera){
-
+    clickedWidget(x, y){
+        if(this.cancel_button.pointCollision(x, y)){
+            return "cancel";
+        }else if(this.ok_button.pointCollision(x, y)){
+            return "ok";
+        }else if(this.plus_button.pointCollision(x, y)){
+            return "+";
+        }else if(this.minus_button.pointCollision(x, y)){
+            return "-";
+        }
     }
+
+    changeNumber(number){
+        this.numberImage.clear();
+
+        this.numberImage.update(ctx => {
+            if(!(ctx instanceof CanvasRenderingContext2D)) return
+
+            ctx.fillStyle = "white";
+                
+            ctx.font = "30px Arial";
+            ctx.fillText(""+number, 250, 250);
+        }, this.#gl);
+    }
+
 }
 
 const canvas = document.querySelector("#game-screen");

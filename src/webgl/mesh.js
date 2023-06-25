@@ -8,8 +8,6 @@ export default class Mesh{
     rotation = [0.0, 0.0, 0.0];
     scale = [1.0, 1.0, 1.0];
 
-    static #textureI = 0;
-
     #modelMatrix = mat4.create();
 
     #attributes = [];
@@ -26,7 +24,7 @@ export default class Mesh{
     _vaoLoc;
 
     #uTexture;
-    #texture;
+    #textures = [];;
 
     #vao_updated = false;
 
@@ -138,10 +136,19 @@ export default class Mesh{
     }
 
     createTex(texData, textureName){
-        this.#uTexture = this._gl.getUniformLocation(this._program, textureName);
-        this.#texture = this._gl.createTexture();
-        this._gl.activeTexture(this._gl[`TEXTURE${Mesh.#textureI}`]);
-        this._gl.bindTexture(this._gl.TEXTURE_2D, this.#texture);
+        const uTexture = this._gl.getUniformLocation(this._program, textureName);
+
+        if(!uTexture)
+            throw new Error(`The uniform ${textureName} doesn't exists in shader code.`);
+
+        const texture = new Texture(uTexture, this._gl.createTexture(), texData);
+
+        this.#textures.push(texture);
+
+        const texI = this.#textures.length - 1;
+
+        this._gl.activeTexture(this._gl[`TEXTURE${texI}`]);
+        this._gl.bindTexture(this._gl.TEXTURE_2D, this.#textures[texI].texture);
 
         this._gl.texParameteri(this._gl.TEXTURE_2D, this._gl.TEXTURE_WRAP_S, this._gl.CLAMP_TO_EDGE);
         this._gl.texParameteri(this._gl.TEXTURE_2D, this._gl.TEXTURE_WRAP_T, this._gl.CLAMP_TO_EDGE);
@@ -151,11 +158,17 @@ export default class Mesh{
         this._gl.texImage2D(this._gl.TEXTURE_2D, 0, this._gl.RGBA32F, this._gl.RGBA, this._gl.FLOAT, texData);
 
         this._gl.useProgram(this._program);
-        this._gl.uniform1i(this.#uTexture, Mesh.#textureI);
+        this._gl.uniform1i(this.#uTexture, texI);
 
-        Mesh.#textureI++;
+        console.log(this.#textures[texI].texture)
 
-        return {tex: this.#texture, index: Mesh.#textureI - 1};
+        return {tex: this.#textures[texI], index: texI};
+    }
+
+    bindTextures(){
+        this.#textures.forEach(texture =>{
+            texture.bind(this._gl);
+        })
     }
 
     setUniformValue(name, value, type){
@@ -196,6 +209,8 @@ export default class Mesh{
 
         this.loadMVP(cam);
 
+        this.bindTextures();
+
         this._gl.drawArrays(this._primitive, 0, this.#count);
 
         this._gl.disable(this._gl.CULL_FACE);
@@ -205,7 +220,45 @@ export default class Mesh{
     }
 
     static changeTex(gl, {tex, index}, texData){
-        gl.bindTexture(gl.TEXTURE_2D, tex);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, gl.RGBA, gl.FLOAT, texData);
+        tex.data = texData;
+    }
+}
+
+class Texture{
+    #uniform;
+    #texture;
+    #data;
+    #changed = false;
+
+    constructor(uniform, texture, data){
+        this.#uniform = uniform;
+        this.#texture = texture;
+        this.#data = data;
+    }
+
+    get uniform(){
+        return this.#uniform;
+    }
+
+    get texture(){
+        return this.#texture;
+    }
+
+    get data(){
+        return this.#data;
+    }
+
+    set data(newData){
+        this.#data = newData;
+        this.#changed = true;
+    }
+
+    bind(gl){
+        gl.bindTexture(gl.TEXTURE_2D, this.#texture);
+        
+        if(this.#changed){
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, gl.RGBA, gl.FLOAT, this.#data);
+            this.#changed = false;
+        }
     }
 }
