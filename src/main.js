@@ -206,7 +206,7 @@ class Game{
         this.#gameScene = new Scene(this.gl);
         this.#gameScene.createCamera(canvas);
         this.#gameScene.camera.camPosition[2] = 1.8;
-        this.#gameScene.camera.camPosition[1] = -0.3;
+        this.#gameScene.camera.camPosition[1] = -0.2;
         this.#gameScene.createLight([1.0, 0.0, 0.3]);
         
 
@@ -237,7 +237,7 @@ class Game{
             this.#background.draw();
             this.#gameScene.draw();
             this.#guiScene.draw();
-            this.#goal.draw();
+            //this.#goal.draw();
         }
         else{
             this.#menuScene.draw();

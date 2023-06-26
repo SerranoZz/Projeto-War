@@ -4,253 +4,295 @@
             "name": "Brasil",
             "neighbors": ["Argentina", "Venezuela", "Chile", "Argélia"],
             "path": "./assets/meshes/south_america/brasil.obj",
-            "continent": "América do Sul"
+            "continent": "América do Sul",
+            "point": "./assets/meshes/points/south_america/point_brasil.obj"
         },
         {
             "name": "Argentina",
             "neighbors": ["Brasil", "Chile"],
             "path": "./assets/meshes/south_america/argentina.obj",
-            "continent": "América do Sul"
+            "continent": "América do Sul",
+            "point": "./assets/meshes/points/south_america/point_argentina.obj"
         },
         {
             "name": "Venezuela",
             "neighbors": ["Brasil", "Chile", "México"],
             "path": "./assets/meshes/south_america/venezuela.obj",
-            "continent": "América do Sul"
+            "continent": "América do Sul",
+            "point": "./assets/meshes/points/south_america/point_venezuela.obj"
         },
         {
-            "name": "Chile",
+            "name": "Peru",
             "neighbors": ["Brasil", "Argentina", "Venezuela"],
             "path": "./assets/meshes/south_america/chile.obj",
-            "continent": "América do Sul"
+            "continent": "América do Sul",
+            "point": "./assets/meshes/points/south_america/point_peru.obj"
         },
         {
             "name": "México",
             "neighbors": ["Venezuela", "Nova Iorque", "Califórnia"],
             "path": "./assets/meshes/north_america/mexico.obj",
-            "continent": "América do Norte"
+            "continent": "América do Norte",
+            "point": "./assets/meshes/points/north_america/point_mexico.obj"
         },
         {
             "name": "Califórnia",
             "neighbors": ["México", "Nova Iorque", "Ottawa", "Vancouver"],
             "path": "./assets/meshes/north_america/california.obj",
-            "continent": "América do Norte"
+            "continent": "América do Norte",
+            "point": "./assets/meshes/points/north_america/point_california.obj"
         },
         {
             "name": "Nova Iorque",
             "neighbors": ["México", "Califórnia", "Ottawa", "Labrador"],
             "path": "./assets/meshes/north_america/nova_york.obj",
-            "continent": "América do Norte"
+            "continent": "América do Norte",
+            "point": "./assets/meshes/points/north_america/point_nova_york.obj"
         },
         {
             "name": "Labrador",
             "neighbors": ["Ottawa", "Nova Iorque", "Groenlândia"],
             "path": "./assets/meshes/north_america/labrador.obj",
-            "continent": "América do Norte"
+            "continent": "América do Norte",
+            "point": "./assets/meshes/points/north_america/point_labrador.obj"
         },
         {
             "name": "Ottawa",
             "neighbors": ["Labrador", "Nova Iorque", "Califórnia", "Vancouver", "Mackenzie"],
             "path": "./assets/meshes/north_america/ottawa.obj",
-            "continent": "América do Norte"
+            "continent": "América do Norte",
+            "point": "./assets/meshes/points/north_america/point_ottawa.obj"
         },
         {
             "name": "Vancouver",
             "neighbors": ["Califórnia", "Ottawa", "Mackenzie", "Alasca"],
             "path": "./assets/meshes/north_america/vancouver.obj",
-            "continent": "América do Norte"
+            "continent": "América do Norte",
+            "point": "./assets/meshes/points/north_america/point_vancouver.obj"
         },
         {
             "name": "Mackenzie",
             "neighbors": ["Alasca", "Vancouver", "Groenlândia", "Ottawa"],
             "path": "./assets/meshes/north_america/mackenzie.obj",
-            "continent": "América do Norte"
+            "continent": "América do Norte",
+            "point": "./assets/meshes/points/north_america/point_mackenzie.obj"
         },
         {
             "name": "Alasca",
             "neighbors": ["Vancouver", "Mackenzie", "Vladvostok"],
             "path": "./assets/meshes/north_america/alaska.obj",
-            "continent": "América do Norte"
+            "continent": "América do Norte",
+            "point": "./assets/meshes/points/north_america/point_alaska.obj"
         },
         {
             "name": "Groenlândia",
             "neighbors": ["Mackenzie", "Labrador", "Islândia"],
             "path": "./assets/meshes/north_america/groenlandia.obj",
-            "continent": "América do Norte"
+            "continent": "América do Norte",
+            "point": "./assets/meshes/points/north_america/point_groelandia.obj"
         },
         {
             "name": "Islândia",
             "neighbors": ["Groenlândia", "Inglaterra"],
             "path": "./assets/meshes/europa/islandia.obj",
-            "continent": "Europa"
+            "continent": "Europa",
+            "point": "./assets/meshes/points/europa/point_islandia.obj"
         },
         {
             "name": "Inglaterra",
             "neighbors": ["Islândia", "França", "Alemanha", "Suécia"],
             "path": "./assets/meshes/europa/inglaterra.obj",
-            "continent": "Europa"
+            "continent": "Europa",
+            "point": "./assets/meshes/points/europa/point_inglaterra.obj"
         },
         {
             "name": "Suécia",
             "neighbors": ["Inglaterra", "Moscou"],
             "path": "./assets/meshes/europa/suecia.obj",
-            "continent": "Europa"
+            "continent": "Europa",
+            "point": "./assets/meshes/points/europa/point_suecia.obj"
         },
         {
             "name": "Alemanha",
             "neighbors": ["Inglaterra", "França", "Polônia"],
             "path": "./assets/meshes/europa/alemanha.obj",
-            "continent": "Europa"
+            "continent": "Europa",
+            "point": "./assets/meshes/points/europa/point_alemanha.obj"
         },
         {
             "name": "França",
             "neighbors": ["Inglaterra", "Alemanha", "Polônia", "Argélia", "Egito"],
             "path": "./assets/meshes/europa/franca.obj",
-            "continent": "Europa"
+            "continent": "Europa",
+            "point": "./assets/meshes/points/europa/point_franca.obj"
         },
         {
             "name": "Polônia",
             "neighbors": ["França", "Alemanha", "Moscou", "Oriente Médio", "Egito"],
             "path": "./assets/meshes/europa/polonia.obj",
-            "continent": "Europa"
+            "continent": "Europa",
+            "point": "./assets/meshes/points/europa/point_polonia.obj"
         },
         {
             "name": "Moscou",
             "neighbors": ["Suécia", "Polônia", "Oriente Médio", "Omsk", "Aral"],
             "path": "./assets/meshes/europa/moscou.obj",
-            "continent": "Europa"
+            "continent": "Europa",
+            "point": "./assets/meshes/points/europa/point_moscou.obj"
         },
         {
             "name": "Argélia",
             "neighbors": ["Brasil", "França", "Egito", "Sudão", "Congo"],
             "path": "./assets/meshes/africa/argelia.obj",
-            "continent": "África"
+            "continent": "África",
+            "point": "./assets/meshes/points/africa/point_argelia.obj"
         },
         {
             "name": "Egito",
             "neighbors": ["Argélia", "Sudão", "Oriente Médio", "Polônia", "França"],
             "path": "./assets/meshes/africa/egito.obj",
-            "continent": "África"
+            "continent": "África",
+            "point": "./assets/meshes/points/africa/point_egito.obj"
         },
         {
             "name": "Congo",
             "neighbors": ["África do Sul", "Argélia", "Sudão"],
             "path": "./assets/meshes/africa/congo.obj",
-            "continent": "África"
+            "continent": "África",
+            "point": "./assets/meshes/points/africa/point_congo.obj"
         },
         {
             "name": "Sudão",
             "neighbors": ["Argélia", "Egito", "Congo", "África do Sul", "Madagascar"],
             "path": "./assets/meshes/africa/sudao.obj",
-            "continent": "África"
+            "continent": "África",
+            "point": "./assets/meshes/points/africa/point_sudao.obj"
         },
         {
             "name": "Madagascar",
             "neighbors": ["Sudão", "África do Sul"],
             "path": "./assets/meshes/africa/madagascar.obj",
-            "continent": "África"
+            "continent": "África",
+            "point": "./assets/meshes/points/africa/point_madagascar.obj"
         },
         {
             "name": "África do Sul",
             "neighbors": ["Congo", "Sudão", "Madagascar"],
             "path": "./assets/meshes/africa/africa_sul.obj",
-            "continent": "África"
+            "continent": "África",
+            "point": "./assets/meshes/points/africa/point_africa_sul.obj"
         },
         {
             "name": "Oriente Médio",
             "neighbors": ["Moscou", "Polônia", "Egito", "Aral", "Índia"],
             "path": "./assets/meshes/asia/oriente_medio.obj",
-            "continent": "Ásia"
+            "continent": "Ásia",
+            "point": "./assets/meshes/points/asia/point_oriente_medio.obj"
         },
         {
             "name": "Aral",
             "neighbors": ["Moscou", "Omsk", "Oriente Médio", "Índia", "China"],
             "path": "./assets/meshes/asia/aral.obj",
-            "continent": "Ásia"
+            "continent": "Ásia",
+            "point": "./assets/meshes/points/asia/point_aral.obj"
         },
         {
             "name": "Omsk",
             "neighbors": ["Moscou", "Aral", "Mongólia", "Dudinka", "China"],
             "path": "./assets/meshes/asia/omsk.obj",
-            "continent": "Ásia"
+            "continent": "Ásia",
+            "point": "./assets/meshes/points/asia/point_omsk.obj"
         },
         {
             "name": "Dudinka",
             "neighbors": ["Omsk", "Sibéria", "Tchita", "Mongólia"],
             "path": "./assets/meshes/asia/dudinka.obj",
-            "continent": "Ásia"
+            "continent": "Ásia",
+            "point": "./assets/meshes/points/asia/point_dudinka.obj"
         },
         {
             "name": "Sibéria",
             "neighbors": ["Dudinka", "Vladvostok", "Tchita"],
             "path": "./assets/meshes/asia/siberia.obj",
-            "continent": "Ásia"
+            "continent": "Ásia",
+            "point": "./assets/meshes/points/asia/point_siberia.obj"
         },
         {
             "name": "Tchita",
             "neighbors": ["Dudinka", "Sibéria", "Vladvostok", "Mongólia", "China"],
             "path": "./assets/meshes/asia/tchita.obj",
-            "continent": "Ásia"
+            "continent": "Ásia",
+            "point": "./assets/meshes/points/asia/point_tchita.obj"
         },
         {
             "name": "Mongólia",
             "neighbors": ["Omsk", "Dudinka", "Tchita", "China"],
             "path": "./assets/meshes/asia/mongolia.obj",
-            "continent": "Ásia"
+            "continent": "Ásia",
+            "point": "./assets/meshes/points/asia/point_mongolia.obj"
         },
         {
             "name": "Vladvostok",
             "neighbors": ["China", "Sibéria", "Tchita", "Alasca", "Japão"],
             "path": "./assets/meshes/asia/vladvostok.obj",
-            "continent": "Ásia"
+            "continent": "Ásia",
+            "point": "./assets/meshes/points/asia/point_vlad.obj"
         },
         {
             "name": "China",
             "neighbors": ["Vladvostok", "Japão", "Vietnã", "Índia", "Aral", "Omsk", "Mongólia", "Tchita"],
             "path": "./assets/meshes/asia/china.obj",
-            "continent": "Ásia"
+            "continent": "Ásia",
+            "point": "./assets/meshes/points/asia/point_china.obj"
         },
         {
             "name": "Índia",
             "neighbors": ["Oriente Médio", "Aral", "China", "Vietnã", "Sumatra"],
             "path": "./assets/meshes/asia/india.obj",
-            "continent": "Ásia"
+            "continent": "Ásia",
+            "point": "./assets/meshes/points/asia/point_india.obj"
         },
         {
             "name": "Japão",
             "neighbors": ["Vladvostok", "China"],
             "path": "./assets/meshes/asia/japao.obj",
-            "continent": "Ásia"
+            "continent": "Ásia",
+            "point": "./assets/meshes/points/asia/point_japao.obj"
         },
         {
             "name": "Vietnã",
             "neighbors": ["Índia", "China", "Bornéu"],
             "path": "./assets/meshes/asia/vietna.obj",
-            "continent": "Ásia"
+            "continent": "Ásia",
+            "point": "./assets/meshes/points/asia/point_vietna.obj"
         },
         {
             "name": "Bornéu",
             "neighbors": ["Vietnã", "Nova Guiné", "Austrália"],
             "path": "./assets/meshes/oceania/borneu.obj",
-            "continent": "Oceania"
+            "continent": "Oceania",
+            "point": "./assets/meshes/points/oceania/point_borneu.obj"
         },
         {
             "name": "Sumatra",
             "neighbors": ["Índia", "Austrália"],
             "path": "./assets/meshes/oceania/sumatra.obj",
-            "continent": "Oceania"
+            "continent": "Oceania",
+            "point": "./assets/meshes/points/oceania/point_sumatra.obj"
         },
         {
             "name": "Nova Guiné",
             "neighbors": ["Bornéu", "Austrália"],
             "path": "./assets/meshes/oceania/nova_guine.obj",
-            "continent": "Oceania"
+            "continent": "Oceania",
+            "point": "./assets/meshes/points/oceania/point_nova_guine.obj"
         },
         {
             "name": "Austrália",
             "neighbors": ["Nova Guiné", "Bornéu", "Sumatra"],
             "path": "./assets/meshes/oceania/australia.obj",
-            "continent": "Oceania"
+            "continent": "Oceania",
+            "point": "./assets/meshes/points/oceania/point_australia.obj"
         }
     ]
 }
