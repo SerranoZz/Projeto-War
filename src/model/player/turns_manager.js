@@ -1,5 +1,6 @@
 export default class TurnsManager{
     #state;
+    #state_name;
     #currPlayerIndex;
     #players;
 
@@ -14,6 +15,7 @@ export default class TurnsManager{
         this.#players = players;
         this.#currPlayerIndex = -1;
         this.#state = null;
+        this.#state_name = '';
         this.nextPlayer();
     }
 
@@ -29,6 +31,29 @@ export default class TurnsManager{
 
     get state(){
         return this.#state;
+    }
+
+    get state_name(){
+        let state;
+        switch(this.#state) {
+            case 0:
+                state = "Distribuição de Tropas";
+                break;
+            case 1:
+                state = "Fase de Ataque";
+                break;
+            case 2:
+                state = "Remanejo de Tropas";
+                break;
+            case 3:
+                state = "Troca de Cartas";
+                break;
+            default:
+                state = "Distribuição de Tropas";
+                break;
+        }
+        this.#state_name = state;
+        return this.#state_name;
     }
 
     get fortifyOpened(){
@@ -48,8 +73,8 @@ export default class TurnsManager{
 
         if(this.#state === 4){
             this.#state = 0;
-
             this.nextPlayer();
+
         }
     }
 }

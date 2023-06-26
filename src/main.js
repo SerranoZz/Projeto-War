@@ -280,6 +280,8 @@ class Game{
 }
 
 class GameScreen{
+    #gl;
+
     async init(gl){
         this.settingsButton = new ImageGL();
         await this.settingsButton.init(gl, "./assets/menu/settings_button.png");
@@ -312,9 +314,9 @@ class GameScreen{
             //ctx.fillRect(0, 0, 1000, 1000);
                 
             ctx.font = "200px Arial";
-            ctx.fillText("Vez do jogador 1", 250, 0);
+            ctx.fillText("Vez de Player 1", 300, 210, 400);
 
-            ctx.fillText("Distribuição de tropas", 100, 500);
+            ctx.fillText("Distribuição de Tropas", 185, 650, 650);
         }, gl);
 
         this.current_player_text.scale = [0.4, 0.3];
@@ -340,6 +342,8 @@ class GameScreen{
             ctx.fillRect(0, 0, 50, 50);
 
         }, gl);
+
+        this.#gl = gl;
     }
 
     static setInitialPosition(x, y, depth, widget){
@@ -368,6 +372,20 @@ class GameScreen{
         if (this.changeStateBtn.pointCollision(x, y)){
             return "changeTurn";
         }
+    }
+
+    changePlayer(player, state){
+        this.current_player_text.clear();
+
+        this.current_player_text.update(ctx => {
+            if(!(ctx instanceof CanvasRenderingContext2D)) return
+
+            ctx.fillStyle = "white";
+                
+            ctx.font = "200px Arial";
+            ctx.fillText("Vez do "+ player, 300, 210, 400);
+            ctx.fillText(state, 185, 650, 650);
+        }, this.#gl);
     }
 }
 

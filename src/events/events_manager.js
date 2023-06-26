@@ -34,6 +34,7 @@ export default class EventsHandler{
 
             if(widget === "changeTurn"){
                 game.turnsManager.nextState();
+                game.gameScreen.changePlayer(game.turnsManager.player.name, game.turnsManager.state_name)
                 alert("chanja aí");
                 return;
             }
