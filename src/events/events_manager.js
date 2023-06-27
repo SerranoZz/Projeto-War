@@ -34,7 +34,8 @@ export default class EventsHandler{
 
             if(widget === "changeTurn"){
                 game.turnsManager.nextState();
-                game.gameScreen.changePlayer(game.turnsManager.player.name, game.turnsManager.state_name)
+                game.gameScreen.changePlayer(game.turnsManager.player.name, game.turnsManager.state_name,
+                    game.turnsManager.player.color);
                 alert("chanja aí");
                 return;
             }
@@ -114,14 +115,15 @@ class AttackAction{
     
             player.attack(this.base, country);
 
+            game.tView.update();
+
             if(country.soldiers === 0){
                 game.fortify.changeNumber(1);
                 game.fortify.up();
-                game.tView.update();
                 this.destiny = country;
                 return;
             }
-    
+
             this.resetPositions(game);
     
             this.base = null;

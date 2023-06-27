@@ -32,7 +32,7 @@ export default class TerritoryController {
         }
     }
 
-    async loadCountries(gl, scale) {
+    async loadCountries(gl, scale, camera) {
         const countriesJson = await fetch("./assets/data/country-constructor.json");
         const countries = await countriesJson.json();
 
@@ -40,7 +40,7 @@ export default class TerritoryController {
             const continent = this.#continents.find(value => value.name === countries.data[i].continent);
 
             let newCountry = new Country(countries.data[i].name, countries.data[i].path, continent, countries.data[i].neighbors);
-            await newCountry.loadMesh(countries.data[i].path, gl, scale);
+            await newCountry.loadMesh(countries.data[i].path, gl, scale, countries.data[i].point);
 
             this.#countries.push(newCountry);
         }
@@ -81,6 +81,17 @@ export default class TerritoryController {
             base.soldiers -= qtd;
             destiny.soldiers += qtd;
         }
+    }
+
+    continentsOfPlayer(player){
+        const out = [];
+
+        for(const continent of this.#continents){
+            if(continent.owner === player)
+                out.push(continent.name);
+        }
+
+        return out;
     }
     //verificar se precisa retornar alguma coisa
 

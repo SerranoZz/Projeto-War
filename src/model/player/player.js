@@ -9,6 +9,7 @@
 // passa para o proximo jogador
 //Perguntar ao Bruno como importar o json de maneira correta***
 
+import TerritoryController from "../map/territories/territory-controller.js";
 import Dice from "../tools/dice.js";
 
 class Attack {
@@ -46,6 +47,7 @@ class Attack {
         console.log(`vitórias do ataque: ${attackWins}, vitórias da defesa: ${defenseWins}`);
 
         countryAttack.soldiers -= defenseWins;
+        console.log("soldiers ataque: ",countryAttack.soldiers);
         countryDefense.soldiers -= attackWins;
     }
 
@@ -77,14 +79,16 @@ export class Player {
     #continentsOwned;
     #goal;
     #freeTroops;
+    #territoryController;
 
-    constructor(name, color, goal) {
+    constructor(name, color, goal, territoryController) {
       this.#name = name;
       this.#color = color; // pode ser usado como ID 
       this.#territoriesOwned = [];
       this.#continentsOwned = [];
       this.#goal = goal;
       this.#freeTroops = 0;
+      this.#territoryController = territoryController;
     }
   
     conquestTerritory(territorio) {
@@ -159,5 +163,9 @@ export class Player {
 
     get goalId(){
         return this.#goal.id;
+    }
+
+    get continentsOwned(){
+        return this.#territoryController.continentsOfPlayer(this);
     }
 }

@@ -6,6 +6,8 @@ export default class TurnsManager{
 
     #fortifyOpened = false;
 
+    #round = 1;
+
     static DISTRIBUCTION = 0;
     static ATTACK = 1;
     static REASSIGNMENT = 2;
@@ -20,7 +22,13 @@ export default class TurnsManager{
     }
 
     nextPlayer(){
-        this.#currPlayerIndex = (this.#currPlayerIndex+1)%this.#players.length;
+        this.#currPlayerIndex = this.#currPlayerIndex+1;
+
+        if(this.#currPlayerIndex >= this.#players.length){
+            this.#round++;
+            this.#currPlayerIndex = 0;
+        }
+
         this.#state = TurnsManager.DISTRIBUCTION;
         this.#players[this.#currPlayerIndex].receiveTroop();
     }
@@ -69,9 +77,14 @@ export default class TurnsManager{
     }
 
     nextState(){
+        if(this.#state === 0 && this.#players[this.#currPlayerIndex].freeTroops > 0){
+            alert("Distribua todas as suas tropas");
+            return;
+        }
+
         this.#state++;
 
-        if(this.#state === 4){
+        if(this.#state === 4 || this.#round === 1 && this.#state===1){
             this.#state = 0;
             this.nextPlayer();
 

@@ -89,6 +89,8 @@ class Game{
         
         const goal = new Goal();
         await goal.loadGoals();
+
+        this.#territoryController = new TerritoryController();
         
         for(let i = 0; i < 6; i++){
             const index = Math.floor(Math.random() * colors.length);
@@ -99,11 +101,10 @@ class Game{
             
             colors.splice(index, 1);
             this.#goal_path = playerGoal.path;
-            this.#players[i] = new Player(names[i], color, playerGoal);
+            this.#players[i] = new Player(names[i], color, playerGoal, this.#territoryController);
 
         }
 
-        this.#territoryController = new TerritoryController();
         await this.#territoryController.init(this.gl, this.#scale);
 
         const countries = [...this.#territoryController.countries];
@@ -198,7 +199,7 @@ class Game{
         
 
         const gameScreen = new GameScreen();
-        await gameScreen.init(this.gl);
+        await gameScreen.init(this.gl, this.#turnsManager);
 
         this.#gameScreen = gameScreen;
 
@@ -214,7 +215,7 @@ class Game{
         this.#gameScene = new Scene(this.gl);
         this.#gameScene.createCamera(canvas);
         this.#gameScene.camera.camPosition[2] = 1.8;
-        this.#gameScene.camera.camPosition[1] = -0.2;
+        //this.#gameScene.camera.camPosition[1] = -0.2;
         this.#gameScene.createLight([1.0, 0.0, 0.3]);
 
         this.#guiScene = new Scene(this.gl);
@@ -228,9 +229,7 @@ class Game{
         this.#gameScene.appendElement(this.#tView);
 
         for(let country of this.#territoryController.countries){
-            country.mesh.setUniformValue("view", this.#gameScene.camera.viewMatrix, "Matrix4fv");
-            country.mesh.setUniformValue("projection", this.#gameScene.camera.projMatrix, "Matrix4fv");
-            country.mesh.setUniformValue("color", country.owner.color, "4fv");
+            country.loadUniforms(this.#gameScene.camera);
         }
     
     }
@@ -282,7 +281,7 @@ class Game{
 class GameScreen{
     #gl;
 
-    async init(gl){
+    async init(gl, turnsManager){
         this.settingsButton = new ImageGL();
         await this.settingsButton.init(gl, "./assets/menu/settings_button.png");
         this.settingsButton.scale = [0.046, 0.08]; 
@@ -306,18 +305,7 @@ class GameScreen{
         this.current_player_text = new CanvasImage();
         await this.current_player_text.init(gl);
 
-        this.current_player_text.update(ctx => {
-            if(!(ctx instanceof CanvasRenderingContext2D)) return
-
-            ctx.fillStyle = "white";
-
-            //ctx.fillRect(0, 0, 1000, 1000);
-                
-            ctx.font = "200px Arial";
-            ctx.fillText("Vez de Player 1", 300, 210, 400);
-
-            ctx.fillText("Distribuição de Tropas", 185, 650, 650);
-        }, gl);
+        this.changePlayer(turnsManager.player.name, "Distribuição de tropas", turnsManager.player.color);
 
         this.current_player_text.scale = [0.4, 0.3];
         this.current_player_text.positionY = -0.85;
@@ -374,16 +362,23 @@ class GameScreen{
         }
     }
 
-    changePlayer(player, state){
+    changePlayer(player, state, color){
         this.current_player_text.clear();
+
+        console.log(color);
+        const newColor = color.map(val => Math.round(val*255));
 
         this.current_player_text.update(ctx => {
             if(!(ctx instanceof CanvasRenderingContext2D)) return
 
-            ctx.fillStyle = "white";
+            ctx.fillStyle = `rgb(${newColor})`.replaceAll("'", "");
                 
             ctx.font = "200px Arial";
             ctx.fillText("Vez do "+ player, 300, 210, 400);
+
+            ctx.fillStyle = "white";
+            
+            console.log(ctx.fillStyle);
             ctx.fillText(state, 185, 650, 650);
         }, this.#gl);
     }
