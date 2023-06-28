@@ -29,6 +29,7 @@ class Game{
 
     #fortify;
     #gameScreen;
+    #show_cards;
 
     #goal;
     #goal_path;
@@ -53,12 +54,20 @@ class Game{
         return this.#territoryController;
     }
 
+    get showCards(){
+        return this.#show_cards;
+    }
+
     get fortify(){
         return this.#fortify;
     }
 
     get gameScreen(){
         return this.#gameScreen;
+    }
+
+    get guiScene(){
+        return this.#guiScene;
     }
 
     static async build(canvas){
@@ -74,7 +83,7 @@ class Game{
         //Depois talvez carregar o jogo apenas quando for dado o play
         
 
-        const names = ["Player 1", "Player 2", "Player 3", "Player 4", "Player 5", "Player 6"];
+        const names = ["Player 1", "Player 2"];
 
         
         //azul, amarelo, vermelho, preto, verde
@@ -92,7 +101,7 @@ class Game{
 
         this.#territoryController = new TerritoryController();
         
-        for(let i = 0; i < 6; i++){
+        for(let i = 0; i < names.length; i++){
             const index = Math.floor(Math.random() * colors.length);
             const color = colors[index];
 
@@ -123,7 +132,7 @@ class Game{
                 countries.splice(index, 1);
             }
         }
-        
+
         //tratar o lance de sobrar países
 
         this.#turnsManager = new TurnsManager(this.#players);
@@ -190,26 +199,16 @@ class Game{
         background.depth = -0.01;
         this.#background = background;
         
-        const goal = new ImageGL();
-        await goal.init(this.gl, this.#goal_path);
-        goal.scaleX = 0.4;
-        goal.scaleY = 0.6;
-        this.#goal = goal;
-        
-        
-
         const gameScreen = new GameScreen();
         await gameScreen.init(this.gl, this.#turnsManager);
-
         this.#gameScreen = gameScreen;
 
         const show_cards = new ShowCards();
         await show_cards.init(this.gl);
+        this.#show_cards = show_cards;
 
         const fortify = new Fortify();
         await fortify.init(this.gl);
-
-
         this.#fortify = fortify;
 
         this.#gameScene = new Scene(this.gl);
@@ -236,6 +235,7 @@ class Game{
 
     logic(){
         this.#fortify.logic();
+        this.#show_cards.logic();
     }
 
     draw(){
@@ -243,7 +243,6 @@ class Game{
             this.#background.draw();
             this.#gameScene.draw();
             this.#guiScene.draw();
-            //this.#goal.draw();
         }
         else{
             this.#menuScene.draw();
@@ -315,23 +314,20 @@ class GameScreen{
         this.show_players.scale = [0.065, 0.115]; 
         GameScreen.setInitialPosition(-0.92, -0.85, 0.2, this.show_players);
 
-        this.changeStateBtn = new CanvasImage();
-        await this.changeStateBtn.init(gl, 50);
-
-        this.changeStateBtn.scale = [0.05, 0.15];
-
-        GameScreen.setInitialPosition(3/5-0.05, -7/8, 0.2, this.changeStateBtn);
-
-        this.changeStateBtn.update(ctx => {
-            if(!(ctx instanceof CanvasRenderingContext2D)) return
-
-            ctx.fillStyle = "white";
-
-            ctx.fillRect(0, 0, 50, 50);
-
-        }, gl);
+        this.changeStateBtn = new ImageGL();
+        await this.changeStateBtn.init(gl, "./assets/game/next_turn.png");
+        this.changeStateBtn.scale = [0.065, 0.11]; 
+        GameScreen.setInitialPosition(0.60, -0.85, 0.2, this.changeStateBtn);
 
         this.#gl = gl;
+    }
+
+    async initGoal(gl, player){
+        this.goal = new ImageGL();
+        console.log(player.goalPath);
+        await this.goal.init(gl, player.goalPath);
+        this.goal.scale = [0.4, 0.6];
+        GameScreen.setInitialPosition(this.goal.positionX, this.goal.positionY, 0.4, this.goal);
     }
 
     static setInitialPosition(x, y, depth, widget){
@@ -346,6 +342,14 @@ class GameScreen{
         this.current_player.positionY += amountY;
     }
 
+    moveGoal(){
+        if(this.goal.positionX === 0){
+            this.goal.positionX = 10;
+        }else{
+            this.goal.positionX = 0;
+        }
+    }
+
     draw(camera){
         this.settingsButton.draw(camera);
         this.card_button.draw(camera);
@@ -354,11 +358,16 @@ class GameScreen{
         this.current_player_text.draw(camera);
         this.show_players.draw(camera);
         this.changeStateBtn.draw(camera);
+        this.goal.draw(camera);
     }
 
     clickedWidget(x, y){
         if (this.changeStateBtn.pointCollision(x, y)){
             return "changeTurn";
+        }else if (this.card_button.pointCollision(x, y)){
+            return "showCards";
+        }else if(this.objective_button.pointCollision(x, y)){
+            return "goal";
         }
     }
 
@@ -385,6 +394,13 @@ class GameScreen{
 }
 
 class ShowCards{
+    #up = false;
+    #down =  false;
+    #xPos = 0;
+    #yPos = 0;
+    #cards;
+    #cardsIndex;
+
     async init(gl){
         this.show_cards = new ImageGL();
         await this.show_cards.init(gl, "./assets/game/show_cards.png");
@@ -404,7 +420,49 @@ class ShowCards{
         this.cards_info = new ImageGL();
         await this.cards_info.init(gl, "assets/game/cards_info.png");
         this.cards_info.scale = [0.2, 0.35];
-        ShowCards.setInitialPosition(0.832 + 1, this.cards_info.positionY, 0.3, this.cards_info); 
+        ShowCards.setInitialPosition(0.832 + 1, this.cards_info.positionY, 0.3, this.cards_info);
+    }
+
+    async initCards(gl, cards){
+        this.#cards = [];
+        this.#cardsIndex = cards;
+        let step = 0;
+        if(cards.length > 0){
+            for(let i = 0; i < cards.length; i++){
+                const card = new ImageGL();
+                if(cards[i] == 0){
+                    await card.init(gl, "./assets/game/cards/square.png");
+                }else if(cards[i] == 1){
+                    await card.init(gl, "./assets/game/cards/circle.png");
+                }else if(cards[i] == 2){
+                    await card.init(gl, "./assets/game/cards/triangle.png");
+                }else if(cards[i] == 3){
+                    await card.init(gl, "./assets/game/cards/joker.png");
+                }
+                this.#cards.push(card);
+            }
+    
+            for(let j = 0; j < this.#cards.length; j++){
+                this.#cards[j].scale = [0.055, 0.095];
+                ShowCards.setInitialPosition(-0.161 + step, -0.85 - 1, 0.4, this.#cards[j]);
+                step += 0.08;
+            }
+        }
+
+        this.cardsNumber = new CanvasImage();
+        await this.cardsNumber.init(gl, 500);
+        this.cardsNumber.update(ctx => {
+            if(!(ctx instanceof CanvasRenderingContext2D)) return
+
+            ctx.fillStyle = "black";
+                
+            ctx.font = "30px Arial";
+            ctx.fillText(this.#cards.length.toString(), 250, 250);
+        }, gl);
+
+        this.cardsNumber.scale = [0.8, 1.8];
+        ShowCards.setInitialPosition(0.74, -0.94, 0.5, this.cardsNumber);
+
     }
 
     static setInitialPosition(x, y, depth, widget){
@@ -414,10 +472,15 @@ class ShowCards{
     }
 
     moveAll(amountX, amountY){
-        this.show_cards.positionY += amountY;
+        this.cards_info.positionX += amountX
         this.cancel_button.positionY += amountY;
         this.ok_button.positionY += amountY;
-        this.cards_info.positionX += amountX
+        this.show_cards.positionY += amountY;
+        if(this.#cards.length > 0){
+            for(let i = 0; i < this.#cards.length; i++){
+                this.#cards[i].positionY += amountY;
+            }
+        }
     }
 
     draw(camera){
@@ -425,7 +488,75 @@ class ShowCards{
         this.cancel_button.draw(camera);
         this.ok_button.draw(camera);
         this.cards_info.draw(camera);
+        this.cardsNumber.draw(camera);
+        if(this.#cards.length > 0){
+            for(let i = 0; i < this.#cards.length; i++){
+                this.#cards[i].draw(camera);
+            }
+        }
     }
+
+    up(){
+        this.#up = true;
+        this.#down = false;
+    }
+
+    down(){
+        this.#down = true;
+        this.#up = false;
+    }
+
+    logic(){
+        const step = 0.01;
+
+        if(this.#up || this.#down){
+            if(this.#up){
+                this.#yPos += step;
+                this.#xPos -= step;
+    
+                if(this.#yPos>=1.0){
+                    this.#yPos = 1.0;
+                    this.#xPos = 0.0;
+                    this.#up = false;
+                }else
+                    this.moveAll(-step, step);
+            }else if(this.#down){
+                this.#yPos -= step;
+                this.#xPos += step;
+    
+                if(this.#yPos<=0.0){
+                    this.#yPos = 0.0;
+                    this.#xPos = 1.0;
+                    this.#down = false;
+                }else
+                    this.moveAll(step, -step);
+            }
+        }
+    }
+    
+    clickedWidget(x, y){
+        if(this.#cards.length > 0){
+            for(let i = 0; i < this.#cards.length; i++){
+                if(this.#cards[i].pointCollision(x, y)){
+                    if(this.#cardsIndex[i] == 0){
+                        return 'square';
+                    }else if(this.#cardsIndex[i] == 1){
+                        return 'circle'; 
+                    }else if(this.#cardsIndex[i] == 2){
+                        return 'triangle';
+                    }else if(this.#cardsIndex[i] == 3){
+                        return 'joker';
+                    } 
+                }
+            }
+        }
+        if(this.cancel_button.pointCollision(x, y)){
+            return "cancel";
+        }else if(this.ok_button.pointCollision(x, y)){
+            return "ok";
+        }
+    }
+
 
 }
 
@@ -493,8 +624,6 @@ class Fortify{
     }
 
     moveAll(amount){
-        console.log("am: ", amount);
-
         this.fortify.positionY += amount;
         this.cancel_button.positionY += amount;
         this.ok_button.positionY += amount;

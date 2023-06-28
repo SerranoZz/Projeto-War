@@ -49,6 +49,8 @@ class Attack {
         countryAttack.soldiers -= defenseWins;
         console.log("soldiers ataque: ",countryAttack.soldiers);
         countryDefense.soldiers -= attackWins;
+
+        return attackWins;
     }
 
     calcDices(country, isAttack) {
@@ -80,12 +82,14 @@ export class Player {
     #goal;
     #freeTroops;
     #territoryController;
+    #cards;
 
     constructor(name, color, goal, territoryController) {
       this.#name = name;
       this.#color = color; // pode ser usado como ID 
       this.#territoriesOwned = [];
       this.#continentsOwned = [];
+      this.#cards= [];
       this.#goal = goal;
       this.#freeTroops = 0;
       this.#territoryController = territoryController;
@@ -94,11 +98,14 @@ export class Player {
     conquestTerritory(territorio) {
       this.#territoriesOwned.push(territorio);
     }
+
+    // por definição, a carta com valor 0 é o coriga.
+    receiveCard(){
+        this.#cards.push(Math.floor(Math.random() * 4));
+    }
     
-
     receiveTroop(){
-
-        //calcula a quantidade de tropas a ser recebida devio a quantidade de territorios        
+       
         let qtdreceivedTroops = Math.floor(this.#territoriesOwned.length / 2);
 
         if(qtdreceivedTroops<3) qtdreceivedTroops = 3;
@@ -110,7 +117,6 @@ export class Player {
         this.#freeTroops = qtdreceivedTroops;
     }
 
-
     addTroops(country,qtdTroops){
         if(qtdTroops <=  this.#freeTroops){
             country.soldiers = country.soldiers + qtdTroops;
@@ -119,15 +125,21 @@ export class Player {
     }
 
     attack(base, to){
+        let win = 0;
         const att = new Attack();
-        att.attackPlayer(base, to);
+        win = att.attackPlayer(base, to);
         console.log(base.soldiers, to.soldiers);
+        console.log(win);
+
+        if(win > 0){
+            this.receiveCard();
+        }
+
         if(to.soldiers===0){
             to.owner = this;
             to.changeColor();
         }
     }
-    
     
     get name(){
         return this.#name;
@@ -165,7 +177,19 @@ export class Player {
         return this.#goal.id;
     }
 
+    get goalPath(){
+        return this.#goal.path;
+    }
+
     get continentsOwned(){
         return this.#territoryController.continentsOfPlayer(this);
+    }
+
+    get cards(){
+        return this.#cards;
+    }
+
+    set cards(cards){
+        this.#cards = cards;
     }
 }
