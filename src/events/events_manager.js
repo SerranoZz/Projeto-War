@@ -18,6 +18,7 @@ export default class EventsHandler{
         this.#actions.set(TurnsManager.REASSIGNMENT, new ReassignmentAction());
 
         game.showCards.initCards(game.gl, game.turnsManager.player.cards);
+        game.gameScreen.initGoal(game.gl, game.turnsManager.player);
 
         game.gl.canvas.addEventListener("click", e=>{
             if(game.turnsManager.state === TurnsManager.FREEZE) return;
@@ -51,6 +52,8 @@ export default class EventsHandler{
                 return;
             }else if(widget === "showCards"){
                 game.showCards.up();
+            }else if(widget === "goal"){
+                game.gameScreen.moveGoal();
             }
     
             const country = game.territoryController.clickedCountry(...point, game.gameScene.camera);

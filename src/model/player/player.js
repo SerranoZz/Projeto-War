@@ -177,6 +177,10 @@ export class Player {
         return this.#goal.id;
     }
 
+    get goalPath(){
+        return this.#goal.path;
+    }
+
     get continentsOwned(){
         return this.#territoryController.continentsOfPlayer(this);
     }

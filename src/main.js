@@ -30,7 +30,6 @@ class Game{
     #fortify;
     #gameScreen;
     #show_cards;
-    #gameScreen;
 
     #goal;
     #goal_path;
@@ -200,12 +199,6 @@ class Game{
         background.depth = -0.01;
         this.#background = background;
         
-        const goal = new ImageGL();
-        await goal.init(this.gl, this.#goal_path);
-        goal.scaleX = 0.4;
-        goal.scaleY = 0.6;
-        this.#goal = goal;
-        
         const gameScreen = new GameScreen();
         await gameScreen.init(this.gl, this.#turnsManager);
         this.#gameScreen = gameScreen;
@@ -250,7 +243,6 @@ class Game{
             this.#background.draw();
             this.#gameScene.draw();
             this.#guiScene.draw();
-            this.#goal.draw();
         }
         else{
             this.#menuScene.draw();
@@ -330,6 +322,14 @@ class GameScreen{
         this.#gl = gl;
     }
 
+    async initGoal(gl, player){
+        this.goal = new ImageGL();
+        console.log(player.goalPath);
+        await this.goal.init(gl, player.goalPath);
+        this.goal.scale = [0.4, 0.6];
+        GameScreen.setInitialPosition(this.goal.positionX, this.goal.positionY, 0.4, this.goal);
+    }
+
     static setInitialPosition(x, y, depth, widget){
         widget.positionX = x;
         widget.positionY = y;
@@ -342,6 +342,14 @@ class GameScreen{
         this.current_player.positionY += amountY;
     }
 
+    moveGoal(){
+        if(this.goal.positionX === 0){
+            this.goal.positionX = 10;
+        }else{
+            this.goal.positionX = 0;
+        }
+    }
+
     draw(camera){
         this.settingsButton.draw(camera);
         this.card_button.draw(camera);
@@ -350,6 +358,7 @@ class GameScreen{
         this.current_player_text.draw(camera);
         this.show_players.draw(camera);
         this.changeStateBtn.draw(camera);
+        this.goal.draw(camera);
     }
 
     clickedWidget(x, y){
@@ -357,6 +366,8 @@ class GameScreen{
             return "changeTurn";
         }else if (this.card_button.pointCollision(x, y)){
             return "showCards";
+        }else if(this.objective_button.pointCollision(x, y)){
+            return "goal";
         }
     }
 
