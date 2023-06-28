@@ -2,21 +2,21 @@
     "data": [
         {
             "name": "Brasil",
-            "neighbors": ["Argentina", "Venezuela", "Chile", "Argélia"],
+            "neighbors": ["Argentina", "Venezuela", "Peru", "Argélia"],
             "path": "./assets/meshes/south_america/brasil.obj",
             "continent": "América do Sul",
             "point": "./assets/meshes/points/south_america/point_brasil.obj"
         },
         {
             "name": "Argentina",
-            "neighbors": ["Brasil", "Chile"],
+            "neighbors": ["Brasil", "Peru"],
             "path": "./assets/meshes/south_america/argentina.obj",
             "continent": "América do Sul",
             "point": "./assets/meshes/points/south_america/point_argentina.obj"
         },
         {
             "name": "Venezuela",
-            "neighbors": ["Brasil", "Chile", "México"],
+            "neighbors": ["Brasil", "Peru", "México"],
             "path": "./assets/meshes/south_america/venezuela.obj",
             "continent": "América do Sul",
             "point": "./assets/meshes/points/south_america/point_venezuela.obj"

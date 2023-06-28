@@ -49,6 +49,8 @@ class Attack {
         countryAttack.soldiers -= defenseWins;
         console.log("soldiers ataque: ",countryAttack.soldiers);
         countryDefense.soldiers -= attackWins;
+
+        return attackWins;
     }
 
     calcDices(country, isAttack) {
@@ -99,9 +101,7 @@ export class Player {
 
     // por definição, a carta com valor 0 é o coriga.
     receiveCard(){
-        if(qtdCountryE > qtdCountryS){
-            this.#cards.push(Math.floor(Math.random() * 4));
-        }
+        this.#cards.push(Math.floor(Math.random() * 4));
     }
     
     receiveTroop(){
@@ -125,9 +125,16 @@ export class Player {
     }
 
     attack(base, to){
+        let win = 0;
         const att = new Attack();
-        att.attackPlayer(base, to);
+        win = att.attackPlayer(base, to);
         console.log(base.soldiers, to.soldiers);
+        console.log(win);
+
+        if(win > 0){
+            this.receiveCard();
+        }
+
         if(to.soldiers===0){
             to.owner = this;
             to.changeColor();

@@ -83,7 +83,7 @@ class Game{
         //Depois talvez carregar o jogo apenas quando for dado o play
         
 
-        const names = ["Player 1", "Player 2", "Player 3", "Player 4", "Player 5", "Player 6"];
+        const names = ["Player 1", "Player 2"];
 
         
         //azul, amarelo, vermelho, preto, verde
@@ -101,7 +101,7 @@ class Game{
 
         this.#territoryController = new TerritoryController();
         
-        for(let i = 0; i < 6; i++){
+        for(let i = 0; i < names.length; i++){
             const index = Math.floor(Math.random() * colors.length);
             const color = colors[index];
 
@@ -133,10 +133,6 @@ class Game{
             }
         }
 
-        this.#players[0].cards = [0, 1, 3];
-        this.#players[5].cards = [3, 1, 2];
-        this.#players[2].cards = [0, 1, 0];
-        this.#players[3].cards = [0, 0, 1];
         //tratar o lance de sobrar países
 
         this.#turnsManager = new TurnsManager(this.#players);
@@ -439,6 +435,20 @@ class ShowCards{
             }
         }
 
+        this.cardsNumber = new CanvasImage();
+        await this.cardsNumber.init(gl, 500);
+        this.cardsNumber.update(ctx => {
+            if(!(ctx instanceof CanvasRenderingContext2D)) return
+
+            ctx.fillStyle = "black";
+                
+            ctx.font = "30px Arial";
+            ctx.fillText(this.#cards.length.toString(), 250, 250);
+        }, gl);
+
+        this.cardsNumber.scale = [0.8, 1.8];
+        ShowCards.setInitialPosition(0.74, -0.94, 0.5, this.cardsNumber);
+
     }
 
     static setInitialPosition(x, y, depth, widget){
@@ -464,6 +474,7 @@ class ShowCards{
         this.cancel_button.draw(camera);
         this.ok_button.draw(camera);
         this.cards_info.draw(camera);
+        this.cardsNumber.draw(camera);
         if(this.#cards.length > 0){
             for(let i = 0; i < this.#cards.length; i++){
                 this.#cards[i].draw(camera);
@@ -518,6 +529,13 @@ class ShowCards{
     }
     
     clickedWidget(x, y){
+        if(this.#cards.length > 0){
+            for(let i = 0; i < this.#cards.length; i++){
+                if(this.#cards[i].pointCollision(x, y)){
+                    alert("alo");
+                }
+            }
+        }
         if(this.cancel_button.pointCollision(x, y)){
             return "cancel";
         }else if(this.ok_button.pointCollision(x, y)){
