@@ -80,12 +80,14 @@ export class Player {
     #goal;
     #freeTroops;
     #territoryController;
+    #cards;
 
     constructor(name, color, goal, territoryController) {
       this.#name = name;
       this.#color = color; // pode ser usado como ID 
       this.#territoriesOwned = [];
       this.#continentsOwned = [];
+      this.#cards= [];
       this.#goal = goal;
       this.#freeTroops = 0;
       this.#territoryController = territoryController;
@@ -97,8 +99,7 @@ export class Player {
     
 
     receiveTroop(){
-
-        //calcula a quantidade de tropas a ser recebida devio a quantidade de territorios        
+       
         let qtdreceivedTroops = Math.floor(this.#territoriesOwned.length / 2);
 
         if(qtdreceivedTroops<3) qtdreceivedTroops = 3;

@@ -30,6 +30,11 @@ export default class EventsHandler{
                 return;
             }
 
+            const widget2 = game.showCards.clickedWidget(...point);
+            if(widget2 === "cancel"){
+                game.showCards.down();
+            }
+
             const widget = game.gameScreen.clickedWidget(...point);
 
             if(widget === "changeTurn"){
@@ -38,6 +43,8 @@ export default class EventsHandler{
                     game.turnsManager.player.color);
                 alert("chanja aí");
                 return;
+            }else if(widget === "showCards"){
+                game.showCards.up();
             }
     
             const country = game.territoryController.clickedCountry(...point, game.gameScene.camera);

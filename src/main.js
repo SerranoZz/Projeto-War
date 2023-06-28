@@ -29,6 +29,7 @@ class Game{
 
     #fortify;
     #gameScreen;
+    #show_cards;
 
     #goal;
     #goal_path;
@@ -53,12 +54,20 @@ class Game{
         return this.#territoryController;
     }
 
+    get showCards(){
+        return this.#show_cards;
+    }
+
     get fortify(){
         return this.#fortify;
     }
 
     get gameScreen(){
         return this.#gameScreen;
+    }
+
+    get guiScene(){
+        return this.#guiScene;
     }
 
     static async build(canvas){
@@ -200,16 +209,14 @@ class Game{
 
         const gameScreen = new GameScreen();
         await gameScreen.init(this.gl, this.#turnsManager);
-
         this.#gameScreen = gameScreen;
 
         const show_cards = new ShowCards();
         await show_cards.init(this.gl);
+        this.#show_cards = show_cards;
 
         const fortify = new Fortify();
         await fortify.init(this.gl);
-
-
         this.#fortify = fortify;
 
         this.#gameScene = new Scene(this.gl);
@@ -236,6 +243,7 @@ class Game{
 
     logic(){
         this.#fortify.logic();
+        this.#show_cards.logic();
     }
 
     draw(){
@@ -315,21 +323,10 @@ class GameScreen{
         this.show_players.scale = [0.065, 0.115]; 
         GameScreen.setInitialPosition(-0.92, -0.85, 0.2, this.show_players);
 
-        this.changeStateBtn = new CanvasImage();
-        await this.changeStateBtn.init(gl, 50);
-
-        this.changeStateBtn.scale = [0.05, 0.15];
-
-        GameScreen.setInitialPosition(3/5-0.05, -7/8, 0.2, this.changeStateBtn);
-
-        this.changeStateBtn.update(ctx => {
-            if(!(ctx instanceof CanvasRenderingContext2D)) return
-
-            ctx.fillStyle = "white";
-
-            ctx.fillRect(0, 0, 50, 50);
-
-        }, gl);
+        this.changeStateBtn = new ImageGL();
+        await this.changeStateBtn.init(gl, "./assets/game/next_turn.png");
+        this.changeStateBtn.scale = [0.065, 0.11]; 
+        GameScreen.setInitialPosition(0.60, -0.85, 0.2, this.changeStateBtn);
 
         this.#gl = gl;
     }
@@ -359,6 +356,8 @@ class GameScreen{
     clickedWidget(x, y){
         if (this.changeStateBtn.pointCollision(x, y)){
             return "changeTurn";
+        }else if (this.card_button.pointCollision(x, y)){
+            return "showCards";
         }
     }
 
@@ -385,6 +384,11 @@ class GameScreen{
 }
 
 class ShowCards{
+    #up = false;
+    #down =  false;
+    #xPos = 0;
+    #yPos = 0;
+
     async init(gl){
         this.show_cards = new ImageGL();
         await this.show_cards.init(gl, "./assets/game/show_cards.png");
@@ -405,6 +409,27 @@ class ShowCards{
         await this.cards_info.init(gl, "assets/game/cards_info.png");
         this.cards_info.scale = [0.2, 0.35];
         ShowCards.setInitialPosition(0.832 + 1, this.cards_info.positionY, 0.3, this.cards_info); 
+
+        this.card = new ImageGL();
+        await this.card.init(gl, "./assets/game/cards/square.png");
+        this.card.scale = [0.055, 0.095];
+        ShowCards.setInitialPosition(-0.161, -0.85 - 1, 0.4, this.card);
+
+        this.card2 = new ImageGL();
+        await this.card2.init(gl, "./assets/game/cards/circle.png");
+        this.card2.scale = [0.055, 0.095];
+        ShowCards.setInitialPosition(-0.161 + 0.08, -0.85 - 1, 0.4, this.card2);
+
+        this.card3 = new ImageGL();
+        await this.card3.init(gl, "./assets/game/cards/triangle.png");
+        this.card3.scale = [0.055, 0.095];
+        ShowCards.setInitialPosition(-0.161 + 0.16, -0.85 - 1, 0.4, this.card3);
+
+        this.card4 = new ImageGL();
+        await this.card4.init(gl, "./assets/game/cards/joker.png");
+        this.card4.scale = [0.055, 0.095];
+        ShowCards.setInitialPosition(-0.161 + 0.24, -0.85 - 1, 0.4, this.card4);
+
     }
 
     static setInitialPosition(x, y, depth, widget){
@@ -414,10 +439,14 @@ class ShowCards{
     }
 
     moveAll(amountX, amountY){
-        this.show_cards.positionY += amountY;
+        this.cards_info.positionX += amountX
         this.cancel_button.positionY += amountY;
         this.ok_button.positionY += amountY;
-        this.cards_info.positionX += amountX
+        this.show_cards.positionY += amountY;
+        this.card.positionY += amountY;
+        this.card2.positionY += amountY;
+        this.card3.positionY += amountY;
+        this.card4.positionY += amountY;
     }
 
     draw(camera){
@@ -425,6 +454,56 @@ class ShowCards{
         this.cancel_button.draw(camera);
         this.ok_button.draw(camera);
         this.cards_info.draw(camera);
+        this.card.draw(camera);
+        this.card2.draw(camera);
+        this.card3.draw(camera);
+        this.card4.draw(camera);
+    }
+
+    up(){
+        this.#up = true;
+        this.#down = false;
+    }
+
+    down(){
+        this.#down = true;
+        this.#up = false;
+    }
+
+    logic(){
+        const step = 0.01;
+
+        if(this.#up || this.#down){
+            if(this.#up){
+                this.#yPos += step;
+                this.#xPos -= step;
+    
+                if(this.#yPos>=1.0){
+                    this.#yPos = 1.0;
+                    this.#xPos = 0.0;
+                    this.#up = false;
+                }else
+                    this.moveAll(-step, step);
+            }else if(this.#down){
+                this.#yPos -= step;
+                this.#xPos += step;
+    
+                if(this.#yPos<=0.0){
+                    this.#yPos = 0.0;
+                    this.#xPos = 1.0;
+                    this.#down = false;
+                }else
+                    this.moveAll(step, -step);
+            }
+        }
+    }
+    
+    clickedWidget(x, y){
+        if(this.cancel_button.pointCollision(x, y)){
+            return "cancel";
+        }else if(this.ok_button.pointCollision(x, y)){
+            return "ok";
+        }
     }
 
 }
@@ -493,8 +572,6 @@ class Fortify{
     }
 
     moveAll(amount){
-        console.log("am: ", amount);
-
         this.fortify.positionY += amount;
         this.cancel_button.positionY += amount;
         this.ok_button.positionY += amount;
