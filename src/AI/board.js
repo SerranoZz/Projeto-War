@@ -1,5 +1,17 @@
 class Board {
 
+    constructor(game, depthLevel) {
+        game.clone();
+        this.#depthLevel = depthLevel;
+        if(depthLevel < 1) {
+            this.#boards = openBoard();
+        }
+    }
+
+    openBoard() {
+        //will generate all possible boards this game can go to.
+    }
+
     evaluate() {
         //Pega o valor total do tabuleiro
         this.evaluateDefense() + this.evaluateObjective() + this.evaluateTerritories;
