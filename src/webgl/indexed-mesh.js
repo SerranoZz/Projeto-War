@@ -226,7 +226,7 @@ class Border{
         this.#min = min;
         this.#max = max;
 
-        this.center = [(maxX+minX)/2, (minY + maxY)/2];
+        this.center = [minX, minY]//[(maxX+minX)/2, (minY + maxY)/2];
     }
 
     pointCollision(x, y, camera, mesh){

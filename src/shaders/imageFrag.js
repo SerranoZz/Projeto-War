@@ -11,7 +11,7 @@ export default `#version 300 es
     void main() {
         color = texture(uTexture, fTexCoord);
 
-        if(color.a < 0.2) discard;
+        if(color.a < 0.9) discard;
 
         color *= alpha;
     }

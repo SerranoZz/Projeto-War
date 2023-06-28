@@ -23,17 +23,18 @@ export default class TroopsView{
 
     async update() {
 
+        this.#cImage.clear(0, 0, this.#gl.canvas.width, this.#gl.canvas.height);
+
         await this.#cImage.update(ctx =>{
-            ctx.clearRect(0, 0, this.#gl.canvas.width, this.#gl.canvas.height);
             if (!(ctx instanceof CanvasRenderingContext2D)) return
 
             this.#countries.forEach(country => {
-                const center = country.mesh.center;
+                const center = country.pointMesh.center;
 
                 ctx.fillStyle = "white";
                 
                 ctx.font = "30px Arial";
-                ctx.fillText(country.soldiers+"", (center[0] + 0.5)*1000 - 10, (-center[1]+0.5)*1000)+10;
+                ctx.fillText(country.soldiers+"", (center[0] + 0.5)*860+70, (-center[1]+0.5)*810+95);
             });
 
         }, this.#gl);

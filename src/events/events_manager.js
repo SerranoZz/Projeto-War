@@ -1,41 +1,79 @@
 import TurnsManager from "../model/player/turns_manager";
 import { Player } from "../model/player/player";
 
-export default class CountryEventsHandler{
+export default class EventsHandler{
     #country = null;
 
-    constructor(game){
+    #mapDebug = false;
 
-        //this.#country = territoryController.countries.find(c => c.name==="México");
+    #actions = new Map();
+
+    mapDebug(){
+        this.#mapDebug = true;
+    }
+
+    constructor(game){
+        this.#actions.set(TurnsManager.DISTRIBUCTION, new DistribuctionAction());
+        this.#actions.set(TurnsManager.ATTACK, new AttackAction());
+        this.#actions.set(TurnsManager.REASSIGNMENT, new ReassignmentAction());
+
+        game.showCards.initCards(game.gl, game.turnsManager.player.cards);
 
         game.gl.canvas.addEventListener("click", e=>{
-            //if(game.turnsManager.state === TurnsManager.FREEZE) return;
-
-            console.log(game.inGame, game.turnsManager.state);
+            if(game.turnsManager.state === TurnsManager.FREEZE) return;
 
             if(!game.inGame) return;
     
-            const point = CountryEventsHandler.mapClickInCanvas(e.clientX, e.clientY, game.gl.canvas);
+            const point = EventsHandler.mapClickInCanvas(e.clientX, e.clientY, game.gl.canvas);
+
+            const troca = new ExchangeCardsAction();
+            troca.execute(game, ...point)
+
+            if(game.fortify.opened){
+                this.#actions.get(game.turnsManager.state).applyFort(game, ...point);
+                return;
+            }
+
+            const widget2 = game.showCards.clickedWidget(...point);
+            if(widget2 === "cancel"){
+                game.showCards.down();
+            }
+
+            const widget = game.gameScreen.clickedWidget(...point);
+
+            if(widget === "changeTurn"){
+                game.turnsManager.nextState();
+                console.log(game.turnsManager.player.name, game.turnsManager.player.cards);
+                game.showCards.initCards(game.gl, game.turnsManager.player.cards);
+                game.gameScreen.changePlayer(game.turnsManager.player.name, game.turnsManager.state_name,
+                    game.turnsManager.player.color);
+                alert("chanja aí");
+                return;
+            }else if(widget === "showCards"){
+                game.showCards.up();
+            }
     
             const country = game.territoryController.clickedCountry(...point, game.gameScene.camera);
-
-            if(country)
-                alert(country.name);
 
             // country events é um dicionário de funções, onde as chaves são os estados
             // essa linha chama uma função de acordo com o estado do jogo atual
 
-            //if(country) countryEvents.get(game.turnsManager.state)(game, country);
-            if(country) countryEvents.get(TurnsManager.ATTACK)(game, country);
+            if(country) {
+                alert(country.name);
+                this.#country = country;
 
-            this.#country = country;
+                const action = this.#actions.get(game.turnsManager.state);
 
-            this.#country.mesh.pointCollision(...point, game.gameScene.camera);
+                action.execute(game, country, ...point);
+            };
+
         });
 
         let child;
 
         document.body.addEventListener("keydown", e=>{
+            if(!this.#mapDebug) return;
+
             if(e.key==="d" && this.#country) {
                 child = this.#country.mesh.drawBorder;
                 document.body.appendChild(child);
@@ -58,22 +96,18 @@ export default class CountryEventsHandler{
     }
 }
 
-const countryEvents = new Map();
+class AttackAction{
+    base = null;
+    destiny = null;
+    neighbors = null;
+    amount = 1;
 
-const attack = {}
-
-const distribuction = null;
-
-countryEvents.set(TurnsManager.ATTACK, (game, country)=>{
-    const player = game.turnsManager.player;
-    const territoryController = game.territoryController;
+    execute(game, country){
+        const player = game.turnsManager.player;
+        const territoryController = game.territoryController;
     
-    //console.log(country.owner, player);
-
-    if(!attack.base) {
-
-        if(country.owner === player){
-            alert("entrou");
+        if(!this.base) {
+            if(country.owner !== player) return;
 
             const neighbors = territoryController.countries.filter(c =>{
                 if(country.neighbors.indexOf(c.name) !== -1 && c.owner !== country.owner)
@@ -82,76 +116,278 @@ countryEvents.set(TurnsManager.ATTACK, (game, country)=>{
 
             if(neighbors.length === 0) return;
 
-            game.gameScene.switchLight();
+            this.changePositions(game, country, neighbors);
 
-            attack.base = country;
-            country.mesh.position[2] = 0.03;
-            country.mesh.scale[2] = 2;
+            this.base = country;
+            this.neighbors = neighbors;
 
-            game.gameScene.light.createUniforms(country.mesh);
+        }else{
+            if(this.neighbors.indexOf(country) === -1) return;
+    
+            alert(`from ${this.base.name} to ${country.name}`);
+    
+            player.attack(this.base, country);
 
-            neighbors.forEach(neighbor => {
-                if(neighbor.owner === player) return;
+            game.tView.update();
 
-                neighbor.mesh.position[2] = 0.03;
-                neighbor.mesh.scale[2] = 2;
+            if(country.soldiers === 0){
+                game.fortify.changeNumber(1);
+                game.fortify.up();
+                this.destiny = country;
+                return;
+            }
 
-                game.gameScene.light.createUniforms(neighbor.mesh);
-            });
-
-            console.log(neighbors);
-            //country.mesh.scale[2] = 3;
-
-            attack.neighbors = neighbors;
+            this.resetPositions(game);
+    
+            this.base = null;
+            this.neighbors = null;
         }
-    }else{
-        if(attack.neighbors.indexOf(country) === -1) return;
+    }
 
-        alert(`from ${attack.base.name} to ${country.name}`);
+    applyFort(game, x, y){
+        const btn = game.fortify.clickedWidget(x, y);
 
-        player.attack(attack.base, country);
+        if(btn === "-" && this.amount > 1){
+            this.amount--;
+            game.fortify.changeNumber(this.amount);
+        }else if(btn === "+" && this.amount < this.base.soldiers - 1){
+            this.amount++;
+            game.fortify.changeNumber(this.amount);
+        }else if(btn==="ok"){
 
+            //alert("base soldiers:"+this.base.soldiers+" amount: "+this.amount)
+
+            game.territoryController.troop_reassignment(this.base, this.destiny, this.amount);
+            game.tView.update();
+            
+            this.resetPositions(game);
+            game.fortify.down();
+            game.fortify.changeNumber(0);
+            this.amount = 0;
+            this.base = null;
+            this.neighbors = null;
+        } 
+    }
+
+    changePositions(game, country, neighbors){
         game.gameScene.switchLight();
 
-        attack.neighbors.forEach(neighbor => {
-            if(neighbor.owner === player) return;
+        country.mesh.position[2] = 0.03;
+        country.mesh.scale[2] = 2;
 
+        game.gameScene.light.createUniforms(country.mesh);
+
+        neighbors.forEach(neighbor => {
+            neighbor.mesh.position[2] = 0.03;
+            neighbor.mesh.scale[2] = 2;
+
+            game.gameScene.light.createUniforms(neighbor.mesh);
+        });
+    }
+
+    resetPositions(game){
+        game.gameScene.switchLight();
+    
+        this.neighbors.forEach(neighbor => {
             neighbor.mesh.position[2] = 0.0;
             neighbor.mesh.scale[2] = 1;
 
             game.gameScene.light.createUniforms(neighbor.mesh);
         });
         
-        attack.base.mesh.position[2] = 0.0;
-        attack.base.mesh.scale[2] = 1;
-
-        attack.base = null;
-        attack.neighbors = null;
-        game.tView.update();
+        this.base.mesh.position[2] = 0.0;
+        this.base.mesh.scale[2] = 1;
     }
-})
+}
 
-countryEvents.set(TurnsManager.DISTRIBUCTION, (game, country)=>{
-    console.log("dist", distribuction);
-    if(!distribuction && country.owner === game.turnsManager.player){
+class DistribuctionAction{
+    country = null;
+    amount = 0;
+
+    execute(game, country){
+        if(!this.country && country.owner === game.turnsManager.player){
+            game.gameScene.switchLight();
+
+            this.changePositions(game, country);
+    
+            game.fortify.up();
+    
+            this.country = country;
+    
+            game.turnsManager.openFortify();
+    
+        }
+    }
+
+    applyFort(game, x, y){
+        const btn = game.fortify.clickedWidget(x, y);
+
+        if(btn === "-" && this.amount > 0){
+            alert(this.amount)
+            this.amount--;
+            game.fortify.changeNumber(this.amount);
+        }else if(btn === "+" && this.amount < game.turnsManager.player.freeTroops){
+            this.amount++;
+            game.fortify.changeNumber(this.amount);
+        }else if(btn === "cancel"){
+            game.fortify.down();
+            this.resetPositions(game);
+            game.amount = 0;
+            game.fortify.changeNumber(0);
+        }else if(btn === "ok"){
+            game.turnsManager.player.addTroops(this.country, this.amount);
+            game.tView.update();
+            this.resetPositions(game);
+            game.fortify.down();
+            game.fortify.changeNumber(0);
+            this.amount = 0;
+        }
+    }
+
+    changePositions(game, country){
+        country.mesh.position[2] = 0.03;
+        country.mesh.scale[2] = 2;
+    
+        game.gameScene.light.createUniforms(country.mesh);
+    }
+    
+    resetPositions(game){
         game.gameScene.switchLight();
+        
+        this.country.mesh.position[2] = 0.0;
+        this.country.mesh.scale[2] = 1;
 
-        attack.base = country;
+        this.country = null;
+    }
+}
+
+class ReassignmentAction{
+    base = null;
+    neighbors = null;
+    destiny = null;
+    amount = 0;
+
+    execute(game, country){
+        const player = game.turnsManager.player;
+        const territoryController = game.territoryController;
+
+        alert("entrou em execute")
+
+        console.log(this)
+    
+        if(!this.base) {
+            if(country.owner !== player) return
+
+            const neighbors = territoryController.countries.filter(c =>{
+                if(country.neighbors.indexOf(c.name) !== -1 && c.owner === country.owner)
+                    return c;
+            })
+
+            if(neighbors.length === 0) return;
+
+            this.base = country;
+            this.neighbors = neighbors;
+            this.changePositions(game, country, neighbors);
+    
+        }else if(!this.destiny){
+            if(this.neighbors.indexOf(country) === -1) return;
+    
+            alert(`from ${this.base.name} to ${country.name}`);
+
+            this.destiny = country;
+            
+            game.fortify.up();
+        }
+    }
+
+    applyFort(game, x, y){
+        alert(this.base.soldiers)
+
+        const btn = game.fortify.clickedWidget(x, y);
+
+        if(btn === "-" && this.amount > 0){
+            this.amount--;
+            game.fortify.changeNumber(this.amount);
+        }else if(btn === "+" && this.amount+1 < this.base.soldiers){
+            this.amount++;
+            game.fortify.changeNumber(this.amount);
+        }else if(btn === "cancel" || btn==="ok"){
+
+            alert("base soldiers:"+this.base.soldiers+" amount: "+this.amount)
+
+            if(btn === "ok"){
+                game.territoryController.troop_reassignment(this.base, this.destiny, this.amount);
+                game.tView.update();
+            }
+
+            this.resetPositions(game);
+            game.fortify.down();
+            game.fortify.changeNumber(0);
+            this.amount = 0;
+            this.base = null;
+            this.neighbors = null;
+            this.destiny = null;
+        } 
+        
+    }
+
+    changePositions(game, country, neighbors){
+        country.mesh.scale[2] = 3;
         country.mesh.position[2] = 0.03;
         country.mesh.scale[2] = 2;
 
+        game.gameScene.switchLight();
+
         game.gameScene.light.createUniforms(country.mesh);
 
-        console.log(game.fortify);
+        neighbors.forEach(neighbor => {
+            if(neighbor.owner === this.base.player) return;
 
-        game.fortify.up();
+            neighbor.mesh.position[2] = 0.03;
+            neighbor.mesh.scale[2] = 2;
 
-        distribuction = country;
-
+            game.gameScene.light.createUniforms(neighbor.mesh);
+        });
     }
-})
 
-countryEvents.set(TurnsManager.REASSIGNMENT, (turnsManager, country)=>{
+    resetPositions(game){
+        game.gameScene.switchLight();
 
-})
+        this.neighbors.forEach(neighbor => {
+            neighbor.mesh.position[2] = 0.0;
+            neighbor.mesh.scale[2] = 1;
 
+            game.gameScene.light.createUniforms(neighbor.mesh);
+        });
+        
+        this.base.mesh.position[2] = 0.0;
+        this.base.mesh.scale[2] = 1;
+    }
+}
+
+class ExchangeCardsAction{
+    #selectCards = [];
+
+    execute(game, x, y){
+        const card = game.showCards.clickedWidget(x,y);
+
+        console.log(card);
+    }
+
+    receiveCards(card) {
+        if (selectedCards.length < 3) {
+          selectedCards.push(numero);
+          console.log(`Carta ${numero} selecionada.`);
+        }
+      
+        if (selectedCards.length === 3) {
+          console.log('Processando as cartas...');
+          // Faça o processamento necessário com as três cartas aqui
+          // por exemplo, some os números das cartas:
+          
+      
+          // Limpe o array para a próxima rodada de seleção de cartas
+          selectedCards = [];
+        }
+    }
+}
