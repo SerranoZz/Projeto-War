@@ -274,6 +274,13 @@ class Game{
         return [mappedOnCenter[0]*2/canvas.width, mappedOnCenter[1]*2/canvas.height];
     }
 
+    clone() {
+        let territoryClone = this.#territoryController.clone();
+        let gameClone = Object.assign(new Game(), this);
+
+        gameClone.#territoryController = territoryClone;
+        return gameClone;
+    }
 
 }
 

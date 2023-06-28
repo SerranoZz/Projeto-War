@@ -5,14 +5,6 @@ export default class TerritoryController {
     #continents;
     #countries;
 
-    /*constructor() {
-        this.#continents = [];
-        this.#countries = [];
-        
-        this.loadContinents();
-        this.loadCountries();
-    }*/
-
     async init(gl, scale){
 
         this.#continents = [];
@@ -102,5 +94,22 @@ export default class TerritoryController {
         }
     
         return null;
+    }
+
+    clone() {
+        let continentClone = Object.assign([], this.#continents);
+        for(let i = 0; i < continentClone.length; i++) {
+            continentclone[i] = Object.assign(new Continent(0, 0), continentClone[i]);
+        }
+
+        let countryClone = Object.assign([], this.#countries);
+        for(let i = 0; i < countryClone.length; i++) {
+            countryclone[i] = Object.assign(new Country(0, 0, 0, 0), countryClone[i]);
+        }
+
+        let clone = Object.assign(new TerritoryController(), this);
+        clone.#continents = continentclone;
+        clone.#countries = countryClone;
+        return clone;
     }
 }
