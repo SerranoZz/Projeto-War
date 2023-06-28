@@ -26,6 +26,9 @@ export default class EventsHandler{
     
             const point = EventsHandler.mapClickInCanvas(e.clientX, e.clientY, game.gl.canvas);
 
+            const troca = new ExchangeCardsAction();
+            troca.execute(game, ...point)
+
             if(game.fortify.opened){
                 this.#actions.get(game.turnsManager.state).applyFort(game, ...point);
                 return;
@@ -153,7 +156,6 @@ class AttackAction{
         }else if(btn==="ok"){
 
             //alert("base soldiers:"+this.base.soldiers+" amount: "+this.amount)
-
 
             game.territoryController.troop_reassignment(this.base, this.destiny, this.amount);
             game.tView.update();
@@ -360,5 +362,32 @@ class ReassignmentAction{
         
         this.base.mesh.position[2] = 0.0;
         this.base.mesh.scale[2] = 1;
+    }
+}
+
+class ExchangeCardsAction{
+    #selectCards = [];
+
+    execute(game, x, y){
+        const card = game.showCards.clickedWidget(x,y);
+
+        console.log(card);
+    }
+
+    receiveCards(card) {
+        if (selectedCards.length < 3) {
+          selectedCards.push(numero);
+          console.log(`Carta ${numero} selecionada.`);
+        }
+      
+        if (selectedCards.length === 3) {
+          console.log('Processando as cartas...');
+          // Faça o processamento necessário com as três cartas aqui
+          // por exemplo, some os números das cartas:
+          
+      
+          // Limpe o array para a próxima rodada de seleção de cartas
+          selectedCards = [];
+        }
     }
 }

@@ -387,6 +387,7 @@ class ShowCards{
     #xPos = 0;
     #yPos = 0;
     #cards;
+    #cardsIndex;
 
     async init(gl){
         this.show_cards = new ImageGL();
@@ -412,6 +413,7 @@ class ShowCards{
 
     async initCards(gl, cards){
         this.#cards = [];
+        this.#cardsIndex = cards;
         let step = 0;
         if(cards.length > 0){
             for(let i = 0; i < cards.length; i++){
@@ -482,14 +484,6 @@ class ShowCards{
         }
     }
 
-    /*drawCards(camera){
-        if(this.#cards.length > 0){
-            for(let i = 0; i < this.#cards.length; i++){
-                this.#cards[i].draw(camera);
-            }
-        }
-    }*/
-
     up(){
         this.#up = true;
         this.#down = false;
@@ -532,7 +526,15 @@ class ShowCards{
         if(this.#cards.length > 0){
             for(let i = 0; i < this.#cards.length; i++){
                 if(this.#cards[i].pointCollision(x, y)){
-                    alert("alo");
+                    if(this.#cardsIndex[i] == 0){
+                        return 'square';
+                    }else if(this.#cardsIndex[i] == 1){
+                        return 'circle'; 
+                    }else if(this.#cardsIndex[i] == 2){
+                        return 'triangle';
+                    }else if(this.#cardsIndex[i] == 3){
+                        return 'joker';
+                    } 
                 }
             }
         }
