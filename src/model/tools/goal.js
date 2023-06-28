@@ -177,3 +177,9 @@ export default class Goal{
         }
     }
 }
+
+module.exports = class Goal {
+    getGoal(goal){
+        return this.#goalToReturn.getGoal(goal);
+    }
+}
