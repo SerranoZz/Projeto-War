@@ -27,6 +27,7 @@ class Game{
     #countryEvents;
 
     #fortify;
+    #gameScreen;
 
     #goal;
     #goal_path;
@@ -237,7 +238,7 @@ class Game{
             this.#background.draw();
             this.#gameScene.draw();
             this.#guiScene.draw();
-            //this.#goal.draw();
+            this.#goal.draw();
         }
         else{
             this.#menuScene.draw();
