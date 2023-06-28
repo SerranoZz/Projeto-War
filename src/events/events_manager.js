@@ -17,6 +17,7 @@ export default class EventsHandler{
         this.#actions.set(TurnsManager.ATTACK, new AttackAction());
         this.#actions.set(TurnsManager.REASSIGNMENT, new ReassignmentAction());
 
+        game.showCards.initCards(game.gl, game.turnsManager.player.cards);
 
         game.gl.canvas.addEventListener("click", e=>{
             if(game.turnsManager.state === TurnsManager.FREEZE) return;
@@ -39,6 +40,8 @@ export default class EventsHandler{
 
             if(widget === "changeTurn"){
                 game.turnsManager.nextState();
+                console.log(game.turnsManager.player.name, game.turnsManager.player.cards);
+                game.showCards.initCards(game.gl, game.turnsManager.player.cards);
                 game.gameScreen.changePlayer(game.turnsManager.player.name, game.turnsManager.state_name,
                     game.turnsManager.player.color);
                 alert("chanja aí");

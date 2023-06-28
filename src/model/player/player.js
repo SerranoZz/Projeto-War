@@ -96,8 +96,14 @@ export class Player {
     conquestTerritory(territorio) {
       this.#territoriesOwned.push(territorio);
     }
-    
 
+    // por definição, a carta com valor 0 é o coriga.
+    receiveCard(){
+        if(qtdCountryE > qtdCountryS){
+            this.#cards.push(Math.floor(Math.random() * 4));
+        }
+    }
+    
     receiveTroop(){
        
         let qtdreceivedTroops = Math.floor(this.#territoriesOwned.length / 2);
@@ -110,7 +116,6 @@ export class Player {
 
         this.#freeTroops = qtdreceivedTroops;
     }
-
 
     addTroops(country,qtdTroops){
         if(qtdTroops <=  this.#freeTroops){
@@ -128,7 +133,6 @@ export class Player {
             to.changeColor();
         }
     }
-    
     
     get name(){
         return this.#name;
@@ -168,5 +172,13 @@ export class Player {
 
     get continentsOwned(){
         return this.#territoryController.continentsOfPlayer(this);
+    }
+
+    get cards(){
+        return this.#cards;
+    }
+
+    set cards(cards){
+        this.#cards = cards;
     }
 }

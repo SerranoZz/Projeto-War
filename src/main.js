@@ -132,7 +132,11 @@ class Game{
                 countries.splice(index, 1);
             }
         }
-        
+
+        this.#players[0].cards = [0, 1, 3];
+        this.#players[5].cards = [3, 1, 2];
+        this.#players[2].cards = [0, 1, 0];
+        this.#players[3].cards = [0, 0, 1];
         //tratar o lance de sobrar países
 
         this.#turnsManager = new TurnsManager(this.#players);
@@ -205,8 +209,6 @@ class Game{
         goal.scaleY = 0.6;
         this.#goal = goal;
         
-        
-
         const gameScreen = new GameScreen();
         await gameScreen.init(this.gl, this.#turnsManager);
         this.#gameScreen = gameScreen;
@@ -388,6 +390,7 @@ class ShowCards{
     #down =  false;
     #xPos = 0;
     #yPos = 0;
+    #cards;
 
     async init(gl){
         this.show_cards = new ImageGL();
@@ -408,27 +411,33 @@ class ShowCards{
         this.cards_info = new ImageGL();
         await this.cards_info.init(gl, "assets/game/cards_info.png");
         this.cards_info.scale = [0.2, 0.35];
-        ShowCards.setInitialPosition(0.832 + 1, this.cards_info.positionY, 0.3, this.cards_info); 
+        ShowCards.setInitialPosition(0.832 + 1, this.cards_info.positionY, 0.3, this.cards_info);
+    }
 
-        this.card = new ImageGL();
-        await this.card.init(gl, "./assets/game/cards/square.png");
-        this.card.scale = [0.055, 0.095];
-        ShowCards.setInitialPosition(-0.161, -0.85 - 1, 0.4, this.card);
-
-        this.card2 = new ImageGL();
-        await this.card2.init(gl, "./assets/game/cards/circle.png");
-        this.card2.scale = [0.055, 0.095];
-        ShowCards.setInitialPosition(-0.161 + 0.08, -0.85 - 1, 0.4, this.card2);
-
-        this.card3 = new ImageGL();
-        await this.card3.init(gl, "./assets/game/cards/triangle.png");
-        this.card3.scale = [0.055, 0.095];
-        ShowCards.setInitialPosition(-0.161 + 0.16, -0.85 - 1, 0.4, this.card3);
-
-        this.card4 = new ImageGL();
-        await this.card4.init(gl, "./assets/game/cards/joker.png");
-        this.card4.scale = [0.055, 0.095];
-        ShowCards.setInitialPosition(-0.161 + 0.24, -0.85 - 1, 0.4, this.card4);
+    async initCards(gl, cards){
+        this.#cards = [];
+        let step = 0;
+        if(cards.length > 0){
+            for(let i = 0; i < cards.length; i++){
+                const card = new ImageGL();
+                if(cards[i] == 0){
+                    await card.init(gl, "./assets/game/cards/square.png");
+                }else if(cards[i] == 1){
+                    await card.init(gl, "./assets/game/cards/circle.png");
+                }else if(cards[i] == 2){
+                    await card.init(gl, "./assets/game/cards/triangle.png");
+                }else if(cards[i] == 3){
+                    await card.init(gl, "./assets/game/cards/joker.png");
+                }
+                this.#cards.push(card);
+            }
+    
+            for(let j = 0; j < this.#cards.length; j++){
+                this.#cards[j].scale = [0.055, 0.095];
+                ShowCards.setInitialPosition(-0.161 + step, -0.85 - 1, 0.4, this.#cards[j]);
+                step += 0.08;
+            }
+        }
 
     }
 
@@ -443,10 +452,11 @@ class ShowCards{
         this.cancel_button.positionY += amountY;
         this.ok_button.positionY += amountY;
         this.show_cards.positionY += amountY;
-        this.card.positionY += amountY;
-        this.card2.positionY += amountY;
-        this.card3.positionY += amountY;
-        this.card4.positionY += amountY;
+        if(this.#cards.length > 0){
+            for(let i = 0; i < this.#cards.length; i++){
+                this.#cards[i].positionY += amountY;
+            }
+        }
     }
 
     draw(camera){
@@ -454,11 +464,20 @@ class ShowCards{
         this.cancel_button.draw(camera);
         this.ok_button.draw(camera);
         this.cards_info.draw(camera);
-        this.card.draw(camera);
-        this.card2.draw(camera);
-        this.card3.draw(camera);
-        this.card4.draw(camera);
+        if(this.#cards.length > 0){
+            for(let i = 0; i < this.#cards.length; i++){
+                this.#cards[i].draw(camera);
+            }
+        }
     }
+
+    /*drawCards(camera){
+        if(this.#cards.length > 0){
+            for(let i = 0; i < this.#cards.length; i++){
+                this.#cards[i].draw(camera);
+            }
+        }
+    }*/
 
     up(){
         this.#up = true;
@@ -505,6 +524,7 @@ class ShowCards{
             return "ok";
         }
     }
+
 
 }
 
