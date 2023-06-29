@@ -132,8 +132,6 @@ export class Player {
         let win = 0;
         const att = new Attack();
         win = att.attackPlayer(base, to);
-        console.log(base.soldiers, to.soldiers);
-        console.log(win);
 
         if(to.soldiers===0){
             to.owner = this;
