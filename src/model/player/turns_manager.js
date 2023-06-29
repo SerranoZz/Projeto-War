@@ -1,5 +1,6 @@
 export default class TurnsManager{
     #state;
+    #state2 = 0;
     #state_name;
     #currPlayerIndex;
     #players;
@@ -23,8 +24,9 @@ export default class TurnsManager{
         this.nextPlayer();
     }
 
-    nextPlayer(game){
+    nextPlayer(){
         if(this.#conquered){
+            console.log('dando carta');
             this.#players[this.#currPlayerIndex].receiveCard();   
         }
 
@@ -37,11 +39,6 @@ export default class TurnsManager{
 
         this.#state = TurnsManager.DISTRIBUCTION;
         this.#players[this.#currPlayerIndex].receiveTroop();
-
-        game.showCards.initCards(game.gl, game.turnsManager.player.cards);
-        game.gameScreen.initGoal(game.gl, game.turnsManager.player);
-        game.gameScreen.changePlayer(game.turnsManager.player.name, game.turnsManager.state_name,
-            game.turnsManager.player.color);
 
         this.#conquered = false;
     }
@@ -93,17 +90,22 @@ export default class TurnsManager{
         this.#fortifyOpened = false;
     }
 
-    nextState(game){
+    nextState(game, player){
         if(this.#state === 0 && this.#players[this.#currPlayerIndex].freeTroops > 0){
             alert("Distribua todas as suas tropas");
             return;
         }
 
         this.#state++;
+        this.#state2++;
+        console.log(this.#state, this.#state2, game.turnsManager.state_name);
 
-        if(this.#state === 4 || this.#round === 1 && this.#state===1){
-            this.#state = 0;
+        if(this.#state2 === 4 || this.#round === 1 && this.#state2===1){
+            this.#state2 = 0;
+            game.showCards.initCards(game.gl, game.turnsManager.player.cards);
             this.nextPlayer();
+            game.gameScreen.changePlayer(game.turnsManager.player.name, game.turnsManager.state_name, game.turnsManager.player.color);
+            game.gameScreen.initGoal(game.gl, game.turnsManager.player);
         }
     }
 }

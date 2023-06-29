@@ -38,6 +38,10 @@ class Game{
         return this.#tView;
     }
 
+    get goal(){
+        return this.#goal;
+    }
+
     get inGame(){
         return this.#inGame;
     }
@@ -70,6 +74,10 @@ class Game{
         return this.#guiScene;
     }
 
+    get players(){
+        return this.#players;
+    }
+
     static async build(canvas){
         const game = new Game();
         await game.init(canvas);
@@ -83,7 +91,7 @@ class Game{
         //Depois talvez carregar o jogo apenas quando for dado o play
         
 
-        const names = ["Player 1", "Player 2"];
+        const names = ["Player 1", "Player 2", "Player 3", "Player 4", "Player 5", "Player 6"];
 
         
         //azul, amarelo, vermelho, preto, verde
@@ -96,8 +104,8 @@ class Game{
             [0.0, 0.4, 0.0, 1.0]
         ];
         
-        const goal = new Goal();
-        await goal.loadGoals();
+        this.#goal = new Goal();
+        await this.#goal.loadGoals();
 
         this.#territoryController = new TerritoryController();
         
@@ -105,8 +113,8 @@ class Game{
             const index = Math.floor(Math.random() * colors.length);
             const color = colors[index];
 
-            goal.sortGoal(names[5-i], color);
-            let playerGoal = goal.getGoal;
+            this.#goal.sortGoal(names[5-i], color);
+            let playerGoal = this.#goal.getGoal;
             
             colors.splice(index, 1);
             this.#goal_path = playerGoal.path;
@@ -137,7 +145,7 @@ class Game{
 
         //tratar o lance de sobrar países
 
-        this.#turnsManager = new TurnsManager(this.#players);
+        this.#turnsManager = new TurnsManager(this.#players, this);
 
         await this.#createGameScreenAlt();
 
@@ -238,13 +246,6 @@ class Game{
     logic(){
         this.#fortify.logic();
         this.#show_cards.logic();
-
-        if(this.#turnsManager.player.freeTroops === 0 && 
-            this.#turnsManager.state === TurnsManager.DISTRIBUCTION){
-            this.#turnsManager.nextState(this);
-            this.#gameScreen.changePlayer(this.#turnsManager.player.name, this.#turnsManager.state_name,
-                this.#turnsManager.player.color);
-        }
     }
 
     draw(){
@@ -333,7 +334,6 @@ class GameScreen{
 
     async initGoal(gl, player){
         this.goal = new ImageGL();
-        console.log(player.goalPath);
         await this.goal.init(gl, player.goalPath);
         this.goal.scale = [0.4, 0.6];
         GameScreen.setInitialPosition(this.goal.positionX, this.goal.positionY, 0.4, this.goal);
@@ -383,7 +383,6 @@ class GameScreen{
     changePlayer(player, state, color){
         this.current_player_text.clear();
 
-        console.log(color);
         const newColor = color.map(val => Math.round(val*255));
 
         this.current_player_text.update(ctx => {
@@ -396,7 +395,6 @@ class GameScreen{
 
             ctx.fillStyle = "white";
             
-            console.log(ctx.fillStyle);
             ctx.fillText(state, 185, 650, 650);
         }, this.#gl);
     }
@@ -470,8 +468,6 @@ class ShowCards{
                 ShowCards.setInitialPosition(-0.161 + step, -0.85 - 1, 0.4, this.#cards[j]);
                 step += 0.08;
             }
-
-            console.log(this.#cards)
         }
 
         this.cardsNumber = new CanvasImage();

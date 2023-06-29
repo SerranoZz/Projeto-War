@@ -160,8 +160,6 @@ export default class Mesh{
         this._gl.useProgram(this._program);
         this._gl.uniform1i(this.#uTexture, texI);
 
-        console.log(this.#textures[texI].texture)
-
         return {tex: this.#textures[texI], index: texI};
     }
 

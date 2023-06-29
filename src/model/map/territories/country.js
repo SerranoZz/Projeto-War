@@ -104,7 +104,6 @@ export default class Country {
     }
 
     changeColor(){
-        console.log(this.#owner.color)
         this.#mesh.setUniformValue("color", this.#owner.color, "4fv");
     }
 }

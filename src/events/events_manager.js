@@ -50,7 +50,6 @@ export default class EventsHandler{
 
             if(widget === "changeTurn"){
                 game.turnsManager.nextState(game);
-                console.log(game.turnsManager.player.name, game.turnsManager.player.cards);
                 return;
             }else if(widget === "showCards"){
                 game.showCards.up();
@@ -70,7 +69,6 @@ export default class EventsHandler{
                 const action = this.#actions.get(game.turnsManager.state);
 
                 action.execute(game, country, ...point);
-
                 for(let i = 0; i < game.players.length; i++){
                     let result;
 
@@ -295,8 +293,6 @@ class ReassignmentAction{
     execute(game, country){
         const player = game.turnsManager.player;
         const territoryController = game.territoryController;
-
-        console.log(this)
     
         if(!this.base) {
             if(country.owner !== player) return

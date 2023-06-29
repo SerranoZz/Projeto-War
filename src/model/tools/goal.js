@@ -77,11 +77,10 @@ export default class Goal{
 
         if(colorName == "") return false;
 
-        for(let i = 0; i < 6; i++){
+        for(let i = 0; i < vetPlayer.length; i++){
             let playerColor = this.colorName(vetPlayer[i].color);
-            
             if(playerColor == colorName){
-                if(vetPlayer[i].continentsOwned != 0){
+                if(vetPlayer[i].territoriesOwned != 0){
                     return false
                 }
             }

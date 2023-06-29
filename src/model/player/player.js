@@ -33,8 +33,6 @@ class Attack {
         attackDiceRolls.sort().reverse();
         defendDiceRolls.sort().reverse();
 
-        console.log(attackDiceRolls);
-        console.log(defendDiceRolls);
 
         for (let i = 0; i < Math.min(dicesAttack, dicesDefense); i++) {
             if (attackDiceRolls[i] > defendDiceRolls[i]) {
@@ -44,10 +42,8 @@ class Attack {
             }
         }
 
-        console.log(`vitórias do ataque: ${attackWins}, vitórias da defesa: ${defenseWins}`);
 
         countryAttack.soldiers -= defenseWins;
-        console.log("soldiers ataque: ",countryAttack.soldiers);
         countryDefense.soldiers -= attackWins;
 
         return attackWins;
@@ -116,8 +112,6 @@ export class Player {
        
         let qtdreceivedTroops = Math.floor(this.#territoriesOwned.length / 2);
 
-        console.log(this.#territoriesOwned);
-
         if(qtdreceivedTroops<3) qtdreceivedTroops = 3;
 
         //calcula a quantidade de tropas a ser recebida devio aos bonus de continente
@@ -163,7 +157,6 @@ export class Player {
             });
 
             this.#cards = newCards;
-            console.log("new cards", newCards);
 
             this.#freeTroops += this.#cardsIncrement;
 
