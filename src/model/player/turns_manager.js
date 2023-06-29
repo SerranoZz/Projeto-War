@@ -1,4 +1,4 @@
-export default class TurnsManager{
+class TurnsManager{
     #state;
     #state_name;
     #currPlayerIndex;
@@ -91,3 +91,5 @@ export default class TurnsManager{
         }
     }
 }
+
+module.exports = TurnsManager;

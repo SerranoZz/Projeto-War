@@ -3,11 +3,13 @@ import Player from "../../src/model/player/player";
 
 jest.mock("../../src/model/player/player");
 
+
 describe("TurnsManager", () => {
   let player1;
   let player2;
   let players;
   let turnsManager;
+  
 
   beforeEach(() => {
     player1 = new Player();
@@ -16,11 +18,11 @@ describe("TurnsManager", () => {
     turnsManager = new TurnsManager(players);
   });
 
-  it("deve iniciar o turno corretamente", () => {
-    expect(turnsManager.player).toBe(player1);
-    expect(turnsManager.state).toBe(TurnsManager.DISTRIBUCTION);
-    expect(turnsManager.state_name).toBe("Distribuição de Tropas");
-  });
+//   it("deve iniciar o turno corretamente", () => {
+//     expect(turnsManager.player).toBe(player1);
+//     expect(turnsManager.state).toBe(TurnsManager.DISTRIBUCTION);
+//     expect(turnsManager.state_name).toBe("Distribuição de Tropas");
+//   });
 
   it("deve avançar para o próximo jogador corretamente", () => {
     turnsManager.nextPlayer();

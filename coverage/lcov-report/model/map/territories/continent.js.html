@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/7</span>
+                <span class='fraction'>7/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -110,34 +110,34 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import Country from "./country";
 &nbsp;
@@ -147,35 +147,35 @@ export default class Continent {
     #bonus;
     #owner;
 &nbsp;
-<span class="fstat-no" title="function not covered" >    co</span>nstructor(name, bonus) {
-<span class="cstat-no" title="statement not covered" >        this.#name = name;</span>
-<span class="cstat-no" title="statement not covered" >        this.#countries = [];</span>
-<span class="cstat-no" title="statement not covered" >        this.#bonus = bonus;</span>
-<span class="cstat-no" title="statement not covered" >        this.#owner = null;</span>
+    constructor(name, bonus) {
+        this.#name = name;
+        this.#countries = [];
+        this.#bonus = bonus;
+        this.#owner = null;
     }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    ad</span>dCountry(country) {
-<span class="cstat-no" title="statement not covered" >        this.#countries.push(country);</span>
+    addCountry(country) {
+        this.#countries.push(country);
     }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    ge</span>t name() {
-<span class="cstat-no" title="statement not covered" >        return this.#name;</span>
+    get name() {
+        return this.#name;
     }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    ge</span>t countries() {
-<span class="cstat-no" title="statement not covered" >        return this.#countries;</span>
+    get countries() {
+        return this.#countries;
     }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    ge</span>t bonus() {
-<span class="cstat-no" title="statement not covered" >        return this.#bonus;</span>
+    get bonus() {
+        return this.#bonus;
     }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    ge</span>t owner(){
-<span class="cstat-no" title="statement not covered" >        return this.#owner;</span>
+    get owner(){
+        return this.#owner;
     }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    se</span>t owner(owner){
-<span class="cstat-no" title="statement not covered" >        this.#owner = owner;</span>
+    set owner(owner){
+        this.#owner = owner;
     }
 }</pre></td></tr></table></pre>
 
@@ -184,7 +184,7 @@ export default class Continent {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-06-29T02:59:27.963Z
+                at 2023-06-29T04:22:08.673Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
