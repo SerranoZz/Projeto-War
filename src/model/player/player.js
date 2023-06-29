@@ -84,6 +84,8 @@ export class Player {
     #territoryController;
     #cards;
 
+    #cardsIncrement = 4;
+
     constructor(name, color, goal, territoryController) {
       this.#name = name;
       this.#color = color; // pode ser usado como ID 
@@ -95,11 +97,17 @@ export class Player {
       this.#territoryController = territoryController;
     }
   
-    conquestTerritory(territorio) {
-      this.#territoriesOwned.push(territorio);
+    conquestTerritory(territory) {
+      this.#territoriesOwned.push(territory);
     }
 
-    // por definição, a carta com valor 0 é o coriga.
+    lostTerritory(territory){
+        const index = this.#territoriesOwned.indexOf(territory);
+
+        this.#territoriesOwned.splice(index, 1);
+    }
+
+    // por definição, a carta com valor 0 é o coringa.
     receiveCard(){
         this.#cards.push(Math.floor(Math.random() * 4));
     }
@@ -107,6 +115,8 @@ export class Player {
     receiveTroop(){
        
         let qtdreceivedTroops = Math.floor(this.#territoriesOwned.length / 2);
+
+        console.log(this.#territoriesOwned);
 
         if(qtdreceivedTroops<3) qtdreceivedTroops = 3;
 
@@ -131,14 +141,38 @@ export class Player {
         console.log(base.soldiers, to.soldiers);
         console.log(win);
 
-        if(win > 0){
-            this.receiveCard();
-        }
-
         if(to.soldiers===0){
             to.owner = this;
             to.changeColor();
         }
+
+        return win>0;
+    }
+
+    exchangeCards(card1, card2, card3){
+
+        if(card1.card === 3 || card2.card === 3 || card3.card === 3 ||
+        (card1.card === card2.card && card1.card === card2.card) || 
+        (card1.card !== card2.card && card2.card !== card3.card && card3.card !== card1.card)){
+
+            const indexes = [card1.index, card2.index, card3.index];
+            
+            const newCards = this.#cards.filter((value, index) => {
+                
+                return indexes.indexOf(index)===-1;
+            });
+
+            this.#cards = newCards;
+            console.log("new cards", newCards);
+
+            this.#freeTroops += this.#cardsIncrement;
+
+            this.#cardsIncrement += 2;
+
+            return true;
+        }
+
+        return false;
     }
     
     get name(){
@@ -159,10 +193,6 @@ export class Player {
 
     get vetTerritoriesOwned(){
         return this.#territoriesOwned;
-    }
-
-    get continentsOwned(){
-        return this.#continentsOwned.length;
     }
 
     get vetContinentsOwned(){

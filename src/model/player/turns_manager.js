@@ -8,6 +8,8 @@ export default class TurnsManager{
 
     #round = 1;
 
+    #conquered = false;
+
     static DISTRIBUCTION = 0;
     static ATTACK = 1;
     static REASSIGNMENT = 2;
@@ -21,7 +23,11 @@ export default class TurnsManager{
         this.nextPlayer();
     }
 
-    nextPlayer(){
+    nextPlayer(game){
+        if(this.#conquered){
+            this.#players[this.#currPlayerIndex].receiveCard();   
+        }
+
         this.#currPlayerIndex = this.#currPlayerIndex+1;
 
         if(this.#currPlayerIndex >= this.#players.length){
@@ -31,6 +37,17 @@ export default class TurnsManager{
 
         this.#state = TurnsManager.DISTRIBUCTION;
         this.#players[this.#currPlayerIndex].receiveTroop();
+
+        game.showCards.initCards(game.gl, game.turnsManager.player.cards);
+        game.gameScreen.initGoal(game.gl, game.turnsManager.player);
+        game.gameScreen.changePlayer(game.turnsManager.player.name, game.turnsManager.state_name,
+            game.turnsManager.player.color);
+
+        this.#conquered = false;
+    }
+
+    set conquered(conq){
+        this.#conquered = conq;
     }
 
     get player(){
@@ -76,7 +93,7 @@ export default class TurnsManager{
         this.#fortifyOpened = false;
     }
 
-    nextState(){
+    nextState(game){
         if(this.#state === 0 && this.#players[this.#currPlayerIndex].freeTroops > 0){
             alert("Distribua todas as suas tropas");
             return;
@@ -87,7 +104,6 @@ export default class TurnsManager{
         if(this.#state === 4 || this.#round === 1 && this.#state===1){
             this.#state = 0;
             this.nextPlayer();
-
         }
     }
 }
