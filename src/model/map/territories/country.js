@@ -107,4 +107,18 @@ export default class Country {
         console.log(this.#owner.color)
         this.#mesh.setUniformValue("color", this.#owner.color, "4fv");
     }
+
+    clone() {
+        let clone = Object.assign(new Country(1, 1, 1, 1), this);
+        let neighborList = Object.assign([], this.#neighbors);
+        clone.#neighbors = neighborList;
+        return clone;
+    }
+
+    updateList(controller) {
+        for(let i = 0; i < this.#neighbors.length; i++) {
+            this.#neighbors[i] = controller.findCountry(this.#neighbors[i].name);
+        }
+
+    }
 }

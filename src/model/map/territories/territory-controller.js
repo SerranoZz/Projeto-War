@@ -104,7 +104,7 @@ export default class TerritoryController {
 
         let countryClone = Object.assign([], this.#countries);
         for(let i = 0; i < countryClone.length; i++) {
-            countryclone[i] = Object.assign(new Country(0, 0, 0, 0), countryClone[i]);
+            countryclone[i] = countryClone[i].clone();
         }
 
         let clone = Object.assign(new TerritoryController(), this);

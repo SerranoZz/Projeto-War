@@ -276,6 +276,12 @@ class Game{
 
     clone() {
         let territoryClone = this.#territoryController.clone();
+        let playersClone = Object.assign([], this.#players);
+
+        for(let i = 0; i < this.#players.length; i++) {
+            playersClone[i] = Object.assign(new Player(1, 1, 1, 1), playersClone[i]);
+        }
+
         let gameClone = Object.assign(new Game(), this);
 
         gameClone.#territoryController = territoryClone;
