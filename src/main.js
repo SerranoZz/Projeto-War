@@ -129,6 +129,8 @@ class Game{
                 countries[index].owner = player;
                 countries[index].soldiers = 1;
 
+                player.conquestTerritory(countries[index]);
+
                 countries.splice(index, 1);
             }
         }
@@ -236,6 +238,13 @@ class Game{
     logic(){
         this.#fortify.logic();
         this.#show_cards.logic();
+
+        if(this.#turnsManager.player.freeTroops === 0 && 
+            this.#turnsManager.state === TurnsManager.DISTRIBUCTION){
+            this.#turnsManager.nextState(this);
+            this.#gameScreen.changePlayer(this.#turnsManager.player.name, this.#turnsManager.state_name,
+                this.#turnsManager.player.color);
+        }
     }
 
     draw(){
@@ -401,6 +410,20 @@ class ShowCards{
     #cards;
     #cardsIndex;
 
+    get opened(){
+        return (!this.#up && this.#yPos === 1.0);
+    }
+
+    get cards(){
+        const out = [];
+
+        for(let i = 0; i<this.#cards.length; i++){
+            out.push({card: this.#cardsIndex[i], index: i, selected: false});
+        }
+        
+        return out;
+    }
+
     async init(gl){
         this.show_cards = new ImageGL();
         await this.show_cards.init(gl, "./assets/game/show_cards.png");
@@ -447,6 +470,8 @@ class ShowCards{
                 ShowCards.setInitialPosition(-0.161 + step, -0.85 - 1, 0.4, this.#cards[j]);
                 step += 0.08;
             }
+
+            console.log(this.#cards)
         }
 
         this.cardsNumber = new CanvasImage();
@@ -538,15 +563,19 @@ class ShowCards{
         if(this.#cards.length > 0){
             for(let i = 0; i < this.#cards.length; i++){
                 if(this.#cards[i].pointCollision(x, y)){
+                    let card = "";
+
                     if(this.#cardsIndex[i] == 0){
-                        return 'square';
+                       card ='square';
                     }else if(this.#cardsIndex[i] == 1){
-                        return 'circle'; 
+                       card ='circle'; 
                     }else if(this.#cardsIndex[i] == 2){
-                        return 'triangle';
+                       card ='triangle';
                     }else if(this.#cardsIndex[i] == 3){
-                        return 'joker';
+                       card ='joker';
                     } 
+
+                    return i;
                 }
             }
         }
@@ -555,8 +584,17 @@ class ShowCards{
         }else if(this.ok_button.pointCollision(x, y)){
             return "ok";
         }
+
+        return -1;
     }
 
+    highlightCard(index){
+        this.#cards[index].scale = [0.065, 0.105];
+    }
+
+    deshighlightCard(index){
+        this.#cards[index].scale = [0.055, 0.095];
+    }
 
 }
 

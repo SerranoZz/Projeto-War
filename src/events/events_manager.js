@@ -16,19 +16,24 @@ export default class EventsHandler{
         this.#actions.set(TurnsManager.DISTRIBUCTION, new DistribuctionAction());
         this.#actions.set(TurnsManager.ATTACK, new AttackAction());
         this.#actions.set(TurnsManager.REASSIGNMENT, new ReassignmentAction());
+        
+        const troca = new ExchangeCardsAction();
 
         game.showCards.initCards(game.gl, game.turnsManager.player.cards);
         game.gameScreen.initGoal(game.gl, game.turnsManager.player);
 
-        game.gl.canvas.addEventListener("click", e=>{
+        game.gl.canvas.addEventListener("click",async e=>{
             if(game.turnsManager.state === TurnsManager.FREEZE) return;
 
             if(!game.inGame) return;
     
             const point = EventsHandler.mapClickInCanvas(e.clientX, e.clientY, game.gl.canvas);
 
-            const troca = new ExchangeCardsAction();
-            troca.execute(game, ...point)
+            //troca.execute(game, ...point)
+
+            if(game.showCards.opened){
+                await troca.getCards(game, ...point);
+            }
 
             if(game.fortify.opened){
                 this.#actions.get(game.turnsManager.state).applyFort(game, ...point);
@@ -36,19 +41,16 @@ export default class EventsHandler{
             }
 
             const widget2 = game.showCards.clickedWidget(...point);
+
             if(widget2 === "cancel"){
-                game.showCards.down();
+                troca.resetCards(game);
             }
 
             const widget = game.gameScreen.clickedWidget(...point);
 
             if(widget === "changeTurn"){
-                game.turnsManager.nextState();
+                game.turnsManager.nextState(game);
                 console.log(game.turnsManager.player.name, game.turnsManager.player.cards);
-                game.showCards.initCards(game.gl, game.turnsManager.player.cards);
-                game.gameScreen.changePlayer(game.turnsManager.player.name, game.turnsManager.state_name,
-                    game.turnsManager.player.color);
-                alert("chanja aí");
                 return;
             }else if(widget === "showCards"){
                 game.showCards.up();
@@ -68,6 +70,23 @@ export default class EventsHandler{
                 const action = this.#actions.get(game.turnsManager.state);
 
                 action.execute(game, country, ...point);
+
+                for(let i = 0; i < game.players.length; i++){
+                    let result;
+
+                    if(game.players[i].goalId >= 0 && game.players[i].goalId <= 5){
+                        result = game.goal.verifyContinent(game.players[i]);
+                    }else if(game.players[i].goalId == 6 || game.players[i].goalId == 7){
+                        result = game.goal.verifyTerritory(game.players[i]);
+                    }else if(game.players[i].goalId >= 8 && game.players[i].goalId <= 13){
+                        result = game.goal.verifyDestroy(game.players[i], game.players);
+                    }
+
+                    if(result){
+                        alert("Parabéns jogador "+game.players[i].name+", ganhaste!! ;)");
+                        break;
+                    }
+                }
             };
 
         });
@@ -137,6 +156,11 @@ class AttackAction{
                 game.fortify.changeNumber(1);
                 game.fortify.up();
                 this.destiny = country;
+
+                game.turnsManager.player.conquestTerritory(country);
+
+                game.turnsManager.conquered = true;
+
                 return;
             }
 
@@ -158,8 +182,6 @@ class AttackAction{
             game.fortify.changeNumber(this.amount);
         }else if(btn==="ok"){
 
-            //alert("base soldiers:"+this.base.soldiers+" amount: "+this.amount)
-
             game.territoryController.troop_reassignment(this.base, this.destiny, this.amount);
             game.tView.update();
             
@@ -169,6 +191,7 @@ class AttackAction{
             this.amount = 1;
             this.base = null;
             this.neighbors = null;
+            this.destiny = null;
         } 
     }
 
@@ -226,7 +249,6 @@ class DistribuctionAction{
         const btn = game.fortify.clickedWidget(x, y);
 
         if(btn === "-" && this.amount > 0){
-            alert(this.amount)
             this.amount--;
             game.fortify.changeNumber(this.amount);
         }else if(btn === "+" && this.amount < game.turnsManager.player.freeTroops){
@@ -274,8 +296,6 @@ class ReassignmentAction{
         const player = game.turnsManager.player;
         const territoryController = game.territoryController;
 
-        alert("entrou em execute")
-
         console.log(this)
     
         if(!this.base) {
@@ -294,8 +314,6 @@ class ReassignmentAction{
     
         }else if(!this.destiny){
             if(this.neighbors.indexOf(country) === -1) return;
-    
-            alert(`from ${this.base.name} to ${country.name}`);
 
             this.destiny = country;
             
@@ -304,7 +322,6 @@ class ReassignmentAction{
     }
 
     applyFort(game, x, y){
-        alert(this.base.soldiers)
 
         const btn = game.fortify.clickedWidget(x, y);
 
@@ -315,8 +332,6 @@ class ReassignmentAction{
             this.amount++;
             game.fortify.changeNumber(this.amount);
         }else if(btn === "cancel" || btn==="ok"){
-
-            alert("base soldiers:"+this.base.soldiers+" amount: "+this.amount)
 
             if(btn === "ok"){
                 game.territoryController.troop_reassignment(this.base, this.destiny, this.amount);
@@ -372,25 +387,48 @@ class ExchangeCardsAction{
     #selectCards = [];
 
     execute(game, x, y){
-        const card = game.showCards.clickedWidget(x,y);
 
-        console.log(card);
     }
 
-    receiveCards(card) {
-        if (selectedCards.length < 3) {
-          selectedCards.push(numero);
-          console.log(`Carta ${numero} selecionada.`);
+    async getCards(game, x, y) {
+        if(this.#selectCards.length === 0){
+            this.#selectCards = game.showCards.cards;
         }
-      
-        if (selectedCards.length === 3) {
-          console.log('Processando as cartas...');
-          // Faça o processamento necessário com as três cartas aqui
-          // por exemplo, some os números das cartas:
-          
-      
-          // Limpe o array para a próxima rodada de seleção de cartas
-          selectedCards = [];
+
+        const widget = game.showCards.clickedWidget(x,y);
+
+        if(widget === "ok"){
+            const selectedCards = this.#selectCards.filter(card => card.selected);
+
+            if(selectedCards.length<3) return;
+
+            game.turnsManager.player.exchangeCards(...selectedCards);
+
+            await this.resetCards(game);
+
+            return;
         }
+
+        if(widget === -1 || widget==="cancel") return;
+
+        this.#selectCards[widget].selected = !this.#selectCards[widget].selected;
+
+        if(this.#selectCards[widget].selected) 
+            game.showCards.highlightCard(widget) 
+        else
+            game.showCards.deshighlightCard(widget);
+
+    }
+
+    async resetCards(game){
+        for(let i = 0; i<this.#selectCards.length; i++){
+            game.showCards.deshighlightCard(i);
+        }
+
+        this.#selectCards = [];
+
+        game.showCards.down();
+
+        //await game.showCards.initCards(game.gl, game.turnsManager.player.cards);
     }
 }
