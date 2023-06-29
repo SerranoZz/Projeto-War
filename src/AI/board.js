@@ -60,10 +60,14 @@ class Board {
     }
 
     evaluateCountries() {
-        return this.player
+        //Função que usa a quantidade de países conquistados
+        //Possui 42 países, 1.5 é o multiplicador
+        return 1.5*this.player.territoriesOwned.length/42;
     }
 
     evaluateContinents() {
         //Função que usa a quantidade de continentes conquistados
+        //Possui 5 continentes, 1.5 é o multiplicador
+        return 1.5*this.player.continentsOwned()/5
     }
 }
