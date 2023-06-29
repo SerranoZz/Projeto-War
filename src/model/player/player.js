@@ -74,7 +74,7 @@ class Attack {
     }
 }
 
-export class Player {
+class Player {
     #name;
     #color;
     #territoriesOwned;
@@ -189,3 +189,5 @@ export class Player {
         this.#cards = cards;
     }
 }
+
+module.exports = Player;

@@ -23,7 +23,6 @@
   "dependencies": {
     "gl-matrix": "^3.4.3"
   },
-  
   "jest": {
     "transform": {
       "^.+\\.js$": "babel-jest"

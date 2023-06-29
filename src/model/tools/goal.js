@@ -3,12 +3,24 @@ import { Player } from "../player/player";
 //Atribuir um objetivo para cada jogador ao inicio da partida
 
 export default class Goal{
-    #goals = []; //vetor de objetivos
+    goals = []; //vetor de objetivos
     #goalCount; //numero de objetivos no vetor
     #goalToReturn //objetivo a ser retornado
     
     get getGoal(){
         return this.#goalToReturn;
+    }
+
+    setGoal(Nome, index){
+        this.goals[index].owner = Nome;
+    }
+    
+    getGoalsOwner(index){
+        return this.goals[index].owner;
+    }
+
+    getGoalsId(index){
+        return this.goals[index].id;
     }
 
     async loadGoals(){
@@ -19,34 +31,37 @@ export default class Goal{
         
         for(let i = 0; i < this.#goalCount; i++) {
             let goal = goals.data[i]
-            this.#goals.push(goal);
+            this.goals.push(goal);
         }
     }
     
+    
+
     async sortGoal(player, color) {
         const colorName = this.colorName(color);
         let index = Math.floor(Math.random() * this.#goalCount);
         
-        if(this.#goals[index].owner == ""){
+        if(this.getGoalsOwner(index) == ""){
             if(
-                (this.#goals[index].id == 8  && colorName == 'azul')     ||
-                (this.#goals[index].id == 9  && colorName == 'amarelo')  ||
-                (this.#goals[index].id == 10  && colorName == 'vermelho')||
-                (this.#goals[index].id == 11  && colorName == 'preto')   ||
-                (this.#goals[index].id == 12  && colorName == 'branco')  ||
-                (this.#goals[index].id == 13  && colorName == 'verde') 
+                (this.getGoalsId(index) == 8  && colorName == 'azul')     ||
+                (this.getGoalsId(index) == 9  && colorName == 'amarelo')  ||
+                (this.getGoalsId(index) == 10  && colorName == 'vermelho')||
+                (this.getGoalsId(index) == 11  && colorName == 'preto')   ||
+                (this.getGoalsId(index) == 12  && colorName == 'branco')  ||
+                (this.getGoalsId(index) == 13  && colorName == 'verde') 
             
             ){
                 this.sortGoal(player, color);
             }else{
-                this.#goals[index].owner = player;
-                this.#goalToReturn = this.#goals[index];
+                this.setGoal(player, index);
+                this.#goalToReturn = this.goals[index];
             }
         }else{
             this.sortGoal(player, color);
         }
     }
 
+    
     
     //se o objetivo do jogador estiver entre 8 e 13 chamar essa função.
     verifyDestroy(player, vetPlayer){
@@ -177,3 +192,5 @@ export default class Goal{
         }
     }
 }
+
+module.exports = Goal;
