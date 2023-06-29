@@ -68,6 +68,16 @@ export default class EventsHandler{
                 const action = this.#actions.get(game.turnsManager.state);
 
                 action.execute(game, country, ...point);
+
+                for(let i = 0; i < game.players.length; i++){
+                    if(game.turnsManager.player.goalId >= 0 && game.turnsManager.player.goalId <= 5){
+                        game.goal.verifyContinent(game.turnsManager.player);
+                    }else if(game.turnsManager.player.goalId == 6 || game.turnsManager.player.goalId == 7){
+                        game.goal.verifyTerritory(game.turnsManager.player);
+                    }else if(game.turnsManager.player.goalId >= 8 && game.turnsManager.player.goalId <= 13){
+                        game.goal.verifyDestroy(game.turnsManager.player, game.players);
+                    }
+                }
             };
 
         });

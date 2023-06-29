@@ -38,6 +38,10 @@ class Game{
         return this.#tView;
     }
 
+    get goal(){
+        return this.#goal;
+    }
+
     get inGame(){
         return this.#inGame;
     }
@@ -70,6 +74,10 @@ class Game{
         return this.#guiScene;
     }
 
+    get players(){
+        return this.#players;
+    }
+
     static async build(canvas){
         const game = new Game();
         await game.init(canvas);
@@ -96,8 +104,8 @@ class Game{
             [0.0, 0.4, 0.0, 1.0]
         ];
         
-        const goal = new Goal();
-        await goal.loadGoals();
+        this.#goal = new Goal();
+        await this.#goal.loadGoals();
 
         this.#territoryController = new TerritoryController();
         
@@ -105,8 +113,8 @@ class Game{
             const index = Math.floor(Math.random() * colors.length);
             const color = colors[index];
 
-            goal.sortGoal(names[5-i], color);
-            let playerGoal = goal.getGoal;
+            this.#goal.sortGoal(names[5-i], color);
+            let playerGoal = this.#goal.getGoal;
             
             colors.splice(index, 1);
             this.#goal_path = playerGoal.path;

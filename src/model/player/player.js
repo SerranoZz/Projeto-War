@@ -161,10 +161,6 @@ export class Player {
         return this.#territoriesOwned;
     }
 
-    get continentsOwned(){
-        return this.#continentsOwned.length;
-    }
-
     get vetContinentsOwned(){
         return this.#continentsOwned;
     }
